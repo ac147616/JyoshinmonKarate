@@ -1,4 +1,6 @@
-﻿namespace JyoshinmonKarate.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace JyoshinmonKarate.Models
 {
     public enum MemberStatus
     {
@@ -26,7 +28,7 @@
         public string EmergencyContactPhone { get; set; }
         public MemberStatus Status { get; set; }
 
-        public User User { get; set; }
+        public IdentityUser User { get; set; }
         public Club Club { get; set; }
         public Membership Membership { get; set; }
         public Belt Belt { get; set; }
