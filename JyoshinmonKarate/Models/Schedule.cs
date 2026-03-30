@@ -19,5 +19,8 @@
         public Weekdays DayOfWeek { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        public Club Club { get; set; }
+        public Instructor Instructor { get; set; }
     }
 }
