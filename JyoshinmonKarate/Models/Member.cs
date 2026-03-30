@@ -7,7 +7,6 @@
     public enum Gender {
         Female, Male, PreferNotToSay
     }
-
     public class Member
     {
         public int MemberId { get; set; }
