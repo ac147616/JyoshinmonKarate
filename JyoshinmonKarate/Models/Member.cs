@@ -17,11 +17,11 @@
         public int BeltSize { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
         public int Weight { get; set; }
         public int Height { get; set; }
-        public DateOnly DateJoined { get; set; }
+        public DateTime DateJoined { get; set; }
         public string EmergencyContactName { get; set; }
         public string EmergencyContactPhone { get; set; }
         public MemberStatus Status { get; set; }
