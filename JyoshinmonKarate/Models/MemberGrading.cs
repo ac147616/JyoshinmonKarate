@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JyoshinmonKarate.Models
 {
@@ -16,8 +17,10 @@ namespace JyoshinmonKarate.Models
         //One member can have attend gradings, thus many "member gradings"
         public Member Member { get; set; }
         //Many members/member gradings will have same belt before getting graded
+        [ForeignKey("BeltBeforeId")]
         public Belt BeltBefore { get; set; }
         //Many members/member gradings will have same belt after getting graded
+        [ForeignKey("BeltAfterId")]
         public Belt BeltAfter { get; set; }
 
 
