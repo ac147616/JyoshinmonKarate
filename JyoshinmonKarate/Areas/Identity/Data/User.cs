@@ -29,7 +29,7 @@ public class User : IdentityUser
     //Email will be inhereted from IdentityUser as Email
 
     //Phone will be inhereted from IdentityUser as PhoneNumber
-
+    [Required]
     public bool IsAdmin { get; set; }
 
 }

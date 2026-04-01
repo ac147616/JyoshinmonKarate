@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace JyoshinmonKarate.Models
 {
@@ -17,7 +18,11 @@ namespace JyoshinmonKarate.Models
         public int MembershipId { get; set; }
         public int BeltId { get; set; }
         public int BeltSize { get; set; }
+
+        [StringLength(30)]
         public string FirstName { get; set; }
+
+        [StringLength(30)]
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
