@@ -1,18 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace JyoshinmonKarate.Models;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace JyoshinmonKarate.Models
 {
     public class Attendance
     {
-        [Required]
+        // I didn't add required for int and dates because they are already non-nullable
         public int AttendanceId { get; set; }
-        [Required]
         public int ScheduleId { get; set; }
-        [Required]
         public int MemberId { get; set; }
-        [Required]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
+        //one schedule can have many attendances
         public Schedule Schedule { get; set; }
+        //one member can have many attendances
         public Member Member { get; set; }
     }
 }

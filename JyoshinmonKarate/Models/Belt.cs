@@ -8,5 +8,14 @@ namespace JyoshinmonKarate.Models
         [Required]
         [StringLength(30)]
         public string BeltName { get; set; }
+
+        //One belt colour can be used by many members
+        public ICollection<Member> Members { get; set; }
+        //One belt colour can be used by many instructors
+        public ICollection<Instructor> Instructors { get; set; }
+        //Many member gradings will have members whos belts were the same colour before grading
+        public ICollection<MemberGrading> BeltBeforeMemberGradings { get; set; }
+        //Many member gradings will have members whos belts become the same colour after grading
+        public ICollection<MemberGrading> BeltAfterMemberGradings { get; set; }
     }
 }

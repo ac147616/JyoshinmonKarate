@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JyoshinmonKarate.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,26 +12,25 @@ namespace JyoshinmonKarate.Areas.Identity.Data;
 public class User : IdentityUser
 {
     //This class was created when I added the Identity scaffolding to the project and I'm only editing it
-
     //UserId will be inhereted from IdentityUser as Id
-
     //Username will be inhereted from IdentityUser as UserName
-
     //Password will be inhereted from IdentityUser as PasswordHash
-
     [Required]
     [StringLength(30)]
     public string FirstName { get; set; }
-
     [Required]
     [StringLength(30)]
     public string LastName { get; set; }
-
     //Email will be inhereted from IdentityUser as Email
-
     //Phone will be inhereted from IdentityUser as PhoneNumber
     [Required]
     public bool IsAdmin { get; set; }
+
+    //one user can manage many members
+    public ICollection<Member> Members { get; set; }
+    //one user can manage one instructor
+    public Instructor Instructors { get; set; }
+
 
 }
 
