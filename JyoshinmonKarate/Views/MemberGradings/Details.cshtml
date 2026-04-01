@@ -1,0 +1,48 @@
+﻿@model JyoshinmonKarate.Models.MemberGrading
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>MemberGrading</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Passed)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Passed)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Grading)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Grading.GradingId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Member)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Member.FirstName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BeltBefore)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BeltBefore.BeltName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BeltAfter)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BeltAfter.BeltName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MemberGradingId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
