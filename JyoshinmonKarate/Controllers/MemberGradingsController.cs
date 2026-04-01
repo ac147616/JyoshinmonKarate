@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using JyoshinmonKarate.Areas.Identity.Data;
 using JyoshinmonKarate.Models;
 
+
 namespace JyoshinmonKarate.Controllers
 {
     public class MemberGradingsController : Controller
