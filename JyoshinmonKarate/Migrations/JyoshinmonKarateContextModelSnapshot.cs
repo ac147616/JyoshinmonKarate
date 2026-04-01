@@ -592,7 +592,7 @@ namespace JyoshinmonKarate.Migrations
                     b.HasOne("JyoshinmonKarate.Models.Schedule", "Schedule")
                         .WithMany("Attendances")
                         .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Member");
@@ -696,7 +696,7 @@ namespace JyoshinmonKarate.Migrations
                     b.HasOne("JyoshinmonKarate.Models.Member", "Member")
                         .WithMany("MemberGradings")
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("BeltAfter");
@@ -730,7 +730,7 @@ namespace JyoshinmonKarate.Migrations
                     b.HasOne("JyoshinmonKarate.Models.Instructor", "Instructor")
                         .WithMany("Schedules")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Club");

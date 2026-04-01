@@ -40,5 +40,23 @@ public class JyoshinmonKarateContext : IdentityDbContext<User>
                 .HasForeignKey(mg => mg.BeltAfterId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Entity<Schedule>()
+                .HasOne(s => s.Instructor)
+                .WithMany(i => i.Schedules)
+                .HasForeignKey(s => s.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<MemberGrading>()
+                .HasOne(mg => mg.Member)
+                .WithMany(m => m.MemberGradings)
+                .HasForeignKey(mg => mg.MemberId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Attendance>()
+                .HasOne(a => a.Schedule)
+                .WithMany(s => s.Attendances)
+                .HasForeignKey(a => a.ScheduleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
     }
 }
