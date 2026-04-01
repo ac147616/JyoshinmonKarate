@@ -1,0 +1,49 @@
+﻿@model JyoshinmonKarate.Models.Grading
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Grading</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GradingId" />
+            <div class="form-group">
+                <label asp-for="ClubId" class="control-label"></label>
+                <select asp-for="ClubId" class="form-control" asp-items="ViewBag.ClubId"></select>
+                <span asp-validation-for="ClubId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradingDate" class="control-label"></label>
+                <input asp-for="GradingDate" class="form-control" />
+                <span asp-validation-for="GradingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradingStartTime" class="control-label"></label>
+                <input asp-for="GradingStartTime" class="form-control" />
+                <span asp-validation-for="GradingStartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradingEndTime" class="control-label"></label>
+                <input asp-for="GradingEndTime" class="form-control" />
+                <span asp-validation-for="GradingEndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

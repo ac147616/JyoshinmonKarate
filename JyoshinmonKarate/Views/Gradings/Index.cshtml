@@ -1,0 +1,53 @@
+﻿@model IEnumerable<JyoshinmonKarate.Models.Grading>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GradingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GradingStartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GradingEndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Club)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GradingDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GradingStartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GradingEndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Club.Address)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GradingId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GradingId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GradingId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
