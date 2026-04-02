@@ -4,22 +4,26 @@ namespace JyoshinmonKarate.Models
     public class Club
     {
         public int ClubId { get; set; }
-        [Required]
-        [StringLength(100)]
+
+        [Required(ErrorMessage = "Club name is required.")]
+        [StringLength(100, ErrorMessage = "Club name cannot be more than 100 characters.")]
+        [Display(Name = "Club Name")]
         public string ClubName { get; set; }
 
-        [Required]
-        [StringLength(200)]
+        [Required(ErrorMessage = "Address is required.")]
+        [StringLength(200, ErrorMessage = "Address cannot be more than 200 characters.")]
         public string Address { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [StringLength(100)]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
+        [StringLength(100, ErrorMessage = "Email cannot be more than 100 characters.")]
+        [Display(Name = "Club Email")]
         public string Email { get; set; }
 
-        [Required]
-        [Phone]
-        [StringLength(30)]
+        [Required(ErrorMessage = "Phone number is required.")]
+        [Phone(ErrorMessage = "Please enter a valid phone number.")]
+        [StringLength(30, ErrorMessage = "Phone number cannot be more than 30 characters.")]
+        [Display(Name = "Phone Number")]
         public string Phone { get; set; }
 
         //One club can have many members

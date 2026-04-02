@@ -6,11 +6,19 @@ namespace JyoshinmonKarate.Models
     public class Instructor
     {
         public int InstructorId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "A user account is required.")]
+        [Display(Name = "User")]
         public string UserId { get; set; }
+
+        [Display(Name = "Club")]
         public int ClubId { get; set; }
+
+        [Display(Name = "Belt")]
         public int BeltId { get; set; }
+
         [DataType(DataType.Date)]
+        [Display(Name = "Date Joined")]
         public DateTime DateJoined { get; set; }
         
         //One instructor can only have one user account

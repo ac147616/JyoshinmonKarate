@@ -14,30 +14,61 @@ namespace JyoshinmonKarate.Models
     public class Member
     {
         public int MemberId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "A user account is required.")]
+        [Display(Name = "User")]
         public string UserId { get; set; }
+
+        [Display(Name = "Club")]
         public int ClubId { get; set; }
+
+        [Display(Name = "Membership")]
         public int MembershipId { get; set; }
+
+        [Display(Name = "Belt")]
         public int BeltId { get; set; }
+
+        [Range(1, 20, ErrorMessage = "Belt size must be between 1 and 20.")]
+        [Display(Name = "Belt Size")]
         public int BeltSize { get; set; }
-        [Required]
-        [StringLength(30)]
+
+        [Required(ErrorMessage = "First name is required.")]
+        [StringLength(30, ErrorMessage = "First name cannot be more than 30 characters.")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
-        [Required]
-        [StringLength(30)]
+
+        [Required(ErrorMessage = "Last name is required.")]
+        [StringLength(30, ErrorMessage = "Last name cannot be more than 30 characters.")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
         [DataType(DataType.Date)]
+        [Display(Name = "Date of Birth")]
         public DateTime DateOfBirth { get; set; }
+
         public Gender Gender { get; set; }
+
+        [Range(1, 500, ErrorMessage = "Weight must be between 1 and 500 kg.")]
         public int Weight { get; set; }
+
+        [Range(1, 300, ErrorMessage = "Height must be between 1 and 300 cm.")]
         public int Height { get; set; }
+
         [DataType(DataType.Date)]
+        [Display(Name = "Date Joined")]
         public DateTime DateJoined { get; set; }
-        [StringLength(30)]
+
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(30, ErrorMessage = "Name cannot be more than 30 characters.")]
+        [Display(Name = "Emergency Contact Name")]
         public string EmergencyContactName { get; set; }
-        [Phone]
-        [StringLength(30)]
+
+        [Phone(ErrorMessage = "Please enter a valid phone number.")]
+        [Required(ErrorMessage = "Phone number is required.")]
+        [StringLength(30, ErrorMessage = "Number cannot be more than 30 characters.")]
+        [Display(Name = "Emergency Contact Phone")]
         public string EmergencyContactPhone { get; set; }
+
         public MemberStatus Status { get; set; }
 
         //A user can manage many members

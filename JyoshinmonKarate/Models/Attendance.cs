@@ -7,9 +7,15 @@ namespace JyoshinmonKarate.Models
     {
         // I didn't add required for int and dates because they are already non-nullable
         public int AttendanceId { get; set; }
+
+        [Display(Name = "Schedule")]
         public int ScheduleId { get; set; }
+
+        [Display(Name = "Member")]
         public int MemberId { get; set; }
+
         [DataType(DataType.Date)]
+        [Display(Name = "Attendance Date")]
         public DateTime Date { get; set; }
 
         //one schedule can have many attendances

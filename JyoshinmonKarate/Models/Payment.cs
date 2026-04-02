@@ -15,15 +15,27 @@ namespace JyoshinmonKarate.Models
     public class Payment
     {
         public int PaymentId { get; set; }
+
+        [Display(Name = "Member")]
         public int MemberId { get; set; }
-        [Required]
-        [StringLength(100)]
+
+        [Required(ErrorMessage = "Payment name is required.")]
+        [StringLength(100, ErrorMessage = "Payment name cannot be more than 100 characters.")]
+        [Display(Name = "Payment Name")]
         public string PaymentName { get; set; }
+
+        [Range(0.01, 100000, ErrorMessage = "Amount must be greater than 0 and less than 100000.")]
+        [Display(Name = "Amount")]
         public decimal Amount { get; set; }
+
         [DataType(DataType.Date)]
+        [Display(Name = "Due Date")]
         public DateTime DateDue { get; set; }
+
+        [Display(Name = "Payment Method")]
         public PaymentMethods PaymentMethod { get; set; }
 
+        [Display(Name = "Payment Status")]
         public PaymentStatus Status { get; set; }
 
         //A member can have many payments

@@ -5,8 +5,10 @@ namespace JyoshinmonKarate.Models
     public class Belt
     {
         public int BeltId { get; set; }
-        [Required]
-        [StringLength(30)]
+
+        [Required(ErrorMessage = "Belt name is required.")]
+        [StringLength(30, ErrorMessage = "Belt name cannot be more than 30 characters.")]
+        [Display(Name = "Belt Name")]
         public string BeltName { get; set; }
 
         //One belt colour can be used by many members

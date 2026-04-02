@@ -15,13 +15,25 @@ namespace JyoshinmonKarate.Models
     public class Schedule
     {
         public int ScheduleId { get; set; }
+
+        [Display(Name = "Club")]
         public int ClubId { get; set; }
+
+        [Display(Name = "Instructor")]
         public int InstructorId { get; set; }
+
+        [Display(Name = "Level")]
         public Levels Level { get; set; }
+
+        [Display(Name = "Day of Week")]
         public Weekdays DayOfWeek { get; set; }
+
         [DataType(DataType.Time)]
+        [Display(Name = "Start Time")]
         public DateTime StartTime { get; set; }
-        [DataType(DataType.Time)]   
+
+        [DataType(DataType.Time)]
+        [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
 
         //One club will have many schedule/classes
