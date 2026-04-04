@@ -1,5 +1,6 @@
 ﻿using JyoshinmonKarate.Areas.Identity.Data;
 using JyoshinmonKarate.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,11 @@ namespace JyoshinmonKarate.Data
 {
     public static class DbInitializer
     {
+
         public static void Initialize(JyoshinmonKarateContext context, UserManager<User> userManager)
         {
+            context.Database.Migrate();
+
             if (context.Clubs.Any())
             {
                 return;
