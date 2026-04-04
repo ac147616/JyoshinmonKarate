@@ -1,6 +1,7 @@
+using JyoshinmonKarate.Areas.Identity.Data;
+using JyoshinmonKarate.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using JyoshinmonKarate.Areas.Identity.Data;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("JyoshinmonKarateContextConnection") ?? throw new InvalidOperationException("Connection string 'JyoshinmonKarateContextConnection' not found.");;
 
@@ -12,6 +13,16 @@ builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfi
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+//load data if databse is empty
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<JyoshinmonKarateContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
+
+    DbInitializer.Initialize(context, userManager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
