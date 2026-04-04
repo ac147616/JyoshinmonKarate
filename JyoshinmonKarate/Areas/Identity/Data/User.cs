@@ -35,7 +35,7 @@ public class User : IdentityUser
     //one user can manage many members
     public ICollection<Member> Members { get; set; }
     //one user can manage one instructor
-    public Instructor Instructors { get; set; }
+    public Instructor Instructor { get; set; }
 
 
 }
