@@ -16,7 +16,7 @@ namespace JyoshinmonKarate.Models
         public DateTime GradingDate { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Grading Date")]
+        [Display(Name = "Start Time")]
         public DateTime GradingStartTime { get; set; }
 
         [DataType(DataType.Time)]
