@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\SQL\Advanced Queries\" />
+    <Folder Include="Areas\Identity\Data\SQL\Complex Queries\" />
   </ItemGroup>
 
 </Project>
