@@ -20,10 +20,26 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Members
-        public async Task<IActionResult> Index()
+        //I used a LINQ query here to allow searching for members by their first or last name. The search string is passed in as a parameter, and if it's not empty, the list of members is filtered to only include those whose first or last name contains the search string. The filtered (or full) list is then sent to the view to be displayed in the table.
+        public async Task<IActionResult> Index(string searchString)
         {
-            var jyoshinmonKarateContext = _context.Members.Include(m => m.Belt).Include(m => m.Club).Include(m => m.Membership).Include(m => m.User);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            // Start by getting all members (including related data so it still shows nicely in the table)
+            IQueryable<Member> members = _context.Members
+                .Include(m => m.Belt)
+                .Include(m => m.Club)
+                .Include(m => m.Membership)
+                .Include(m => m.User);
+
+            // If the user typed something in the search box
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // Filter the list so only matching names are shown
+                members = members.Where(m => m.FirstName.Contains(searchString) || m.LastName.Contains(searchString));
+
+            }
+
+            // Send the final (filtered or full) list to the view
+            return View(await members.ToListAsync());
         }
 
         // GET: Members/Details/5
