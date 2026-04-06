@@ -9,6 +9,12 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form method="get">
+    <button type="submit" name="showOutstanding" value="true">
+        Show Outstanding Payments
+    </button>
+</form>
+<a asp-action="Index">Show All</a>
 <table class="table">
     <thead>
         <tr>

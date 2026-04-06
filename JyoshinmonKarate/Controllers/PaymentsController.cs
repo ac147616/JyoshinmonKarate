@@ -20,10 +20,23 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool showOutstanding = false)
         {
-            var jyoshinmonKarateContext = _context.Payments.Include(p => p.Member);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            // Start by creating a query for all payments
+            // Include Member so we can show which member the payment belongs to
+            IQueryable<Payment> payments = _context.Payments
+                .Include(p => p.Member);
+
+            // If the user clicked the "Show Outstanding Payments" button
+            if (showOutstanding)
+            {
+                // Filter the results to only include:
+                // Pending (not paid yet) OR Failed (payment did not go through)
+                payments = payments.Where(p => p.Status == PaymentStatus.Pending || p.Status == PaymentStatus.Failed);
+            }
+
+            // Execute the query and return the results to the view
+            return View(await payments.ToListAsync());
         }
 
         // GET: Payments/Details/5
