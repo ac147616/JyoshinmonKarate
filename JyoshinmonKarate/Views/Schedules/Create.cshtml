@@ -22,12 +22,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Level" class="control-label"></label>
-                <select asp-for="Level" class="form-control"></select>
+                <select asp-for="Level" class="form-control" asp-items="Html.GetEnumSelectList<Levels>()"></select>
                 <span asp-validation-for="Level" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DayOfWeek" class="control-label"></label>
-                <select asp-for="DayOfWeek" class="form-control"></select>
+                <select asp-for="DayOfWeek" class="form-control" asp-items="Html.GetEnumSelectList<DayOfWeek>()"></select>
                 <span asp-validation-for="DayOfWeek" class="text-danger"></span>
             </div>
             <div class="form-group">
