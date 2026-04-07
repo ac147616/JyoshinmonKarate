@@ -19,6 +19,7 @@ namespace JyoshinmonKarate.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "Date Joined")]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2200", ErrorMessage = "Date must be between 1900 and 2200")]
         public DateTime DateJoined { get; set; }
         
         //One instructor can only have one user account

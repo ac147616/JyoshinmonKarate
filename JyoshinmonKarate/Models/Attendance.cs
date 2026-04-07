@@ -16,6 +16,7 @@ namespace JyoshinmonKarate.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "Attendance Date")]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2200", ErrorMessage = "Date must be between 1900 and 2200")]
         public DateTime Date { get; set; }
 
         //one schedule can have many attendances

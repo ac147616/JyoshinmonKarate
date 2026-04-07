@@ -44,6 +44,7 @@ namespace JyoshinmonKarate.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "Date of Birth")]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2200", ErrorMessage = "Date must be between 1900 and 2200")]
         public DateTime DateOfBirth { get; set; }
 
         public Gender Gender { get; set; }
@@ -56,6 +57,7 @@ namespace JyoshinmonKarate.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "Date Joined")]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2200", ErrorMessage = "Date must be between 1900 and 2200")]
         public DateTime DateJoined { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]

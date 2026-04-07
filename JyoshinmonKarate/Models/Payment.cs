@@ -29,6 +29,7 @@ namespace JyoshinmonKarate.Models
         public decimal Amount { get; set; }
 
         [DataType(DataType.Date)]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2200", ErrorMessage = "Date must be between 1900 and 2200")]
         [Display(Name = "Due Date")]
         public DateTime DateDue { get; set; }
 
