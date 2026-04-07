@@ -108,6 +108,11 @@ namespace JyoshinmonKarate.Areas.Identity.Pages.Account
             [StringLength(30)]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
+
+            [Required]
+            [StringLength(30)]
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
         }
 
 
@@ -124,7 +129,7 @@ namespace JyoshinmonKarate.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
+                user.UserName = Input.UserName;
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.IsAdmin = false;
