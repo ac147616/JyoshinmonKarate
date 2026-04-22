@@ -82,10 +82,10 @@ namespace JyoshinmonKarate.Models
         //A club has many club members
         public Club Club { get; set; }
         //Many members will be on the same membership plan
-        public Membership Membership { get; set; }
-        //A belt colour would be common for many members
         public Belt Belt { get; set; }
         //A member can have many attendances
+        public ICollection<MemberMembership> MemberMemberships { get; set; }
+        //A member will have many member-memberships over time
         public ICollection<Attendance> Attendances { get; set; }
         //A member will have many payments to make
         public ICollection<Payment> Payments { get; set; }

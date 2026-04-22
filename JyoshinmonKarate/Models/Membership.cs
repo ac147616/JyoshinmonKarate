@@ -20,5 +20,5 @@ public class Membership
     public string AgeGroup { get; set; }
 
     //Many members will have the same membership plan
-    public ICollection<Member> Members { get; set; }
+    public ICollection<MemberMembership> MemberMemberships { get; set; }
 }
