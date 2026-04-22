@@ -1,6 +1,7 @@
 ﻿using JyoshinmonKarate.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JyoshinmonKarate.Models
 {
@@ -23,9 +24,7 @@ namespace JyoshinmonKarate.Models
         public int ClubId { get; set; }
 
         [Display(Name = "Membership")]
-        public int MembershipId { get; set; }
 
-        [Display(Name = "Belt")]
         public int BeltId { get; set; }
 
         [Range(1, 20, ErrorMessage = "Belt size must be between 1 and 20.")]
@@ -46,6 +45,11 @@ namespace JyoshinmonKarate.Models
         [Display(Name = "Date of Birth")]
         [Range(typeof(DateTime), "01-01-1900", "01-01-2200", ErrorMessage = "Date must be between 1900 and 2200")]
         public DateTime DateOfBirth { get; set; }
+
+        public string ProfilePhotoPath { get; set; }
+
+        [NotMapped]
+        public IFormFile ProfilePhotoFile { get; set; }
 
         public Gender Gender { get; set; }
 
