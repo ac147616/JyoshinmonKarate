@@ -138,7 +138,6 @@ namespace JyoshinmonKarate.Data
                 {
                     UserId = users[i % users.Count].Id,
                     ClubId = clubs[i % clubs.Count].ClubId,
-                    MembershipId = memberships[i % memberships.Count].MembershipId,
                     BeltId = belts[i % 7].BeltId,
                     BeltSize = 2 + (i % 8),
                     FirstName = firstNames[i],

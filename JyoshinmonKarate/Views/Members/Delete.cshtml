@@ -36,6 +36,12 @@
             @Html.DisplayFor(model => model.DateOfBirth)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ProfilePhotoPath)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ProfilePhotoPath)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Gender)
         </dt>
         <dd class = "col-sm-10">
@@ -88,9 +94,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Club.Address)
-        </dd>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Membership.AgeGroup)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Belt)

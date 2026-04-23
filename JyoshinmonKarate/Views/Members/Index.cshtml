@@ -9,10 +9,6 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<form method="get">
-    <input type="text" name="searchString" placeholder="Search member name..." />
-    <input type="submit" value="Search" />
-</form>
 <table class="table">
     <thead>
         <tr>
@@ -27,6 +23,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfilePhotoPath)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Gender)
@@ -77,6 +76,9 @@
                 @Html.DisplayFor(modelItem => item.DateOfBirth)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ProfilePhotoPath)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Gender)
             </td>
             <td>
@@ -102,9 +104,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Club.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Membership.AgeGroup)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Belt.BeltName)
