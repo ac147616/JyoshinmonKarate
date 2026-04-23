@@ -21,6 +21,7 @@ public class JyoshinmonKarateContext : IdentityDbContext<User>
     public DbSet<Member> Members { get; set; }
     public DbSet<MemberGrading> MemberGradings { get; set; }
     public DbSet<Membership> Memberships { get; set; }
+    public DbSet<MemberMembership> MemberMemberships { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
 

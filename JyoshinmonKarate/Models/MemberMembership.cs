@@ -14,7 +14,7 @@ namespace JyoshinmonKarate.Models
         public int MemberMembershipId { get; set; }
 
         [Display(Name = "Member")]
-        public int MemberId { get; set; }
+        public int MemberId { get; set; }   
 
         [Display(Name = "Membership")]
         public int MembershipId { get; set; }

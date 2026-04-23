@@ -37,6 +37,6 @@ public class User : IdentityUser
     //one user can manage one instructor
     public Instructor Instructor { get; set; }
 
-
+    
 }
 
