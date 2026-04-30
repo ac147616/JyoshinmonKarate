@@ -4,10 +4,9 @@ namespace JyoshinmonKarate.Models
 {
     public enum MembershipStatus
     {
-        Active,
-        Inactive,
-        Suspended,
-        Cancelled
+        Active,    //still going
+        Suspended, //end date passed
+        Cancelled  //The membership was cancelled before the end date for some reason
     }
     public class MemberMembership
     {

@@ -127,32 +127,87 @@ namespace JyoshinmonKarate.Data
             var members = new List<Member>();
             for (int i = 0; i < 50; i++)
             {
+                // calculates age between 8 and 37, then works out date of birth from that
                 var age = 8 + (i % 30);
                 var dob = DateTime.Today.AddYears(-age).AddDays(-(i * 7 % 365));
+
+                // cycles through Female, Male, PreferNotToSay (3 options)
                 var gender = (Gender)(i % 3);
+
+                // every 10th member is Suspended, every 6th is Inactive, rest are Active
                 var status = i % 10 == 0 ? MemberStatus.Suspended :
                              i % 6 == 0 ? MemberStatus.Inactive :
                              MemberStatus.Active;
 
                 members.Add(new Member
                 {
+                    // cycles through the 12 users so each user manages multiple members
                     UserId = users[i % users.Count].Id,
+
+                    // spreads members across the 5 clubs
                     ClubId = clubs[i % clubs.Count].ClubId,
+
+                    // only assigns belts up to Purple (index 6), not senior belts
                     BeltId = belts[i % 7].BeltId,
+
+                    // belt size cycles between 2 and 9
                     BeltSize = 2 + (i % 8),
+
                     FirstName = firstNames[i],
                     LastName = lastNames[i % lastNames.Length],
                     DateOfBirth = dob,
                     Gender = gender,
+
+                    // weight between 30kg and 99kg
                     Weight = 30 + (i % 70),
+
+                    // height between 120cm and 189cm
                     Height = 120 + (i % 70),
+
+                    // joined between 1 and 24 months ago
                     DateJoined = DateTime.Today.AddMonths(-(1 + (i % 24))).AddDays(-(i % 20)),
+
                     EmergencyContactName = emergencyNames[i % emergencyNames.Length],
                     EmergencyContactPhone = $"02288{i:0000}",
-                    Status = status
+                    Status = status,
+
+                    // no profile photo for seeded members, left as null
+                    ProfilePhotoPath = null
                 });
             }
             context.Members.AddRange(members);
+            context.SaveChanges();
+
+            // MEMBER MEMBERSHIPS
+            var memberMemberships = new List<MemberMembership>();
+            for (int i = 0; i < 50; i++)
+            {
+                // start date between 1 and 24 months ago, matching when the member joined
+                var startDate = DateTime.Today.AddMonths(-(1 + (i % 24))).AddDays(-(i % 20));
+
+                // end date is 12 months after start date (annual membership)
+                var endDate = startDate.AddMonths(12);
+
+                // if end date has passed, status is Suspended, otherwise Active
+                // every 8th membership is Cancelled to give some variety
+                var status = i % 8 == 0 ? MembershipStatus.Cancelled :
+                             endDate < DateTime.Today ? MembershipStatus.Suspended :
+                             MembershipStatus.Active;
+
+                memberMemberships.Add(new MemberMembership
+                {
+                    // links to the member created at the same index
+                    MemberId = members[i % members.Count].MemberId,
+
+                    // cycles through the 4 membership plans
+                    MembershipId = memberships[i % memberships.Count].MembershipId,
+
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    MembershipStatus = status
+                });
+            }
+            context.MemberMemberships.AddRange(memberMemberships);
             context.SaveChanges();
 
             // SCHEDULES
