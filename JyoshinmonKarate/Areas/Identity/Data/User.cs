@@ -29,9 +29,6 @@ public class User : IdentityUser
     //Email will be inhereted from IdentityUser as Email
     //Phone will be inhereted from IdentityUser as PhoneNumber
 
-    [Display(Name = "Admin User")]
-    public bool IsAdmin { get; set; }
-
     //one user can manage many members
     public ICollection<Member> Members { get; set; }
     //one user can manage one instructor
