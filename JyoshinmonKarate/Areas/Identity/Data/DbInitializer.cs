@@ -74,8 +74,7 @@ namespace JyoshinmonKarate.Data
                     FirstName = $"User{i}",
                     LastName = $"Manager{i}",
                     PhoneNumber = $"02177{i:0000}",
-                    EmailConfirmed = true,
-                    IsAdmin = i <= 3
+                    EmailConfirmed = true
                 };
 
                 var result = userManager.CreateAsync(user, "Password123!").Result;
