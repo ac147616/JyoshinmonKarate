@@ -80,6 +80,16 @@ namespace JyoshinmonKarate.Data
                 var result = userManager.CreateAsync(user, "Password123!").Result;
                 if (result.Succeeded)
                 {
+                    // first 3 users are admins, rest are regular users
+                    if (i <= 3)
+                    {
+                        userManager.AddToRoleAsync(user, "Admin").Wait();
+                    }
+                    else
+                    {
+                        userManager.AddToRoleAsync(user, "User").Wait();
+                    }
+
                     users.Add(user);
                 }
             }

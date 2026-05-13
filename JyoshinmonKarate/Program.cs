@@ -1,4 +1,4 @@
-        using JyoshinmonKarate.Areas.Identity.Data;
+using JyoshinmonKarate.Areas.Identity.Data;
 using JyoshinmonKarate.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +14,22 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-//load data if databse is empty
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<JyoshinmonKarateContext>();
-    var userManager = services.GetRequiredService<UserManager<User>>();
+    //first I seed the roles
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await RoleSeeder.SeedRolesAsync(roleManager);
 
+    // and then the database
+    var context = scope.ServiceProvider.GetRequiredService<JyoshinmonKarateContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     DbInitializer.Initialize(context, userManager);
 }
+
+// Add Identity with Roles
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<JyoshinmonKarateContext>()
+    .AddDefaultTokenProviders();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
