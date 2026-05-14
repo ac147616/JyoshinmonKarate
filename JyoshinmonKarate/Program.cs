@@ -8,9 +8,9 @@ var connectionString = builder.Configuration.GetConnectionString("JyoshinmonKara
 builder.Services.AddDbContext<JyoshinmonKarateContext>(options => options.UseSqlServer(connectionString));
 
 //Adding identity with roles
-builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<JyoshinmonKarateContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<JyoshinmonKarateContext>();
 
 builder.Services.AddControllersWithViews();
 
@@ -38,7 +38,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
