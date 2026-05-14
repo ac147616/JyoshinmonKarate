@@ -7,9 +7,11 @@ var connectionString = builder.Configuration.GetConnectionString("JyoshinmonKara
 
 builder.Services.AddDbContext<JyoshinmonKarateContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<JyoshinmonKarateContext>();
+//Adding identity with roles
+builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<JyoshinmonKarateContext>()
+    .AddDefaultTokenProviders();
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -26,11 +28,6 @@ using (var scope = app.Services.CreateScope())
     DbInitializer.Initialize(context, userManager);
 }
 
-// Add Identity with Roles
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<JyoshinmonKarateContext>()
-    .AddDefaultTokenProviders();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -41,7 +38,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
