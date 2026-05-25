@@ -8,7 +8,7 @@ namespace JyoshinmonKarate.Data
         {
             string[] roles = { "Admin", "User" };
 
-            foreach (var role in roles)
+            foreach (string role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                 {

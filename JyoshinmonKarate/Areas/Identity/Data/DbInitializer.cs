@@ -10,7 +10,6 @@ namespace JyoshinmonKarate.Data
 {
     public static class DbInitializer
     {
-
         public static void Initialize(JyoshinmonKarateContext context, UserManager<User> userManager)
         {
             context.Database.Migrate();

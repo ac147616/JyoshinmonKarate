@@ -46,7 +46,7 @@ namespace JyoshinmonKarate.Models
         [Range(typeof(DateTime), "01-01-1900", "01-01-2200", ErrorMessage = "Date must be between 1900 and 2200")]
         public DateTime DateOfBirth { get; set; }
 
-        public string ProfilePhotoPath { get; set; }
+        public string? ProfilePhotoPath { get; set; }
 
         [NotMapped]
         public IFormFile ProfilePhotoFile { get; set; }

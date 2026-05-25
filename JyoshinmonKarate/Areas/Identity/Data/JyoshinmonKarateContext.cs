@@ -1,5 +1,4 @@
-﻿using JyoshinmonKarate.Areas.Identity.Data;
-using JyoshinmonKarate.Models;
+﻿using JyoshinmonKarate.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

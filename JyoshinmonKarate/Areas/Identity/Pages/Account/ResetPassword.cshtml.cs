@@ -7,11 +7,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using JyoshinmonKarate.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using JyoshinmonKarate.Areas.Identity.Data;
 
 namespace JyoshinmonKarate.Areas.Identity.Pages.Account
 {
