@@ -29,3 +29,22 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* making my NAVBAR */
+
+.navbar {
+    background-image: url('/images/black_belt_bg_navbar1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    position: relative;
+    margin-top: 30px !important;
+    overflow: visible !important;
+    min-height: 60px !important;
+}
+
+header {
+    overflow: visible !important;
+}
