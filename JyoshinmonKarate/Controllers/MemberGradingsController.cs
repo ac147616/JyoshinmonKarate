@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using JyoshinmonKarate.Areas.Identity.Data;
 using JyoshinmonKarate.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace JyoshinmonKarate.Controllers
 {
+    [Authorize]
     public class MemberGradingsController : Controller
     {
         private readonly JyoshinmonKarateContext _context;
@@ -50,6 +52,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberGradings/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["BeltAfterId"] = new SelectList(_context.Belts, "BeltId", "BeltName");
@@ -62,6 +65,7 @@ namespace JyoshinmonKarate.Controllers
         // POST: MemberGradings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberGradingId,GradingId,MemberId,BeltBeforeId,BeltAfterId,Passed")] MemberGrading memberGrading)
@@ -80,6 +84,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberGradings/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +107,7 @@ namespace JyoshinmonKarate.Controllers
         // POST: MemberGradings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberGradingId,GradingId,MemberId,BeltBeforeId,BeltAfterId,Passed")] MemberGrading memberGrading)
@@ -139,6 +145,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberGradings/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -161,6 +168,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // POST: MemberGradings/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using JyoshinmonKarate.Areas.Identity.Data;
+using JyoshinmonKarate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using JyoshinmonKarate.Areas.Identity.Data;
-using JyoshinmonKarate.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace JyoshinmonKarate.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly JyoshinmonKarateContext _context;
@@ -59,6 +62,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Payments/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName");
@@ -68,6 +72,7 @@ namespace JyoshinmonKarate.Controllers
         // POST: Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,MemberId,PaymentName,Amount,DateDue,PaymentMethod,Status")] Payment payment)
@@ -83,6 +88,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Payments/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +108,7 @@ namespace JyoshinmonKarate.Controllers
         // POST: Payments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentId,MemberId,PaymentName,Amount,DateDue,PaymentMethod,Status")] Payment payment)
@@ -136,6 +143,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Payments/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -155,6 +163,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // POST: Payments/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

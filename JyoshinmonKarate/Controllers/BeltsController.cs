@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using JyoshinmonKarate.Areas.Identity.Data;
 using JyoshinmonKarate.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JyoshinmonKarate.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BeltsController : Controller
     {
         private readonly JyoshinmonKarateContext _context;
