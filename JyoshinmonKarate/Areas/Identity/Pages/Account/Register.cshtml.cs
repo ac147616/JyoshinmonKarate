@@ -113,6 +113,11 @@ namespace JyoshinmonKarate.Areas.Identity.Pages.Account
             [StringLength(30)]
             [Display(Name = "Username")]
             public string UserName { get; set; }
+
+            [Required]
+            [Phone]
+            [Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; }
         }
 
 
