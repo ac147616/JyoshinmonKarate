@@ -30,7 +30,7 @@ body {
   text-align: start;
 }
 
-/* making my NAVBAR */
+/* making the NAVBAR */
 
 .navbar {
     background-image: url('/images/beltsmall.png');
@@ -42,7 +42,48 @@ body {
     position: relative;
     margin-top: 40px;
     overflow: visible;
-    min-height: 60px;
+    min-height: 70px;
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand,
+.dropdown-toggle {
+    color: white !important;
+    /* makes text stand out from the belt texture by adding a dark shadow behind the white text*/
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+    /* slightly bolder */
+    font-weight: 600;
+}
+
+.navbar .nav-link {
+    position: relative;
+    color: white !important;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* underline */
+.navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 4px;
+    height: 3px;
+    background-color: #d71920;
+    border-radius: 10px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+/* hover */
+.navbar .nav-link:hover {
+    color: #d71920 !important;
+}
+
+.navbar .nav-link:hover::after {
+    transform: scaleX(1);
 }
 
 header {
