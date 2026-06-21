@@ -1,59 +1,48 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <style>
     .guest-hero {
-        min-height: 650px;
-        padding: 70px 20px 40px;
         text-align: center;
+        padding: 70px 0 40px;
         overflow: hidden;
     }
 
-    .hero-badge {
-        display: inline-block;
-        padding: 8px 18px;
-        margin-bottom: 25px;
-        background-color: #ffe1a6;
-        color: #373544;
-        font-weight: 600;
-        border-radius: 999px;
-        font-size: 0.95rem;
-    }
-
     .guest-hero h1 {
-        color: #111111;
+        color: #111;
         font-size: 4rem;
         font-weight: 800;
         line-height: 1.05;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
 
     .guest-hero p {
         color: #373544;
-        font-size: 1.15rem;
         max-width: 650px;
-        margin: 0 auto 35px;
+        margin: 0 auto 30px;
+        font-size: 1.1rem;
         line-height: 1.6;
     }
 
     .hero-buttons {
-        margin-bottom: 45px;
+        margin-bottom: 25px;
     }
 
-        .hero-buttons a {
-            display: inline-block;
-            text-decoration: none;
-            padding: 12px 26px;
-            margin: 0 8px;
-            border-radius: 999px;
-            font-weight: 600;
-        }
+    .hero-buttons a {
+        display: inline-block;
+        padding: 12px 28px;
+        margin: 0 8px;
+        border-radius: 999px;
+        font-weight: 600;
+        text-decoration: none;
+    }
 
     .primary-btn {
         background-color: #d71920;
         color: white;
-        box-shadow: 0 8px 18px rgba(215, 25, 32, 0.25);
     }
 
     .secondary-btn {
@@ -61,69 +50,38 @@
         color: #373544;
         border: 1px solid #ddd;
     }
-
-    .hero-gallery {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 22px;
-        margin-top: 20px;
+    
+    .hero-gallery-carousel {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 35px 0 60px;
+        overflow: hidden;
+        perspective: 1200px;
     }
 
-        .hero-gallery img {
-            width: 160px;
-            height: 260px;
+        .hero-gallery-carousel .swiper-wrapper {
+            align-items: center;
+            transition-timing-function: linear !important;
+        }
+
+        .hero-gallery-carousel .swiper-slide {
+            width: 165px !important;
+            height: 245px !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-gallery-carousel img {
+            width: 165px;
+            height: 245px;
             object-fit: cover;
             border-radius: 24px;
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.20);
-            transition: transform 0.25s ease;
+            display: block;
+            box-shadow: none;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+            transform-style: preserve-3d;
         }
-
-            .hero-gallery img:nth-child(1) {
-                transform: rotate(-7deg) translateY(10px);
-            }
-
-            .hero-gallery img:nth-child(2) {
-                transform: rotate(4deg) translateY(-5px);
-            }
-
-            .hero-gallery img:nth-child(3) {
-                transform: rotate(-3deg) translateY(8px);
-            }
-
-            .hero-gallery img:nth-child(4) {
-                transform: rotate(3deg) translateY(-8px);
-            }
-
-            .hero-gallery img:nth-child(5) {
-                transform: rotate(-4deg) translateY(6px);
-            }
-
-            .hero-gallery img:nth-child(6) {
-                transform: rotate(6deg) translateY(-4px);
-            }
-
-            .hero-gallery img:hover {
-                transform: translateY(-14px) scale(1.04);
-            }
-
-    @@media (max-width: 768px) {
-        .guest-hero h1 {
-            font-size: 2.5rem;
-        }
-
-        .hero-gallery {
-            overflow-x: auto;
-            justify-content: flex-start;
-            padding-bottom: 20px;
-        }
-
-            .hero-gallery img {
-                width: 140px;
-                height: 220px;
-                flex-shrink: 0;
-            }
-    }
 </style>
 
 @if (User.Identity?.IsAuthenticated != true)
@@ -149,11 +107,72 @@
             </a>
         </div>
 
-        <div class="hero-gallery">
-            @for (int i = 1; i <= 6; i++)
-            {
-                <img src="~/images/carousel@(i).jpg" alt="Karate training photo" />
-            }
+        <div class="swiper hero-gallery-carousel">
+            <div class="swiper-wrapper">
+                @for (int repeat = 0; repeat < 4; repeat++)
+                {
+                    for (int i = 1; i <= 10; i++)
+                    {
+                        <div class="swiper-slide">
+                            <img src="~/images/carousel@(i).jpg" alt="Karate Image">
+                        </div>
+                    }
+                }
+            </div>
         </div>
     </section>
 }
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    window.addEventListener("load", function () {
+    const gallerySwiper = new Swiper(".hero-gallery-carousel", {
+    slidesPerView: "auto",
+    centeredSlides: true,
+    loop: true,
+    loopAdditionalSlides: 20,
+    spaceBetween: 15,
+    grabCursor: true,
+    speed: 1200,
+    watchSlidesProgress: true,
+
+    autoplay: {
+    delay: 1800,
+    disableOnInteraction: false
+    },
+
+    on: {
+    setTranslate: function () {
+    updateGalleryDepth(this);
+    },
+    slideChange: function () {
+    updateGalleryDepth(this);
+    }
+    }
+    });
+
+    updateGalleryDepth(gallerySwiper);
+    gallerySwiper.update();
+    gallerySwiper.slideNext(0);
+    gallerySwiper.autoplay.start();
+    
+    });
+
+    function updateGalleryDepth(swiper) {
+    swiper.slides.forEach(function (slide) {
+    const img = slide.querySelector("img");
+    if (!img) return;
+
+    const progress = slide.progress;
+    const absProgress = Math.abs(progress);
+
+    const rotateY = progress * 10;
+    const scale = 1 + Math.min(absProgress * 0.03, 0.10);
+
+    img.style.transform =
+    "perspective(900px) " +
+    "rotateY(" + rotateY + "deg) " +
+    "scale(" + scale + ")";
+    });
+    }
+</script>
