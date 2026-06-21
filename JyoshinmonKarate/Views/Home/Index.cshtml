@@ -2,101 +2,158 @@
     ViewData["Title"] = "Home Page";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
 <style>
-    .welcome-swiper {
-        width: 100%;
-        height: 330px;
-        padding: 20px 0 45px 0;
-    }
-
-    .welcome-swiper .swiper-slide {
-        width: 75%;
-        background: white;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    .guest-hero {
+        min-height: 650px;
+        padding: 70px 20px 40px;
+        text-align: center;
         overflow: hidden;
     }
 
-    .welcome-swiper .swiper-slide img {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-        display: block;
+    .hero-badge {
+        display: inline-block;
+        padding: 8px 18px;
+        margin-bottom: 25px;
+        background-color: #ffe1a6;
+        color: #373544;
+        font-weight: 600;
+        border-radius: 999px;
+        font-size: 0.95rem;
     }
 
-    .welcome-swiper .swiper-button-prev,
-    .welcome-swiper .swiper-button-next {
-        color: #d71920;
+    .guest-hero h1 {
+        color: #111111;
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.05;
+        margin-bottom: 22px;
     }
 
-    .welcome-swiper .swiper-pagination-bullet-active {
-        background: #d71920;
+    .guest-hero p {
+        color: #373544;
+        font-size: 1.15rem;
+        max-width: 650px;
+        margin: 0 auto 35px;
+        line-height: 1.6;
+    }
+
+    .hero-buttons {
+        margin-bottom: 45px;
+    }
+
+        .hero-buttons a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 26px;
+            margin: 0 8px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+    .primary-btn {
+        background-color: #d71920;
+        color: white;
+        box-shadow: 0 8px 18px rgba(215, 25, 32, 0.25);
+    }
+
+    .secondary-btn {
+        background-color: white;
+        color: #373544;
+        border: 1px solid #ddd;
+    }
+
+    .hero-gallery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 22px;
+        margin-top: 20px;
+    }
+
+        .hero-gallery img {
+            width: 160px;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 24px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.20);
+            transition: transform 0.25s ease;
+        }
+
+            .hero-gallery img:nth-child(1) {
+                transform: rotate(-7deg) translateY(10px);
+            }
+
+            .hero-gallery img:nth-child(2) {
+                transform: rotate(4deg) translateY(-5px);
+            }
+
+            .hero-gallery img:nth-child(3) {
+                transform: rotate(-3deg) translateY(8px);
+            }
+
+            .hero-gallery img:nth-child(4) {
+                transform: rotate(3deg) translateY(-8px);
+            }
+
+            .hero-gallery img:nth-child(5) {
+                transform: rotate(-4deg) translateY(6px);
+            }
+
+            .hero-gallery img:nth-child(6) {
+                transform: rotate(6deg) translateY(-4px);
+            }
+
+            .hero-gallery img:hover {
+                transform: translateY(-14px) scale(1.04);
+            }
+
+    @@media (max-width: 768px) {
+        .guest-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-gallery {
+            overflow-x: auto;
+            justify-content: flex-start;
+            padding-bottom: 20px;
+        }
+
+            .hero-gallery img {
+                width: 140px;
+                height: 220px;
+                flex-shrink: 0;
+            }
     }
 </style>
 
-@if (!User.Identity.IsAuthenticated){
-    <div class="row mt-5">
-        <div class="col-md-6">            
-            <div class="swiper welcome-swiper">
-                <div class="swiper-wrapper">
-                    @for (int i = 1; i <= 10; i++)
-                    {
-                        <div class="swiper-slide">
-                            <img src="~/images/carousel@(i).jpg" alt="Karate image" />
-                        </div>
-                    }
-                </div>
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <section class="guest-hero">
+        <h1>
+            Manage Your Karate<br />
+            Journey in One Place
+        </h1>
 
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-pagination"></div>
-            </div>
+        <p>
+            A simple online portal for members, parents, instructors, and administrators
+            to view schedules, attendance, grading progress, memberships, and payments.
+        </p>
+
+        <div class="hero-buttons">
+            <a class="primary-btn" asp-area="Identity" asp-page="/Account/Register">
+                Register
+            </a>
+
+            <a class="secondary-btn" asp-area="Identity" asp-page="/Account/Login">
+                Login
+            </a>
         </div>
-        <div class="col-md-6 d-flex flex-column justify-content-center">
-            <h1 style="color: #373544;">Jyoshinmon Karate</h1>
-            <p style="color: #373544;">Welcome to the Jyoshinmon Karate Club management system.</p>
-            <p style="color: #373544;">
-                Our club has been training members across Auckland for many years,
-                offering classes for all ages and skill levels from White Belt through to Black Belt.
-            </p>
-            <p style="color: #373544;">
-                Use the navigation above to manage members, schedules,
-                gradings, and more.
-            </p>
+
+        <div class="hero-gallery">
+            @for (int i = 1; i <= 6; i++)
+            {
+                <img src="~/images/carousel@(i).jpg" alt="Karate training photo" />
+            }
         </div>
-    </div>
+    </section>
 }
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-    const swiper = new Swiper(".welcome-swiper", {
-        effect: "coverflow",
-        grabCursor: true,
-        centeredSlides: true,
-        slidesPerView: "auto",
-        loop: true,
-
-        coverflowEffect: {
-            rotate: 0,
-            stretch: 40,
-            depth: 150,
-            modifier: 1.5,
-            slideShadows: true
-        },
-
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false
-        },
-
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev"
-        },
-
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true
-        }
-    });
-</script>
