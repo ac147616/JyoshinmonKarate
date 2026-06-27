@@ -125,6 +125,18 @@
             text-decoration: none;
             font-weight: 500;
         }
+
+    .validation-summary-errors ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0 0 12px 0;
+    }
+
+    .validation-summary-errors li {
+        margin: 0;
+        font-size: 0.85rem;
+    }
+
 </style>
 
 <div class="register-background">
@@ -146,13 +158,6 @@
                 <label asp-for="Input.LastName" class="form-label">Last Name*</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
-
-            <div class="floating-group">
-                <input asp-for="Input.UserName" class="form-control" placeholder=" " />
-                <label asp-for="Input.UserName" class="form-label">Username*</label>
-                <span asp-validation-for="Input.UserName" class="text-danger"></span>
-            </div>
-
             <div class="floating-group">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder=" " />
                 <label asp-for="Input.Email" class="form-label">Email*</label>

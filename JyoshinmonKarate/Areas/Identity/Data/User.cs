@@ -13,7 +13,6 @@ public class User : IdentityUser
 {
     //This class was created when I added the Identity scaffolding to the project and I'm only editing it
     //UserId will be inhereted from IdentityUser as Id
-    //Username will be inhereted from IdentityUser as UserName
     //Password will be inhereted from IdentityUser as PasswordHash
 
     [Required(ErrorMessage = "First name is required.")]

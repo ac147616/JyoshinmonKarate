@@ -110,11 +110,6 @@ namespace JyoshinmonKarate.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
-            [StringLength(30)]
-            [Display(Name = "Username")]
-            public string UserName { get; set; }
-
-            [Required]
             [Phone]
             [Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
@@ -134,7 +129,6 @@ namespace JyoshinmonKarate.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-                user.UserName = Input.UserName;
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.PhoneNumber = Input.PhoneNumber;
