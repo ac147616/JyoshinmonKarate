@@ -4,51 +4,187 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <h1>@ViewData["Title"]</h1>
+<style>
+    .register-background {
+        min-height: 100vh;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 25px 15px;
+        background: #ffffff;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 390px;
+        padding: 24px 28px;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.14);
+    }
+
+        .register-card h1 {
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: 500;
+            color: #2f2f38;
+            margin-bottom: 6px;
+        }
+
+    .register-line {
+        width: 45px;
+        height: 2px;
+        background-color: #d71920;
+        margin: 10px auto 20px;
+    }
+
+    .register-subtitle {
+        display: none;
+    }
+
+    form {
+        margin-top: 0;
+    }
+
+    .floating-group {
+        position: relative;
+        margin-bottom: 13px;
+    }
+
+    .register-card .form-control {
+        width: 100%;
+        height: 50px;
+        padding: 16px 14px 6px;
+        border-radius: 7px;
+        border: 1.5px solid #d6d6d6;
+        color: #333333;
+        background-color: #ffffff;
+        font-size: 0.92rem;
+        outline: none;
+    }
+
+        .register-card .form-control:focus {
+            border-color: #b71920;
+            box-shadow: 0 0 0 1px rgba(183, 25, 32, 0.35);
+        }
+
+    .register-card .form-label {
+        position: absolute;
+        left: 12px;
+        top: 14px;
+        padding: 0 5px;
+        background: #ffffff;
+        color: #777777;
+        font-size: 0.92rem;
+        pointer-events: none;
+        transition: 0.18s ease;
+        margin: 0;
+    }
+
+    .register-card .form-control:focus + .form-label,
+    .register-card .form-control:not(:placeholder-shown) + .form-label {
+        top: -8px;
+        font-size: 0.78rem;
+        color: #b71920;
+    }
+
+    .register-card .text-danger {
+        display: block;
+        font-size: 0.78rem;
+        margin-top: 3px;
+    }
+
+    .register-btn {
+        width: 100%;
+        height: 48px;
+        border: none;
+        border-radius: 7px;
+        background-color: #b71920;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-top: 4px;
+    }
+
+        .register-btn:hover {
+            background-color: #9f151b;
+        }
+
+    .login-link-text {
+        text-align: center;
+        margin-top: 16px;
+        margin-bottom: 0;
+        color: #8a8a8a;
+        font-size: 0.9rem;
+    }
+
+        .login-link-text a {
+            color: #b71920;
+            text-decoration: none;
+            font-weight: 500;
+        }
+</style>
+
+<div class="register-background">
+    <div class="register-card">
+        <h1>Create Account</h1>
+        <div class="register-line"></div>
+
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" aria-required="true" placeholder="First name" />
-                <label asp-for="Input.FirstName">First Name</label>
+            <div class="floating-group">
+                <input asp-for="Input.FirstName" class="form-control" placeholder=" " />
+                <label asp-for="Input.FirstName" class="form-label">First Name*</label>
                 <span asp-validation-for="Input.FirstName" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" aria-required="true" placeholder="Last name" />
-                <label asp-for="Input.LastName">Last Name</label>
+            <div class="floating-group">
+                <input asp-for="Input.LastName" class="form-control" placeholder=" " />
+                <label asp-for="Input.LastName" class="form-label">Last Name*</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.UserName" class="form-control" aria-required="true" placeholder="Username" />
-                <label asp-for="Input.UserName">Username</label>
+            <div class="floating-group">
+                <input asp-for="Input.UserName" class="form-control" placeholder=" " />
+                <label asp-for="Input.UserName" class="form-label">Username*</label>
                 <span asp-validation-for="Input.UserName" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
+            <div class="floating-group">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder=" " />
+                <label asp-for="Input.Email" class="form-label">Email*</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
+            <div class="floating-group">
+                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="tel" placeholder=" " />
+                <label asp-for="Input.PhoneNumber" class="form-label">Phone Number*</label>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="floating-group">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder=" " />
+                <label asp-for="Input.Password" class="form-label">Password*</label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+            <div class="floating-group">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder=" " />
+                <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password*</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button id="registerSubmit" type="submit" class="register-btn">
+                Register
+            </button>
+
+            <p class="login-link-text">
+                Already have an account?
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Log in</a>
+            </p>
         </form>
     </div>
 </div>

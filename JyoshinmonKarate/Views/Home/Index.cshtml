@@ -2,18 +2,29 @@
     ViewData["Title"] = "Home";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <style>
+    main.pb-3 {
+        padding-bottom: 0 !important;
+    }
+
+    .container {
+        margin-bottom: 0 !important;
+    }
+
+    body {
+        margin-bottom: 0 !important;
+    }
+
     .guest-hero {
         text-align: center;
-        padding: 70px 0 40px;
+        padding: 15px 0 0px;
         overflow: hidden;
     }
 
     .guest-hero h1 {
         color: #111;
-        font-size: 4rem;
+        font-size: 3rem;
         font-weight: 800;
         line-height: 1.05;
         margin-bottom: 20px;
@@ -22,27 +33,28 @@
     .guest-hero p {
         color: #373544;
         max-width: 650px;
-        margin: 0 auto 30px;
-        font-size: 1.1rem;
+        margin: 0 auto 20px;
+        font-size: 1rem;
         line-height: 1.6;
     }
 
     .hero-buttons {
-        margin-bottom: 25px;
+        margin-bottom: 30px;
     }
 
-    .hero-buttons a {
-        display: inline-block;
-        padding: 12px 28px;
-        margin: 0 8px;
-        border-radius: 999px;
-        font-weight: 600;
-        text-decoration: none;
-    }
+        .hero-buttons a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 26px;
+            margin: 0 8px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
 
     .primary-btn {
         background-color: #d71920;
         color: white;
+        box-shadow: 0 8px 18px rgba(215, 25, 32, 0.25);
     }
 
     .secondary-btn {
@@ -50,39 +62,65 @@
         color: #373544;
         border: 1px solid #ddd;
     }
-    
-    .hero-gallery-carousel {
-        width: 100vw;
-        margin-left: calc(50% - 50vw);
-        padding: 35px 0 60px;
-        overflow: hidden;
-        perspective: 1200px;
+
+    .scene,
+    .a3d {
+        display: grid;
     }
 
-        .hero-gallery-carousel .swiper-wrapper {
-            align-items: center;
-            transition-timing-function: linear !important;
-        }
+    .scene {
+        width: 100vw;
+        height: 380px;
+        margin-top: -100px;
+        margin-left: calc(50% - 50vw);
+        overflow: hidden;
+        perspective: 1600px;
+        mask: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    }
 
-        .hero-gallery-carousel .swiper-slide {
-            width: 165px !important;
-            height: 245px !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .a3d {
+        place-self: center;
+        transform-style: preserve-3d;
+        animation: rotateCarousel 32s linear infinite;
+    }
 
-        .hero-gallery-carousel img {
-            width: 165px;
-            height: 245px;
-            object-fit: cover;
-            border-radius: 24px;
-            display: block;
-            box-shadow: none;
-            transition: transform 0.25s ease, opacity 0.25s ease;
-            transform-style: preserve-3d;
+    @@keyframes rotateCarousel {
+        to {
+            transform: rotateY(360deg);
         }
+    }
+
+    .card {
+        --w: 165px;
+        --ba: calc(1turn / var(--n));
+        grid-area: 1 / 1;
+        width: var(--w);
+        aspect-ratio: 7 / 10;
+        object-fit: cover;
+        border-radius: 24px;
+        backface-visibility: hidden;
+        transform: rotateY(calc(var(--i) * var(--ba))) translateZ(-590px);
+    }
+
 </style>
+
+@{
+    ViewData["Title"] = "Home";
+
+    var carouselImages = new[]
+    {
+        "carousel1.jpg",
+        "carousel2.jpg",
+        "carousel3.jpg",
+        "carousel4.jpg",
+        "carousel5.jpg",
+        "carousel6.jpg",
+        "carousel7.jpg",
+        "carousel8.jpg",
+        "carousel9.jpg",
+        "carousel10.jpg"
+    };
+}
 
 @if (User.Identity?.IsAuthenticated != true)
 {
@@ -91,10 +129,9 @@
             Manage Your Karate<br />
             Journey in One Place
         </h1>
-
         <p>
-            A simple online portal for members, parents, instructors, and administrators
-            to view schedules, attendance, grading progress, memberships, and payments.
+            A simple online portal for Jyoshinmon Karate members, parents, instructors, and administrators
+            to view schedules, attendance, grading progress.
         </p>
 
         <div class="hero-buttons">
@@ -107,72 +144,21 @@
             </a>
         </div>
 
-        <div class="swiper hero-gallery-carousel">
-            <div class="swiper-wrapper">
-                @for (int repeat = 0; repeat < 4; repeat++)
+        <div class="scene">
+            <div class="a3d" style="--n:@(carouselImages.Length * 2)">
+
+                @for (int repeat = 0; repeat < 2; repeat++)
                 {
-                    for (int i = 1; i <= 10; i++)
+                    for (int i = 0; i < carouselImages.Length; i++)
                     {
-                        <div class="swiper-slide">
-                            <img src="~/images/carousel@(i).jpg" alt="Karate Image">
-                        </div>
+                        <img class="card"
+                             src="~/images/@carouselImages[i]"
+                             style="--i:@(repeat* carouselImages.Length + i)"
+                             alt="Karate Image" />
                     }
                 }
+
             </div>
         </div>
     </section>
 }
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-    window.addEventListener("load", function () {
-    const gallerySwiper = new Swiper(".hero-gallery-carousel", {
-    slidesPerView: "auto",
-    centeredSlides: true,
-    loop: true,
-    loopAdditionalSlides: 20,
-    spaceBetween: 15,
-    grabCursor: true,
-    speed: 1200,
-    watchSlidesProgress: true,
-
-    autoplay: {
-    delay: 1800,
-    disableOnInteraction: false
-    },
-
-    on: {
-    setTranslate: function () {
-    updateGalleryDepth(this);
-    },
-    slideChange: function () {
-    updateGalleryDepth(this);
-    }
-    }
-    });
-
-    updateGalleryDepth(gallerySwiper);
-    gallerySwiper.update();
-    gallerySwiper.slideNext(0);
-    gallerySwiper.autoplay.start();
-    
-    });
-
-    function updateGalleryDepth(swiper) {
-    swiper.slides.forEach(function (slide) {
-    const img = slide.querySelector("img");
-    if (!img) return;
-
-    const progress = slide.progress;
-    const absProgress = Math.abs(progress);
-
-    const rotateY = progress * 10;
-    const scale = 1 + Math.min(absProgress * 0.03, 0.10);
-
-    img.style.transform =
-    "perspective(900px) " +
-    "rotateY(" + rotateY + "deg) " +
-    "scale(" + scale + ")";
-    });
-    }
-</script>
