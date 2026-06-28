@@ -1,108 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home";
-}
-
-
-<style>
-    main.pb-3 {
-        padding-bottom: 0 !important;
-    }
-
-    .container {
-        margin-bottom: 0 !important;
-    }
-
-    body {
-        margin-bottom: 0 !important;
-    }
-
-    .guest-hero {
-        text-align: center;
-        padding: 15px 0 0px;
-        overflow: hidden;
-    }
-
-    .guest-hero h1 {
-        color: #111;
-        font-size: 3rem;
-        font-weight: 800;
-        line-height: 1.05;
-        margin-bottom: 20px;
-    }
-
-    .guest-hero p {
-        color: #373544;
-        max-width: 650px;
-        margin: 0 auto 20px;
-        font-size: 1rem;
-        line-height: 1.6;
-    }
-
-    .hero-buttons {
-        margin-bottom: 30px;
-    }
-
-        .hero-buttons a {
-            display: inline-block;
-            text-decoration: none;
-            padding: 12px 26px;
-            margin: 0 8px;
-            border-radius: 999px;
-            font-weight: 600;
-        }
-
-    .primary-btn {
-        background-color: #d71920;
-        color: white;
-        box-shadow: 0 8px 18px rgba(215, 25, 32, 0.25);
-    }
-
-    .secondary-btn {
-        background-color: white;
-        color: #373544;
-        border: 1px solid #ddd;
-    }
-
-    .scene,
-    .a3d {
-        display: grid;
-    }
-
-    .scene {
-        width: 100vw;
-        height: 380px;
-        margin-top: -100px;
-        margin-left: calc(50% - 50vw);
-        overflow: hidden;
-        perspective: 1600px;
-        mask: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
-    }
-
-    .a3d {
-        place-self: center;
-        transform-style: preserve-3d;
-        animation: rotateCarousel 32s linear infinite;
-    }
-
-    @@keyframes rotateCarousel {
-        to {
-            transform: rotateY(360deg);
-        }
-    }
-
-    .card {
-        --w: 165px;
-        --ba: calc(1turn / var(--n));
-        grid-area: 1 / 1;
-        width: var(--w);
-        aspect-ratio: 7 / 10;
-        object-fit: cover;
-        border-radius: 24px;
-        backface-visibility: hidden;
-        transform: rotateY(calc(var(--i) * var(--ba))) translateZ(-590px);
-    }
-
-</style>
+﻿@model List<JyoshinmonKarate.Models.Member>
 
 @{
     ViewData["Title"] = "Home";
@@ -120,6 +16,10 @@
         "carousel9.jpg",
         "carousel10.jpg"
     };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 }
 
 @if (User.Identity?.IsAuthenticated != true)
@@ -161,4 +61,159 @@
             </div>
         </div>
     </section>
+}
+
+@if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("User"))
+{
+    <section class="member-home">
+        <div class="member-home-top">
+            <div>
+                <h1>My Members</h1>
+                <p>Select a member to manage their profile, attendance, payments, and progress.</p>
+            </div>
+
+            <a class="add-member-btn"
+                   asp-controller="Members"
+                   asp-action="Create">
+                <i class="bi bi-person-plus"></i>
+                Add Member
+            </a>
+        </div>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="member-carousel-wrap">
+                <button class="carousel-arrow left-arrow" type="button" onclick="scrollMembers(-1)">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <div class="member-carousel" id="memberCarousel">
+                    @foreach (var member in Model)
+                    {
+                        <div class="member-card-box">
+
+                            <div class="member-avatar">
+                                @if (!string.IsNullOrEmpty(member.ProfilePhotoPath))
+                                {
+                                    <img src="@member.ProfilePhotoPath" alt="@member.FirstName" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-person-fill"></i>
+                                }
+                            </div>
+
+                            <div class="member-name-row">
+                                <h2>@member.FirstName @member.LastName</h2>
+
+                                <div class="dropdown">
+                                    <button class="member-menu-btn"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end member-dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                   asp-controller="Members"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@member.MemberId">
+                                                <i class="bi bi-pencil-square"></i>
+                                                Edit member
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a class="dropdown-item text-danger"
+                                                   href="#">
+                                                <i class="bi bi-trash3"></i>
+                                                Request delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="member-info-list">
+                                <p>
+                                    <span>Current belt:</span>
+                                    @if (member.Belt != null)
+                                    {
+                                        @member.Belt.BeltName
+                                    }
+                                    else
+                                    {
+                                        <text>Not assigned</text>
+                                    }
+                                </p>
+
+                                <p>
+                                    <span>Membership:</span>
+                                    Beginner Plan
+                                </p>
+
+                                <p>
+                                    <span>Last class attended:</span>
+                                    18 June 2026
+                                </p>
+
+                                <p>
+                                    <span>Outstanding payment:</span>
+                                    $0
+                                </p>
+                            </div>
+
+                            <a class="manage-member-link"
+                                   asp-controller="Members"
+                                   asp-action="Details"
+                                   asp-route-id="@member.MemberId">
+                                Manage Member
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <button class="carousel-arrow right-arrow" type="button" onclick="scrollMembers(1)">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="no-member-card">
+                <h2>No members added yet</h2>
+                <p>Add a member profile to start viewing attendance, membership, grading progress, and payments.</p>
+
+                <a class="add-member-btn"
+                       asp-controller="Members"
+                       asp-action="Create">
+                    <i class="bi bi-person-plus"></i>
+                    Add Member
+                </a>
+            </div>
+        }
+    </section>
+}
+
+@section Scripts {
+    <script>
+        function scrollMembers(direction) {
+            const carousel = document.getElementById("memberCarousel");
+            const card = carousel.querySelector(".member-card-box");
+
+            if (!card) {
+                return;
+            }
+
+            const scrollAmount = card.offsetWidth + 18;
+
+            carousel.scrollBy({
+                left: direction * scrollAmount,
+                behavior: "smooth"
+            });
+        }
+    </script>
 }
