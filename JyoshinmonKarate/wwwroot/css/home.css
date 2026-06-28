@@ -78,7 +78,7 @@ body {
     animation: rotateCarousel 32s linear infinite;
 }
 
-@@keyframes rotateCarousel {
+@keyframes rotateCarousel {
     to {
         transform: rotateY(360deg);
     }
@@ -272,14 +272,14 @@ body {
 
     .member-info-list p {
         margin: 0 0 3px;
-        color: #333333;
+        color: #5f5f5f;
         font-size: 0.82rem;
-        line-height: 1.2;
+        line-height: 1.25;
     }
 
     .member-info-list span {
-        color: #111111;
-        font-weight: 600;
+        color: #444444;
+        font-weight: 500;
     }
 
 .manage-member-link {
