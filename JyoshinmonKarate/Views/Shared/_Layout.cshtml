@@ -43,23 +43,26 @@
                             <li class = "nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">About</a></li>
                             <li class = "nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Contact Us</a></li>       
                         }
-                        @if (User.IsInRole("User") || User.IsInRole("Admin"))
-                            {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="memberDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Club Member Functions
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                    My Members
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="memberDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Attendances" asp-action="Index">Attendance</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Schedules" asp-action="Index">Schedules</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="MemberGradings" asp-action="Index">Member Gradings</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Members" asp-action="Index">Members</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="MemberMemberships" asp-action="Index">Member Membership</a></li>
-                                </ul>
                             </li>
-                            }
 
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Payments" asp-action="Index">
+                                    Payments
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Schedules" asp-action="Index">
+                                    Class Schedule
+                                </a>
+                            </li>
+                        }
                         @if (User.IsInRole("Admin")){
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

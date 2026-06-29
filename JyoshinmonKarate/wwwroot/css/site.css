@@ -89,3 +89,44 @@ body {
 header {
     overflow: visible;
 }
+
+.logout-form {
+    margin: 0;
+}
+
+.account-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.settings-link {
+    color: white !important;
+    font-size: 1.25rem;
+    padding: 6px 4px !important;
+    display: flex;
+    align-items: center;
+}
+
+    .settings-link:hover {
+        color: #f2f2f2 !important;
+    }
+
+.logout-btn {
+    border: none;
+    background: transparent;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 4px !important;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+    .logout-btn i {
+        font-size: 1.2rem;
+    }
+
+    .logout-btn:hover {
+        color: #f2f2f2 !important;
+    }

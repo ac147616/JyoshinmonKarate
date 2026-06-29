@@ -1,108 +1,204 @@
 ﻿@model JyoshinmonKarate.Models.Member
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Member Dashboard";
+
+    string fullName = Model.FirstName + " " + Model.LastName;
+
+    string beltName = "Not assigned";
+    if (Model.Belt != null)
+    {
+        beltName = Model.Belt.BeltName;
+    }
+
+    string clubName = "Not assigned";
+    if (Model.Club != null)
+    {
+        clubName = Model.Club.ClubName;
+    }
+
+    string membershipName = "Beginner Plan";
+    string lastClassAttended = "18 June 2026";
+
+    decimal paymentDue = 0;
+    string paymentClass = "payment-clear";
+
+    if (paymentDue > 0)
+    {
+        paymentClass = "payment-due";
+    }
+
+    int age = 0;
+    DateTime today = DateTime.Today;
+
+    age = today.Year - Model.DateOfBirth.Year;
+
+    if (Model.DateOfBirth > today.AddYears(-age))
+    {
+        age--;
+    }
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/member-dashboard.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>Member</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BeltSize)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BeltSize)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProfilePhotoPath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProfilePhotoPath)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Height)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Height)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateJoined)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateJoined)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmergencyContactName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmergencyContactName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmergencyContactPhone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmergencyContactPhone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Club)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Club.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Belt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Belt.BeltName)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MemberId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="member-dashboard-page">
+
+    <div class="dashboard-top-row">
+
+        <div class="member-profile-card">
+            <div class="photo-box">
+                @if (!string.IsNullOrEmpty(Model.ProfilePhotoPath))
+                {
+                    <img src="@Url.Content(Model.ProfilePhotoPath)" alt="@fullName" />
+                }
+                else
+                {
+                    <i class="bi bi-person-fill"></i>
+                }
+
+                <div class="photo-overlay">
+                    <form asp-controller="Members"
+                          asp-action="UploadPhoto"
+                          asp-route-id="@Model.MemberId"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        <label class="photo-action">
+                            Upload
+                            <input type="file"
+                                   name="profilePhoto"
+                                   accept="image/*"
+                                   hidden
+                                   onchange="this.form.submit()" />
+                        </label>
+                    </form>
+
+                    <form asp-controller="Members"
+                          asp-action="DeletePhoto"
+                          asp-route-id="@Model.MemberId"
+                          method="post">
+
+                        <button type="submit" class="photo-action photo-delete">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="profile-card-info">
+                <h1>@fullName</h1>
+                <p class="profile-club">@clubName</p>
+
+                <div class="profile-mini-info">
+                    <span>@Model.Gender</span>
+                    <span>@age years old</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i class="bi bi-award"></i>
+            </div>
+            <p>Membership</p>
+            <h2>@membershipName</h2>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+            <p>Last Class</p>
+            <h2>@lastClassAttended</h2>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+            <p>Payment Due</p>
+            <h2 class="@paymentClass">$@paymentDue</h2>
+        </div>
+
+    </div>
+
+    <div class="dashboard-main-row">
+
+        <aside class="member-info-panel">
+            <div class="panel-header">
+                <h2>Member Information</h2>
+
+                <a asp-controller="Members"
+                       asp-action="Edit"
+                       asp-route-id="@Model.MemberId"
+                       class="small-edit-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Edit
+                </a>
+            </div>
+
+            <div class="info-list">
+                <p><span>Full name</span>@fullName</p>
+                <p><span>Current belt</span>@beltName</p>
+                <p><span>Club</span>@clubName</p>
+                <p><span>Date of birth</span>@Model.DateOfBirth.ToString("dd MMM yyyy")</p>
+                <p><span>Gender</span>@Model.Gender</p>
+                <p><span>Belt size</span>@Model.BeltSize</p>
+                <p><span>Height</span>@Model.Height</p>
+                <p><span>Weight</span>@Model.Weight</p>
+                <p><span>Date joined</span>@Model.DateJoined.ToString("dd MMM yyyy")</p>
+                <p><span>Emergency contact</span>@Model.EmergencyContactName</p>
+                <p><span>Emergency phone</span>@Model.EmergencyContactPhone</p>
+            </div>
+        </aside>
+
+        <div class="member-action-area">
+            <h2>Manage Member</h2>
+            <p>Choose what you would like to view or manage for this member.</p>
+
+            <div class="action-tile-grid">
+
+                <a class="action-tile"
+                       asp-controller="Attendances"
+                       asp-action="Index"
+                       asp-route-memberId="@Model.MemberId">
+                    <i class="bi bi-calendar-check"></i>
+                    <h3>Attendance</h3>
+                    <p>View class attendance history.</p>
+                </a>
+
+                <a class="action-tile"
+                       asp-controller="Payments"
+                       asp-action="Index"
+                       asp-route-memberId="@Model.MemberId">
+                    <i class="bi bi-cash-stack"></i>
+                    <h3>Payments</h3>
+                    <p>View fees and payment records.</p>
+                </a>
+
+                <a class="action-tile"
+                       asp-controller="MemberMemberships"
+                       asp-action="Index"
+                       asp-route-memberId="@Model.MemberId">
+                    <i class="bi bi-card-checklist"></i>
+                    <h3>Membership</h3>
+                    <p>View membership plan history.</p>
+                </a>
+
+                <a class="action-tile"
+                       asp-controller="MemberGradings"
+                       asp-action="Index"
+                       asp-route-memberId="@Model.MemberId">
+                    <i class="bi bi-trophy"></i>
+                    <h3>Grading</h3>
+                    <p>View belt progress and grading results.</p>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
