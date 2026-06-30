@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace JyoshinmonKarate.Controllers
 {
@@ -152,7 +153,6 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Members/Edit/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -160,21 +160,32 @@ namespace JyoshinmonKarate.Controllers
                 return NotFound();
             }
 
-            var member = await _context.Members.FindAsync(id);
+            var member = await _context.Members
+                .Include(m => m.Belt)
+                .Include(m => m.Club)
+                .Include(m => m.User)
+                .FirstOrDefaultAsync(m => m.MemberId == id);
+
             if (member == null)
             {
                 return NotFound();
             }
+
+            if (!CanEditMember(member))
+            {
+                return Forbid();
+            }
+
             ViewData["BeltId"] = new SelectList(_context.Belts, "BeltId", "BeltName", member.BeltId);
             ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", member.ClubId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
+
             return View(member);
         }
 
         // POST: Members/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberId,UserId,ClubId,BeltId,BeltSize,FirstName,LastName,DateOfBirth,ProfilePhotoPath,Gender,Weight,Height,DateJoined,EmergencyContactName,EmergencyContactPhone,Status")] Member member)
@@ -184,11 +195,42 @@ namespace JyoshinmonKarate.Controllers
                 return NotFound();
             }
 
+            var existingMember = await _context.Members.FindAsync(id);
+
+            if (existingMember == null)
+            {
+                return NotFound();
+            }
+
+            if (!CanEditMember(existingMember))
+            {
+                return Forbid();
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(member);
+                    if (User.IsInRole("Admin"))
+                    {
+                        existingMember.UserId = member.UserId;
+                        existingMember.ClubId = member.ClubId;
+                        existingMember.BeltId = member.BeltId;
+                        existingMember.Status = member.Status;
+                        existingMember.DateJoined = member.DateJoined;
+                    }
+
+                    existingMember.FirstName = member.FirstName;
+                    existingMember.LastName = member.LastName;
+                    existingMember.DateOfBirth = member.DateOfBirth;
+                    existingMember.ProfilePhotoPath = member.ProfilePhotoPath;
+                    existingMember.Gender = member.Gender;
+                    existingMember.Weight = member.Weight;
+                    existingMember.Height = member.Height;
+                    existingMember.BeltSize = member.BeltSize;
+                    existingMember.EmergencyContactName = member.EmergencyContactName;
+                    existingMember.EmergencyContactPhone = member.EmergencyContactPhone;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -202,11 +244,14 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(nameof(Details), new { id = existingMember.MemberId });
             }
+
             ViewData["BeltId"] = new SelectList(_context.Belts, "BeltId", "BeltName", member.BeltId);
             ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", member.ClubId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
+
             return View(member);
         }
 
@@ -246,6 +291,18 @@ namespace JyoshinmonKarate.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool CanEditMember(Member member)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                return true;
+            }
+
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return member.UserId == currentUserId;
         }
 
         private bool MemberExists(int id)
