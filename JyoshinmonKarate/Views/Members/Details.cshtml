@@ -17,10 +17,16 @@
         clubName = Model.Club.ClubName;
     }
 
-    string membershipName = "Beginner Plan";
-    string lastClassAttended = "18 June 2026";
+    string membershipName = ViewBag.MembershipName as string ?? "Not assigned";
+    string lastClassAttended = ViewBag.LastClassAttended as string ?? "No attendance yet";
 
     decimal paymentDue = 0;
+
+    if (ViewBag.PaymentDue != null)
+    {
+        paymentDue = Convert.ToDecimal(ViewBag.PaymentDue);
+    }
+
     string paymentClass = "payment-clear";
 
     if (paymentDue > 0)

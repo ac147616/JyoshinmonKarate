@@ -88,8 +88,40 @@
                 </button>
 
                 <div class="member-carousel" id="memberCarousel">
+                    @{
+                        var membershipNames = ViewBag.MembershipNames as Dictionary<int, string>;
+                        var lastClassDates = ViewBag.LastClassDates as Dictionary<int, string>;
+                        var outstandingPayments = ViewBag.OutstandingPayments as Dictionary<int, decimal>;
+                    }
+
                     @foreach (var member in Model)
                     {
+                        string membershipName = "Not assigned";
+                        string lastClassAttended = "No attendance yet";
+                        decimal outstandingPayment = 0;
+
+                        if (membershipNames != null && membershipNames.ContainsKey(member.MemberId))
+                        {
+                            membershipName = membershipNames[member.MemberId];
+                        }
+
+                        if (lastClassDates != null && lastClassDates.ContainsKey(member.MemberId))
+                        {
+                            lastClassAttended = lastClassDates[member.MemberId];
+                        }
+
+                        if (outstandingPayments != null && outstandingPayments.ContainsKey(member.MemberId))
+                        {
+                            outstandingPayment = outstandingPayments[member.MemberId];
+                        }
+
+                        string paymentClass = "payment-clear";
+
+                        if (outstandingPayment > 0)
+                        {
+                            paymentClass = "payment-due";
+                        }
+
                         <div class="member-card-box">
 
                             <div class="member-avatar">
@@ -151,17 +183,19 @@
 
                                 <p>
                                     <span>Membership:</span>
-                                    Beginner Plan
+                                    @membershipName
                                 </p>
 
                                 <p>
                                     <span>Last class attended:</span>
-                                    18 June 2026
+                                    @lastClassAttended
                                 </p>
 
                                 <p>
                                     <span>Outstanding payment:</span>
-                                    $0
+                                    <span class="@paymentClass">
+                                        $@outstandingPayment
+                                    </span>
                                 </p>
                             </div>
 

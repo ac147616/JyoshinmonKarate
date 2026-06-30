@@ -36,15 +36,87 @@ namespace JyoshinmonKarate.Controllers
                 return NotFound();
             }
 
-            var member = await _context.Members
-                .Include(m => m.Belt)
-                .Include(m => m.Club)
-                .Include(m => m.User)
-                .FirstOrDefaultAsync(m => m.MemberId == id);
+            List<Member> allMembers = await _context.Members
+                .Include("Belt")
+                .Include("Club")
+                .ToListAsync();
+
+            Member member = null;
+
+            foreach (Member item in allMembers)
+            {
+                if (item.MemberId == id.Value)
+                {
+                    member = item;
+                    break;
+                }
+            }
+
             if (member == null)
             {
                 return NotFound();
             }
+
+            string membershipName = "Not assigned";
+
+            List<MemberMembership> allMemberships = await _context.MemberMemberships
+                .Include("Membership")
+                .ToListAsync();
+
+            DateTime latestMembershipStart = DateTime.MinValue;
+
+            foreach (MemberMembership record in allMemberships)
+            {
+                if (record.MemberId == member.MemberId)
+                {
+                    if (record.StartDate > latestMembershipStart)
+                    {
+                        latestMembershipStart = record.StartDate;
+
+                        if (record.Membership != null)
+                        {
+                            membershipName = record.Membership.MembershipName;
+                        }
+                    }
+                }
+            }
+
+            string lastClassAttended = "No attendance yet";
+
+            List<Attendance> allAttendances = await _context.Attendances.ToListAsync();
+
+            DateTime latestAttendanceDate = DateTime.MinValue;
+
+            foreach (Attendance attendance in allAttendances)
+            {
+                if (attendance.MemberId == member.MemberId)
+                {
+                    if (attendance.Date > latestAttendanceDate)
+                    {
+                        latestAttendanceDate = attendance.Date;
+                        lastClassAttended = attendance.Date.ToString("dd MMM yyyy");
+                    }
+                }
+            }
+
+            decimal paymentDue = 0;
+
+            List<Payment> allPayments = await _context.Payments.ToListAsync();
+
+            foreach (Payment payment in allPayments)
+            {
+                if (payment.MemberId == member.MemberId)
+                {
+                    if (payment.Status.ToString() != "Paid")
+                    {
+                        paymentDue = paymentDue + payment.Amount;
+                    }
+                }
+            }
+
+            ViewBag.MembershipName = membershipName;
+            ViewBag.LastClassAttended = lastClassAttended;
+            ViewBag.PaymentDue = paymentDue;
 
             return View(member);
         }
