@@ -2,19 +2,27 @@
     padding: 35px 10px 45px;
 }
 
-.dashboard-top-row {
+/* Main layout */
+.dashboard-top-row,
+.dashboard-main-row {
     display: grid;
-    grid-template-columns: 310px 1fr 1fr 1fr;
+    grid-template-columns: 310px repeat(3, 1fr);
     gap: 18px;
+}
+
+.dashboard-top-row {
     margin-bottom: 22px;
 }
 
-.dashboard-main-row {
-    display: grid;
-    grid-template-columns: 310px 1fr;
-    gap: 22px;
+.member-info-panel {
+    grid-column: 1;
 }
 
+.member-action-area {
+    grid-column: 2 / 5;
+}
+
+/* Shared card style */
 .member-profile-card,
 .summary-card,
 .member-info-panel,
@@ -25,6 +33,7 @@
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
 }
 
+/* Profile card */
 .member-profile-card {
     display: flex;
     align-items: center;
@@ -110,6 +119,7 @@
     margin: 6px 0 0;
 }
 
+/* Summary cards */
 .summary-card {
     padding: 18px;
     text-align: center;
@@ -149,6 +159,7 @@
     color: #b71920 !important;
 }
 
+/* Member information panel */
 .member-info-panel {
     padding: 18px;
 }
@@ -196,6 +207,7 @@
     font-size: 0.78rem;
 }
 
+/* Manage member area */
 .member-action-area {
     padding: 20px;
 }
@@ -258,6 +270,7 @@
         margin: 0;
     }
 
+/* Responsive layout */
 @media (max-width: 950px) {
     .dashboard-top-row {
         grid-template-columns: repeat(2, 1fr);
@@ -265,6 +278,11 @@
 
     .dashboard-main-row {
         grid-template-columns: 1fr;
+    }
+
+    .member-info-panel,
+    .member-action-area {
+        grid-column: auto;
     }
 }
 
