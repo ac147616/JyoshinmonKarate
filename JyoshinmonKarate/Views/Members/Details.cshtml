@@ -91,10 +91,9 @@
                 <h1>@fullName</h1>
                 <p class="profile-club">@clubName</p>
 
-                <div class="profile-mini-info">
-                    <span>@Model.Gender</span>
-                    <span>@age years old</span>
-                </div>
+                <p class="profile-basic-line">
+                    @Model.Gender, @age yrs
+                </p>
             </div>
         </div>
 
@@ -146,8 +145,8 @@
                 <p><span>Date of birth</span>@Model.DateOfBirth.ToString("dd MMM yyyy")</p>
                 <p><span>Gender</span>@Model.Gender</p>
                 <p><span>Belt size</span>@Model.BeltSize</p>
-                <p><span>Height</span>@Model.Height</p>
-                <p><span>Weight</span>@Model.Weight</p>
+                <p><span>Height (cm)</span>@Model.Height</p>
+                <p><span>Weight (kg)</span>@Model.Weight</p>
                 <p><span>Date joined</span>@Model.DateJoined.ToString("dd MMM yyyy")</p>
                 <p><span>Emergency contact</span>@Model.EmergencyContactName</p>
                 <p><span>Emergency phone</span>@Model.EmergencyContactPhone</p>
