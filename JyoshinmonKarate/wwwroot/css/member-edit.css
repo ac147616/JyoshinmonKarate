@@ -1,0 +1,136 @@
+﻿.edit-member-page {
+    padding: 35px 10px 45px;
+}
+
+.edit-member-card {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid rgba(183, 25, 32, 0.18);
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    padding: 28px;
+}
+
+.edit-member-header {
+    margin-bottom: 24px;
+}
+
+    .edit-member-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #000000;
+        margin-bottom: 4px;
+    }
+
+    .edit-member-header p {
+        color: #777777;
+        font-size: 0.92rem;
+        margin: 0;
+    }
+
+.form-section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #b71920;
+    margin: 22px 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 16px 18px;
+}
+
+.form-group label {
+    color: #444444;
+    font-size: 0.84rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    height: 44px;
+    border-radius: 7px;
+    border: 1.5px solid #d6d6d6;
+    color: #333333;
+    background: #ffffff;
+    font-size: 0.9rem;
+}
+
+    .form-control:focus {
+        border-color: #b71920;
+        box-shadow: 0 0 0 1px rgba(183, 25, 32, 0.25);
+    }
+
+.text-danger {
+    font-size: 0.78rem;
+    margin-top: 3px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.save-btn {
+    height: 44px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 7px;
+    background: #b71920;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+    .save-btn:hover {
+        background: #9f151b;
+    }
+
+.cancel-link {
+    color: #777777;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+    .cancel-link:hover {
+        color: #b71920;
+        text-decoration: underline;
+    }
+
+.validation-summary-errors ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 14px;
+}
+
+.validation-summary-errors li {
+    color: #b71920;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 650px) {
+    .edit-member-card {
+        padding: 22px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .save-btn,
+    .cancel-link {
+        width: 100%;
+        text-align: center;
+    }
+}

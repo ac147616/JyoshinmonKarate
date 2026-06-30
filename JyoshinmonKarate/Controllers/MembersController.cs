@@ -23,6 +23,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Members
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var jyoshinmonKarateContext = _context.Members.Include(m => m.Belt).Include(m => m.Club).Include(m => m.User);
@@ -54,6 +55,11 @@ namespace JyoshinmonKarate.Controllers
             }
 
             if (member == null)
+            {
+                return NotFound();
+            }
+
+            if (!CanEditMember(member))
             {
                 return NotFound();
             }
