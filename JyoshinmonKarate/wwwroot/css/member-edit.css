@@ -134,3 +134,24 @@
         text-align: center;
     }
 }
+
+.edit-photo-preview {
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #dddddd;
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+}
+
+    .edit-photo-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+.photo-form-group {
+    grid-column: 1 / -1;
+}

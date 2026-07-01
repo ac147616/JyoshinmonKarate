@@ -1,100 +1,225 @@
-﻿@model JyoshinmonKarate.Models.Member
+﻿@using JyoshinmonKarate.Models
+@model JyoshinmonKarate.Models.Member
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Member";
+    bool isAdmin = User.IsInRole("Admin");
+    string todayDate = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
-<h1>Create</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/member-edit.css" asp-append-version="true" />
+}
 
-<h4>Member</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<section class="edit-member-page">
+    <div class="edit-member-card">
+        <div class="edit-member-header">
+            <h1>Create Member</h1>
+        </div>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+
+            @if (!isAdmin)
+            {
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="BeltId" />
+                <input type="hidden" asp-for="DateJoined" />
+                <input type="hidden" asp-for="Status" />
+                <input type="hidden" asp-for="ProfilePhotoPath" />
+            }
+
+            <div class="form-section-title">Member Details</div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="text-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Profile Photo</label>
+                    <input type="file"
+                           name="profilePhoto"
+                           class="form-control"
+                           accept="image/*" />
+                    <span asp-validation-for="ProfilePhotoPath" class="text-danger"></span>
+                </div>
+
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="UserId">User</label>
+                        <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>User</label>
+                        <input class="form-control" value="@User.Identity?.Name" readonly />
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label asp-for="FirstName">First Name</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="LastName">Last Name</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DateOfBirth">Date of Birth</label>
+                    <input asp-for="DateOfBirth"
+                           class="form-control"
+                           type="date"
+                           min="1900-01-01"
+                           max="@todayDate" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Gender">Gender</label>
+                    <select asp-for="Gender" class="form-control">
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Weight">Weight (kg)</label>
+                    <input asp-for="Weight" class="form-control" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Height">Height (cm)</label>
+                    <input asp-for="Height" class="form-control" />
+                    <span asp-validation-for="Height" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EmergencyContactName">Emergency Contact Name</label>
+                    <input asp-for="EmergencyContactName" class="form-control" />
+                    <span asp-validation-for="EmergencyContactName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EmergencyContactPhone">Emergency Contact Phone</label>
+                    <input asp-for="EmergencyContactPhone" class="form-control" />
+                    <span asp-validation-for="EmergencyContactPhone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ClubId">Club</label>
+                    <select asp-for="ClubId" class="form-control" asp-items="ViewBag.ClubId"></select>
+                    <span asp-validation-for="ClubId" class="text-danger"></span>
+                </div>
+
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="BeltId">Current Belt</label>
+                        <select asp-for="BeltId" class="form-control" asp-items="ViewBag.BeltId"></select>
+                        <span asp-validation-for="BeltId" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Current Belt</label>
+                        <input class="form-control" value="White" readonly />
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label asp-for="BeltSize">Belt Size</label>
+                    <input asp-for="BeltSize" class="form-control" />
+                    <span asp-validation-for="BeltSize" class="text-danger"></span>
+                </div>
+
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="DateJoined">Date Joined</label>
+                        <input asp-for="DateJoined"
+                               class="form-control"
+                               type="date"
+                               min="1900-01-01"
+                               max="@todayDate" />
+                        <span asp-validation-for="DateJoined" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Date Joined</label>
+                        <input class="form-control"
+                               value="@Model.DateJoined.ToString("dd/MM/yyyy")"
+                               readonly />
+                    </div>
+                }
+
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="Status">Status</label>
+                        <select asp-for="Status"
+                                class="form-control"
+                                asp-items="Html.GetEnumSelectList<MemberStatus>()">
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Status</label>
+                        <input class="form-control" value="Active" readonly />
+                    </div>
+                }
+
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="ProfilePhotoPath">Profile Photo Path</label>
+                        <input asp-for="ProfilePhotoPath" class="form-control" />
+                        <span asp-validation-for="ProfilePhotoPath" class="text-danger"></span>
+                    </div>
+                }
             </div>
-            <div class="form-group">
-                <label asp-for="ClubId" class="control-label"></label>
-                <select asp-for="ClubId" class ="form-control" asp-items="ViewBag.ClubId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BeltId" class="control-label"></label>
-                <select asp-for="BeltId" class ="form-control" asp-items="ViewBag.BeltId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BeltSize" class="control-label"></label>
-                <input asp-for="BeltSize" class="form-control" />
-                <span asp-validation-for="BeltSize" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProfilePhotoPath" class="control-label"></label>
-                <input asp-for="ProfilePhotoPath" class="form-control" />
-                <span asp-validation-for="ProfilePhotoPath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control"></select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Height" class="control-label"></label>
-                <input asp-for="Height" class="form-control" />
-                <span asp-validation-for="Height" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateJoined" class="control-label"></label>
-                <input asp-for="DateJoined" class="form-control" />
-                <span asp-validation-for="DateJoined" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmergencyContactName" class="control-label"></label>
-                <input asp-for="EmergencyContactName" class="form-control" />
-                <span asp-validation-for="EmergencyContactName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmergencyContactPhone" class="control-label"></label>
-                <input asp-for="EmergencyContactPhone" class="form-control" />
-                <span asp-validation-for="EmergencyContactPhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Create Member</button>
+
+                @if (isAdmin)
+                {
+                    <a asp-action="Index" class="cancel-link">Cancel</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="Index" class="cancel-link">Cancel</a>
+                }
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

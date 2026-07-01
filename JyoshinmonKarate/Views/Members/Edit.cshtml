@@ -16,7 +16,7 @@
             <h1>Edit Member Details</h1>
         </div>
 
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="MemberId" />
@@ -32,7 +32,39 @@
 
             <div class="form-section-title">Member Details</div>
 
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="text-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
             <div class="form-grid">
+                <div class="form-group photo-form-group">
+                    <label>Profile Photo</label>
+
+                    @if (!string.IsNullOrEmpty(Model.ProfilePhotoPath))
+                    {
+                        <div class="edit-photo-preview">
+                            <img src="@Url.Content(Model.ProfilePhotoPath)" alt="Profile photo" />
+                        </div>
+
+                        <label class="remove-photo-check">
+                            <input type="checkbox" name="removeProfilePhoto" value="true" />
+                            Delete current photo
+                        </label>
+                    }
+
+                    <input type="file"
+                           name="profilePhoto"
+                           class="form-control"
+                           accept="image/*" />
+
+                    <span asp-validation-for="ProfilePhotoPath" class="text-danger"></span>
+                </div>
                 @if (isAdmin)
                 {
                     <div class="form-group">
@@ -169,11 +201,19 @@
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>
 
-                <a asp-action="Details"
-                       asp-route-id="@Model.MemberId"
-                       class="cancel-link">
-                    Cancel
-                </a>
+                @if (isAdmin){
+                    <a asp-action="Index"
+                           class="cancel-link">
+                        Cancel
+                    </a>
+                }
+                else{
+                    <a asp-action="Details"
+                           asp-route-id="@Model.MemberId"
+                           class="cancel-link">
+                        Cancel
+                    </a>
+                }
             </div>
         </form>
     </div>

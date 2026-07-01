@@ -63,34 +63,6 @@
                 {
                     <i class="bi bi-person-fill"></i>
                 }
-
-                <div class="photo-overlay">
-                    <form asp-controller="Members"
-                          asp-action="UploadPhoto"
-                          asp-route-id="@Model.MemberId"
-                          method="post"
-                          enctype="multipart/form-data">
-
-                        <label class="photo-action">
-                            Upload
-                            <input type="file"
-                                   name="profilePhoto"
-                                   accept="image/*"
-                                   hidden
-                                   onchange="this.form.submit()" />
-                        </label>
-                    </form>
-
-                    <form asp-controller="Members"
-                          asp-action="DeletePhoto"
-                          asp-route-id="@Model.MemberId"
-                          method="post">
-
-                        <button type="submit" class="photo-action photo-delete">
-                            Delete
-                        </button>
-                    </form>
-                </div>
             </div>
 
             <div class="profile-card-info">
