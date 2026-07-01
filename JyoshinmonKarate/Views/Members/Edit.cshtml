@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Edit Member";
     bool isAdmin = User.IsInRole("Admin");
+    string todayDate = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
 @section Styles {
@@ -25,40 +26,21 @@
             {
                 <input type="hidden" asp-for="UserId" />
                 <input type="hidden" asp-for="DateJoined" />
+                <input type="hidden" asp-for="BeltId" />
                 <input type="hidden" asp-for="Status" />
-            }
-
-            @if (isAdmin)
-            {
-                <div class="form-section-title">Admin Fields</div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label asp-for="UserId">User</label>
-                        <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                        <span asp-validation-for="UserId" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="DateJoined">Date Joined</label>
-                        <input asp-for="DateJoined" class="form-control" type="date" />
-                        <span asp-validation-for="DateJoined" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Status">Status</label>
-                        <select asp-for="Status" class="form-control">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                        <span asp-validation-for="Status" class="text-danger"></span>
-                    </div>
-                </div>
             }
 
             <div class="form-section-title">Member Details</div>
 
             <div class="form-grid">
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="UserId">User</label>
+                        <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+                }
                 <div class="form-group">
                     <label asp-for="FirstName">First Name</label>
                     <input asp-for="FirstName" class="form-control" />
@@ -73,7 +55,11 @@
 
                 <div class="form-group">
                     <label asp-for="DateOfBirth">Date of Birth</label>
-                    <input asp-for="DateOfBirth" class="form-control" type="date" />
+                    <input asp-for="DateOfBirth"
+                           class="form-control"
+                           type="date"
+                           min="1900-01-01"
+                           max="@todayDate" />
                     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                 </div>
 
@@ -126,8 +112,6 @@
                 }
                 else
                 {
-                    <input type="hidden" asp-for="BeltId" />
-
                     <div class="form-group">
                         <label>Current Belt</label>
                         <input class="form-control" value="@Model.Belt?.BeltName" readonly />
@@ -144,7 +128,11 @@
                 {
                     <div class="form-group">
                         <label asp-for="DateJoined">Date Joined</label>
-                        <input asp-for="DateJoined" class="form-control" type="date" />
+                        <input asp-for="DateJoined"
+                               class="form-control"
+                               type="date"
+                               min="1900-01-01"
+                               max="@todayDate" />
                         <span asp-validation-for="DateJoined" class="text-danger"></span>
                     </div>
                 }
@@ -155,6 +143,25 @@
                         <input class="form-control"
                                value="@Model.DateJoined.ToString("dd/MM/yyyy")"
                                readonly />
+                    </div>
+                }
+
+                @if (isAdmin)
+                {
+                    <div class="form-group">
+                        <label asp-for="Status">Status</label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Status</label>
+                        <input class="form-control" value="@Model.Status" readonly />
                     </div>
                 }
             </div>

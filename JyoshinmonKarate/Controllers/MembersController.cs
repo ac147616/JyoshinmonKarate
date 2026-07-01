@@ -146,6 +146,16 @@ namespace JyoshinmonKarate.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberId,UserId,ClubId,BeltId,BeltSize,FirstName,LastName,DateOfBirth,ProfilePhotoPath,Gender,Weight,Height,DateJoined,EmergencyContactName,EmergencyContactPhone,Status")] Member member)
         {
+            if (!IsDateBetween1900AndToday(member.DateOfBirth))
+            {
+                ModelState.AddModelError("DateOfBirth", "Date of birth cannot be in the future.");
+            }
+
+            if (!IsDateBetween1900AndToday(member.DateJoined))
+            {
+                ModelState.AddModelError("DateJoined", "Date joined must be between 1900 and 2200.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(member);
@@ -213,6 +223,19 @@ namespace JyoshinmonKarate.Controllers
                 return Forbid();
             }
 
+            if (!IsDateBetween1900AndToday(member.DateOfBirth))
+            {
+                ModelState.AddModelError("DateOfBirth", "Date of birth cannot be in the future.");
+            }
+
+            if (User.IsInRole("Admin"))
+            {
+                if (!IsDateBetween1900AndToday(member.DateJoined))
+                {
+                    ModelState.AddModelError("DateJoined", "Date joined cannot be in the future.");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -221,7 +244,7 @@ namespace JyoshinmonKarate.Controllers
                     {
                         existingMember.UserId = member.UserId;
                         existingMember.ClubId = member.ClubId;
-                        existingMember.BeltId = member.BeltId;
+                        existingMember.BeltId = member.BeltId;  
                         existingMember.Status = member.Status;
                         existingMember.DateJoined = member.DateJoined;
                     }
@@ -311,6 +334,13 @@ namespace JyoshinmonKarate.Controllers
             return member.UserId == currentUserId;
         }
 
+        private bool IsDateBetween1900AndToday(DateTime date)
+        {
+            DateTime minimumDate = new DateTime(1900, 1, 1);
+            DateTime maximumDate = DateTime.Today;
+
+            return date >= minimumDate && date <= maximumDate;
+        }
         private bool MemberExists(int id)
         {
             return _context.Members.Any(e => e.MemberId == id);
