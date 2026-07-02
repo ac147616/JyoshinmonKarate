@@ -10,7 +10,10 @@ namespace JyoshinmonKarate.Models
         Active, Inactive, Suspended
     }
     public enum Gender {
-        Female, Male, PreferNotToSay
+        Female, Male,
+        
+        [Display(Name = "Prefer Not To Say")]
+        PreferNotToSay
     }
     public class Member
     {

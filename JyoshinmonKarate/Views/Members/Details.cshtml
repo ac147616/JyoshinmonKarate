@@ -70,7 +70,7 @@
                 <p class="profile-club">@clubName</p>
 
                 <p class="profile-basic-line">
-                    @Model.Gender, @age yrs
+                    @Html.DisplayFor(model => model.Gender), @age yrs
                 </p>
             </div>
         </div>
@@ -121,7 +121,7 @@
                 <p><span>Current belt</span>@beltName</p>
                 <p><span>Club</span>@clubName</p>
                 <p><span>Date of birth</span>@Model.DateOfBirth.ToString("dd MMM yyyy")</p>
-                <p><span>Gender</span>@Model.Gender</p>
+                <p><span>Gender</span>@Html.DisplayFor(model => model.Gender)</p>
                 <p><span>Belt size</span>@Model.BeltSize</p>
                 <p><span>Height (cm)</span>@Model.Height</p>
                 <p><span>Weight (kg)</span>@Model.Weight</p>

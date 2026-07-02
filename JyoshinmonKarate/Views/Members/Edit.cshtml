@@ -1,4 +1,5 @@
-﻿@model JyoshinmonKarate.Models.Member
+﻿@using JyoshinmonKarate.Models
+@model JyoshinmonKarate.Models.Member
 
 @{
     ViewData["Title"] = "Edit Member";
@@ -97,10 +98,9 @@
 
                 <div class="form-group">
                     <label asp-for="Gender">Gender</label>
-                    <select asp-for="Gender" class="form-control">
-                        <option value="Female">Female</option>
-                        <option value="Male">Male</option>
-                        <option value="Other">Other</option>
+                    <select asp-for="Gender"
+                            class="form-control"
+                            asp-items="Html.GetEnumSelectList<Gender>()">
                     </select>
                     <span asp-validation-for="Gender" class="text-danger"></span>
                 </div>

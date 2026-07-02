@@ -23,8 +23,106 @@
         <div class="member-toolbar-actions">
 
             <div class="status-filter-group">
-                <button type="button" class="status-filter active" data-status="active">Active</button>
-                <button type="button" class="status-filter" data-status="all">All</button>
+                <button type="button" class="status-filter active" data-status="all">All</button>
+                <button type="button" class="status-filter" data-status="active">Active</button>
+            </div>
+
+            <div class="more-filters-wrap">
+                <button type="button" class="more-filters-btn" id="moreFiltersBtn">
+                    <i class="bi bi-sliders"></i>
+                    More filters
+                </button>
+
+                <div class="more-filters-panel" id="moreFiltersPanel">
+
+                    <div class="filter-section">
+                        <h3>Clubs</h3>
+
+                        @foreach (var club in Model.Where(m => m.Club != null)
+                                                                        .Select(m => m.Club.ClubName)
+                                                                        .Distinct()
+                                                                        .OrderBy(c => c))
+                        {
+                            <label>
+                                <input type="checkbox" class="extra-filter" data-filter-type="club" value="@club.ToLower()" />
+                                @club
+                            </label>
+                        }
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>Belts</h3>
+
+                        @foreach (var belt in Model.Where(m => m.Belt != null)
+                                                                        .Select(m => m.Belt.BeltName)
+                                                                        .Distinct()
+                                                                        .OrderBy(b => b))
+                        {
+                            <label>
+                                <input type="checkbox" class="extra-filter" data-filter-type="belt" value="@belt.ToLower()" />
+                                @belt
+                            </label>
+                        }
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>Age range</h3>
+
+                        <label>
+                            <input type="checkbox" class="extra-filter" data-filter-type="age" value="under16" />
+                            Under 16
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="extra-filter" data-filter-type="age" value="16to18" />
+                            16 to 18
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="extra-filter" data-filter-type="age" value="18plus" />
+                            18+
+                        </label>
+
+                        <label>
+                            <input type="checkbox" class="extra-filter" data-filter-type="age" value="35plus" />
+                            35+
+                        </label>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>Gender</h3>
+
+                        @{
+                            var genders = Model.Select(m => m.Gender)
+                                               .Distinct()
+                                               .OrderBy(g => g.ToString());
+                        }
+
+                        @foreach (var gender in genders)
+                        {
+                            string genderValue = gender.ToString().ToLower();
+                            string genderDisplay = gender.ToString();
+
+                            if (gender == JyoshinmonKarate.Models.Gender.PreferNotToSay)
+                            {
+                                genderDisplay = "Prefer Not To Say";
+                            }
+
+                            <label>
+                                <input type="checkbox"
+                                       class="extra-filter"
+                                       data-filter-type="gender"
+                                       value="@genderValue" />
+                                @genderDisplay
+                            </label>
+                        }
+                    </div>
+
+                    <button type="button" class="clear-filters-btn" id="clearFiltersBtn">
+                        Clear filters
+                    </button>
+
+                </div>
             </div>
 
             <a asp-action="Create" class="add-member-btn">
@@ -68,8 +166,39 @@
 
                     string statusName = item.Status.ToString();
                     string statusClass = statusName.ToLower();
+                    string genderName = item.Gender.ToString().ToLower();
 
-                    <tr data-status="@statusClass">
+                    int age = 0;
+                    DateTime today = DateTime.Today;
+
+                    age = today.Year - item.DateOfBirth.Year;
+
+                    if (item.DateOfBirth > today.AddYears(-age))
+                    {
+                        age--;
+                    }
+
+                    string ageGroup = "18plus";
+
+                    if (age < 16)
+                    {
+                        ageGroup = "under16";
+                    }
+                    else if (age >= 16 && age <= 18)
+                    {
+                        ageGroup = "16to18";
+                    }
+                    else if (age >= 35)
+                    {
+                        ageGroup = "35plus";
+                    }
+
+                    <tr data-status="@statusClass"
+                        data-club="@clubName.ToLower()"
+                        data-belt="@beltName.ToLower()"
+                        data-age="@ageGroup"
+                        data-gender="@genderName">
+
                         <td>
                             <div class="member-profile-cell">
 
@@ -128,11 +257,36 @@
         const searchInput = document.getElementById("memberSearch");
         const rows = document.querySelectorAll("#membersTable tbody tr");
         const filterButtons = document.querySelectorAll(".status-filter");
+        const extraFilters = document.querySelectorAll(".extra-filter");
 
-        let selectedStatus = "active";
+        const moreFiltersBtn = document.getElementById("moreFiltersBtn");
+        const moreFiltersPanel = document.getElementById("moreFiltersPanel");
+        const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+        let selectedStatus = "all";
+
+        function getCheckedValues(type) {
+            return Array.from(extraFilters)
+                .filter(filter => filter.checked && filter.getAttribute("data-filter-type") === type)
+                .map(filter => filter.value);
+        }
+
+        function matchesSelectedFilter(row, type, selectedValues) {
+            if (selectedValues.length === 0) {
+                return true;
+            }
+
+            const rowValue = row.getAttribute("data-" + type);
+            return selectedValues.includes(rowValue);
+        }
 
         function filterMembers() {
             const searchValue = searchInput.value.toLowerCase();
+
+            const selectedClubs = getCheckedValues("club");
+            const selectedBelts = getCheckedValues("belt");
+            const selectedAges = getCheckedValues("age");
+            const selectedGenders = getCheckedValues("gender");
 
             rows.forEach(row => {
                 const rowText = row.innerText.toLowerCase();
@@ -141,7 +295,12 @@
                 const matchesSearch = rowText.includes(searchValue);
                 const matchesStatus = selectedStatus === "all" || rowStatus === selectedStatus;
 
-                if (matchesSearch && matchesStatus) {
+                const matchesClub = matchesSelectedFilter(row, "club", selectedClubs);
+                const matchesBelt = matchesSelectedFilter(row, "belt", selectedBelts);
+                const matchesAge = matchesSelectedFilter(row, "age", selectedAges);
+                const matchesGender = matchesSelectedFilter(row, "gender", selectedGenders);
+
+                if (matchesSearch && matchesStatus && matchesClub && matchesBelt && matchesAge && matchesGender) {
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
@@ -159,6 +318,25 @@
                 selectedStatus = this.getAttribute("data-status");
                 filterMembers();
             });
+        });
+
+        extraFilters.forEach(filter => {
+            filter.addEventListener("change", filterMembers);
+        });
+
+        moreFiltersBtn.addEventListener("click", function () {
+            moreFiltersPanel.classList.toggle("show");
+        });
+
+        clearFiltersBtn.addEventListener("click", function () {
+            extraFilters.forEach(filter => filter.checked = false);
+            filterMembers();
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest(".more-filters-wrap")) {
+                moreFiltersPanel.classList.remove("show");
+            }
         });
 
         filterMembers();
