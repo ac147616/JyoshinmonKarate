@@ -1,0 +1,245 @@
+﻿.members-index-page {
+    padding: 24px 8px 35px;
+}
+
+.members-header {
+    margin-bottom: 14px;
+}
+
+    .members-header h1 {
+        color: #111111;
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.4px;
+    }
+
+.members-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.member-search-box {
+    width: 260px;
+    height: 38px;
+    border: 1px solid #dddddd;
+    border-radius: 9px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+
+    .member-search-box input {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 0.88rem;
+        color: #333333;
+        background: transparent;
+    }
+
+        .member-search-box input::placeholder {
+            color: #9b9b9b;
+        }
+
+.member-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-filter-group {
+    display: inline-flex;
+    align-items: center;
+    background: #f2f2f6;
+    border-radius: 9px;
+    padding: 3px;
+}
+
+.status-filter {
+    border: none;
+    background: transparent;
+    color: #555555;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1;
+}
+
+    .status-filter.active {
+        background: #d9d7e3;
+        color: #222222;
+    }
+
+.add-member-btn {
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+    border-radius: 9px;
+    background: #d71920;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+    .add-member-btn:hover {
+        background: #b71920;
+        color: #ffffff;
+    }
+
+    .add-member-btn i {
+        font-size: 0.95rem;
+    }
+
+.members-table-wrap {
+    width: 100%;
+    background: #ffffff;
+    overflow-x: auto;
+}
+
+.members-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .members-table th {
+        color: #444444;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-align: left;
+        padding: 9px 12px;
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .members-table td {
+        color: #444444;
+        font-size: 0.84rem;
+        padding: 7px 12px;
+        border-bottom: 1px solid #eeeeee;
+        vertical-align: middle;
+        line-height: 1.15;
+    }
+
+    .members-table tbody tr:hover {
+        background: #fafafa;
+    }
+
+.member-profile-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-table-photo {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid rgba(183, 25, 32, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .member-table-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .member-table-photo i {
+        color: #b71920;
+        font-size: 1.15rem;
+    }
+
+.member-name {
+    color: #222222;
+    font-size: 0.86rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.member-status {
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #168a3a;
+}
+
+.status-inactive {
+    color: #777777;
+}
+
+.status-suspended {
+    color: #b71920;
+}
+
+.actions-heading {
+    text-align: left;
+    width: 180px;
+}
+
+.member-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 18px;
+    white-space: nowrap;
+}
+
+.manage-member-link {
+    color: #b71920;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+    .manage-member-link:hover {
+        color: #9f151b;
+        text-decoration: underline;
+    }
+
+.delete-member-link {
+    color: #777777;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+    .delete-member-link:hover {
+        color: #b71920;
+        text-decoration: underline;
+    }
+
+@media (max-width: 850px) {
+    .members-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .member-search-box {
+        width: 100%;
+    }
+
+    .member-toolbar-actions {
+        justify-content: space-between;
+    }
+
+    .members-table {
+        min-width: 680px;
+    }
+}

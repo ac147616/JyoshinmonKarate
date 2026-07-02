@@ -1,119 +1,166 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Member>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Members";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BeltSize)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProfilePhotoPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Height)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateJoined)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmergencyContactName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmergencyContactPhone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Club)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Belt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BeltSize)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProfilePhotoPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Weight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Height)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateJoined)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmergencyContactName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmergencyContactPhone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Club.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Belt.BeltName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MemberId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MemberId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MemberId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/member-index.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="members-index-page">
+
+    <div class="members-header">
+        <h1>Members</h1>
+    </div>
+
+    <div class="members-toolbar">
+
+        <div class="member-search-box">
+            <input type="text" id="memberSearch" placeholder="Search members" />
+        </div>
+
+        <div class="member-toolbar-actions">
+
+            <div class="status-filter-group">
+                <button type="button" class="status-filter active" data-status="active">Active</button>
+                <button type="button" class="status-filter" data-status="all">All</button>
+            </div>
+
+            <a asp-action="Create" class="add-member-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Member
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="members-table-wrap">
+
+        <table class="members-table" id="membersTable">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Club</th>
+                    <th>Belt</th>
+                    <th>Status</th>
+                    <th class="actions-heading">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string fullName = item.FirstName + " " + item.LastName;
+
+                    string clubName = "Not assigned";
+                    if (item.Club != null)
+                    {
+                        clubName = item.Club.ClubName;
+                    }
+
+                    string beltName = "Not assigned";
+                    if (item.Belt != null)
+                    {
+                        beltName = item.Belt.BeltName;
+                    }
+
+                    string statusName = item.Status.ToString();
+                    string statusClass = statusName.ToLower();
+
+                    <tr data-status="@statusClass">
+                        <td>
+                            <div class="member-profile-cell">
+
+                                <div class="member-table-photo">
+                                    @if (!string.IsNullOrEmpty(item.ProfilePhotoPath))
+                                    {
+                                        <img src="@Url.Content(item.ProfilePhotoPath)" alt="@fullName" />
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-person-fill"></i>
+                                    }
+                                </div>
+
+                                <span class="member-name">@fullName</span>
+
+                            </div>
+                        </td>
+
+                        <td>@clubName</td>
+
+                        <td>@beltName</td>
+
+                        <td>
+                            <span class="member-status status-@statusClass">
+                                @statusName
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="member-actions">
+                                <a asp-action="Details"
+                                       asp-route-id="@item.MemberId"
+                                       class="manage-member-link">
+                                    Manage Member
+                                </a>
+
+                                <a asp-action="Delete"
+                                       asp-route-id="@item.MemberId"
+                                       class="delete-member-link">
+                                    Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById("memberSearch");
+        const rows = document.querySelectorAll("#membersTable tbody tr");
+        const filterButtons = document.querySelectorAll(".status-filter");
+
+        let selectedStatus = "active";
+
+        function filterMembers() {
+            const searchValue = searchInput.value.toLowerCase();
+
+            rows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                const rowStatus = row.getAttribute("data-status");
+
+                const matchesSearch = rowText.includes(searchValue);
+                const matchesStatus = selectedStatus === "all" || rowStatus === selectedStatus;
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener("input", filterMembers);
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                filterButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                selectedStatus = this.getAttribute("data-status");
+                filterMembers();
+            });
+        });
+
+        filterMembers();
+    </script>
+}
