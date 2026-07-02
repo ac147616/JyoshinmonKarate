@@ -265,6 +265,16 @@
 
         let selectedStatus = "all";
 
+        function getSelectedStatusFromButton() {
+            const activeButton = document.querySelector(".status-filter.active");
+
+            if (activeButton) {
+                return activeButton.getAttribute("data-status");
+            }
+
+            return "all";
+        }
+
         function getCheckedValues(type) {
             return Array.from(extraFilters)
                 .filter(filter => filter.checked && filter.getAttribute("data-filter-type") === type)
@@ -281,6 +291,8 @@
         }
 
         function filterMembers() {
+            selectedStatus = getSelectedStatusFromButton();
+
             const searchValue = searchInput.value.toLowerCase();
 
             const selectedClubs = getCheckedValues("club");
@@ -315,7 +327,6 @@
                 filterButtons.forEach(btn => btn.classList.remove("active"));
                 this.classList.add("active");
 
-                selectedStatus = this.getAttribute("data-status");
                 filterMembers();
             });
         });
@@ -330,6 +341,15 @@
 
         clearFiltersBtn.addEventListener("click", function () {
             extraFilters.forEach(filter => filter.checked = false);
+            searchInput.value = "";
+
+            filterButtons.forEach(btn => btn.classList.remove("active"));
+
+            const allButton = document.querySelector('.status-filter[data-status="all"]');
+            if (allButton) {
+                allButton.classList.add("active");
+            }
+
             filterMembers();
         });
 
@@ -337,6 +357,10 @@
             if (!event.target.closest(".more-filters-wrap")) {
                 moreFiltersPanel.classList.remove("show");
             }
+        });
+
+        window.addEventListener("pageshow", function () {
+            filterMembers();
         });
 
         filterMembers();
