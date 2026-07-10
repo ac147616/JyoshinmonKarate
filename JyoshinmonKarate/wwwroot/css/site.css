@@ -130,3 +130,48 @@ header {
     .logout-btn:hover {
         color: #f2f2f2 !important;
     }
+
+.app-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 14px;
+}
+
+.app-page-link {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 7px;
+    color: #444444;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .app-page-link:hover {
+        color: #b71920;
+        border-color: #b71920;
+        background: #fff7f7;
+        text-decoration: none;
+    }
+
+    .app-page-link.active {
+        color: #ffffff;
+        background: #b71920;
+        border-color: #b71920;
+    }
+
+    .app-page-link.disabled {
+        color: #bbbbbb;
+        background: #f7f7f7;
+        border-color: #eeeeee;
+        cursor: not-allowed;
+    }

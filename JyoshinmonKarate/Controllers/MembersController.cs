@@ -27,10 +27,27 @@ namespace JyoshinmonKarate.Controllers
 
         // GET: Members
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var jyoshinmonKarateContext = _context.Members.Include(m => m.Belt).Include(m => m.Club).Include(m => m.User);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            int pageSize = 20;
+
+            var membersQuery = _context.Members
+                .Include(m => m.Club)
+                .Include(m => m.Belt)
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName);
+
+            int totalMembers = await membersQuery.CountAsync();
+
+            var members = await membersQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalMembers / (double)pageSize);
+
+            return View(members);
         }
 
         // GET: Members/Details/5
