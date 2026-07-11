@@ -98,7 +98,8 @@
 }
 
 .save-btn,
-.save-link {
+.save-link,
+.delete-btn {
     height: 34px;
     padding: 0 14px;
     border: none;
@@ -114,25 +115,10 @@
 }
 
     .save-btn:hover,
-    .save-link:hover {
-        background: #9f151b;
-        color: #ffffff;
-    }
-
-.delete-btn {
-    height: 44px;
-    padding: 0 22px;
-    border: none;
-    border-radius: 7px;
-    background: #b71920;
-    color: #ffffff;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-}
-
+    .save-link:hover,
     .delete-btn:hover {
         background: #9f151b;
+        color: #ffffff;
     }
 
 .cancel-link {
