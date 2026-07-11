@@ -59,6 +59,8 @@ namespace JyoshinmonKarate.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MembershipId,MembershipName,Cost,AgeGroup")] Membership membership)
         {
+            ModelState.Remove("MemberMemberships");
+
             if (ModelState.IsValid)
             {
                 _context.Add(membership);
@@ -95,6 +97,8 @@ namespace JyoshinmonKarate.Controllers
             {
                 return NotFound();
             }
+
+            ModelState.Remove("MemberMemberships");
 
             if (ModelState.IsValid)
             {
