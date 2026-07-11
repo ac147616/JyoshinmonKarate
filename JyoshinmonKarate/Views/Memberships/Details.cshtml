@@ -1,36 +1,43 @@
 ﻿@model JyoshinmonKarate.Models.Membership
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Membership Plan Details";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membership-form.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>Membership</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MembershipName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MembershipName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cost)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cost)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AgeGroup)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AgeGroup)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MembershipId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="membership-form-page">
+    <div class="membership-form-card">
+
+        <div class="membership-form-header">
+            <h1>Membership Plan Info</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Membership name</span>
+                <p>@Model.MembershipName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Membership cost</span>
+                <p>$@Model.Cost.ToString("0.00")</p>
+            </div>
+
+            <div class="details-item">
+                <span>Age group</span>
+                <p>@Model.AgeGroup</p>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.MembershipId" class="save-link">Edit Plan</a>
+            <a asp-action="Index" class="cancel-link">Back to List</a>
+        </div>
+
+    </div>
+</section>
