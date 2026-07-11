@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Membership Plans";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
 @section Styles {
@@ -15,10 +16,13 @@
             <h1>Membership Plans</h1>
         </div>
 
-        <a asp-action="Create" class="add-membership-btn">
-            <i class="bi bi-plus-lg"></i>
-            Add Membership Plan
-        </a>
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="add-membership-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Membership Plan
+            </a>
+        }
     </div>
 
     <div class="membership-table-wrap">
@@ -29,7 +33,10 @@
                     <th>Membership Name</th>
                     <th>Cost</th>
                     <th>Age Group</th>
-                    <th class="actions-heading">Actions</th>
+                    @if (isAdmin)
+                    {
+                        <th class="actions-heading">Actions</th>
+                    }
                 </tr>
             </thead>
 
@@ -49,13 +56,16 @@
                             @item.AgeGroup
                         </td>
 
-                        <td>
-                            <div class="membership-actions">
-                                <a asp-action="Details" asp-route-id="@item.MembershipId" class="details-membership-link">Details</a>
-                                <a asp-action="Edit" asp-route-id="@item.MembershipId" class="edit-membership-link">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@item.MembershipId" class="delete-membership-link">Delete</a>
-                            </div>
-                        </td>
+                        @if (isAdmin)
+                        {
+                            <td>
+                                <div class="membership-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MembershipId" class="details-membership-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.MembershipId" class="edit-membership-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MembershipId" class="delete-membership-link">Delete</a>
+                                </div>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>
