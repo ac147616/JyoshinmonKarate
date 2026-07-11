@@ -1,47 +1,66 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Membership>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Membership Plans";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MembershipName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AgeGroup)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MembershipName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AgeGroup)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MembershipId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MembershipId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MembershipId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membership-index.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="membership-index-page">
+
+    <div class="membership-header-row">
+        <div class="membership-header">
+            <h1>Membership Plans</h1>
+        </div>
+
+        <a asp-action="Create" class="add-membership-btn">
+            <i class="bi bi-plus-lg"></i>
+            Add Membership Plan
+        </a>
+    </div>
+
+    <div class="membership-table-wrap">
+
+        <table class="membership-table">
+            <thead>
+                <tr>
+                    <th>Membership Name</th>
+                    <th>Cost</th>
+                    <th>Age Group</th>
+                    <th class="actions-heading">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="membership-name">@item.MembershipName</span>
+                        </td>
+
+                        <td>
+                            $@item.Cost.ToString("0.00")
+                        </td>
+
+                        <td>
+                            @item.AgeGroup
+                        </td>
+
+                        <td>
+                            <div class="membership-actions">
+                                <a asp-action="Details" asp-route-id="@item.MembershipId" class="details-membership-link">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.MembershipId" class="edit-membership-link">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.MembershipId" class="delete-membership-link">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
