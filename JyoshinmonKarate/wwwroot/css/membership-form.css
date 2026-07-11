@@ -31,15 +31,6 @@
         line-height: 1.4;
     }
 
-.form-section-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #b71920;
-    margin: 22px 0 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-}
-
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(240px, 1fr));

@@ -1,43 +1,56 @@
 ﻿@model JyoshinmonKarate.Models.Membership
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Membership Plan";
 }
 
-<h1>Create</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membership-form.css" asp-append-version="true" />
+}
 
-<h4>Membership</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<section class="membership-form-page">
+    <div class="membership-form-card">
+
+        <div class="membership-form-header">
+            <h1>Create Membership Plan</h1>
+        </div>
+
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MembershipName" class="control-label"></label>
-                <input asp-for="MembershipName" class="form-control" />
-                <span asp-validation-for="MembershipName" class="text-danger"></span>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label asp-for="MembershipName">Membership Name</label>
+                    <input asp-for="MembershipName" class="form-control" />
+                    <span asp-validation-for="MembershipName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Cost">Membership Cost</label>
+                    <input asp-for="Cost" class="form-control" />
+                    <span asp-validation-for="Cost" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AgeGroup">Age Group</label>
+                    <input asp-for="AgeGroup" class="form-control" />
+                    <span asp-validation-for="AgeGroup" class="text-danger"></span>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Cost" class="control-label"></label>
-                <input asp-for="Cost" class="form-control" />
-                <span asp-validation-for="Cost" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AgeGroup" class="control-label"></label>
-                <input asp-for="AgeGroup" class="form-control" />
-                <span asp-validation-for="AgeGroup" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Create Plan</button>
+                <a asp-action="Index" class="cancel-link">Cancel</a>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
