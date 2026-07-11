@@ -128,18 +128,19 @@
 .delete-actions {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-top: 4px;
+    gap: 12px;
+    margin-top: 18px;
 }
 
 .delete-confirm-btn {
+    height: 34px;
+    padding: 0 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 7px;
     background: #b71920;
     color: #ffffff;
-    padding: 7px 15px;
     font-size: 0.82rem;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -148,10 +149,10 @@
     }
 
 .cancel-link {
-    color: #666666;
-    text-decoration: none;
+    color: #777777;
     font-size: 0.82rem;
     font-weight: 600;
+    text-decoration: none;
 }
 
     .cancel-link:hover {

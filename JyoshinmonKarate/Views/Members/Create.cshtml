@@ -190,15 +190,6 @@
                         <input class="form-control" value="Active" readonly />
                     </div>
                 }
-
-                @if (isAdmin)
-                {
-                    <div class="form-group">
-                        <label asp-for="ProfilePhotoPath">Profile Photo Path</label>
-                        <input asp-for="ProfilePhotoPath" class="form-control" />
-                        <span asp-validation-for="ProfilePhotoPath" class="text-danger"></span>
-                    </div>
-                }
             </div>
 
             <div class="form-actions">

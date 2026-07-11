@@ -269,7 +269,7 @@ namespace JyoshinmonKarate.Controllers
             }
 
             ViewData["BeltId"] = new SelectList(_context.Belts, "BeltId", "BeltName", member.BeltId);
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", member.ClubId);
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", member.ClubId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
 
             return View(member);
@@ -391,7 +391,7 @@ namespace JyoshinmonKarate.Controllers
             }
 
             ViewData["BeltId"] = new SelectList(_context.Belts, "BeltId", "BeltName", member.BeltId);
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", member.ClubId);
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", member.ClubId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", member.UserId);
 
             return View(member);
@@ -457,7 +457,7 @@ namespace JyoshinmonKarate.Controllers
         private void PopulateCreateViewData(Member member)
         {
             ViewData["BeltId"] = new SelectList(_context.Belts, "BeltId", "BeltName", member.BeltId);
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", member.ClubId);
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", member.ClubId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", member.UserId);
 
             ViewBag.CurrentUserDisplay = User.Identity?.Name;
