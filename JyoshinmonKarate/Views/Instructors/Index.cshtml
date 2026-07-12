@@ -1,53 +1,206 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Instructor>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Instructors";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DateJoined)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Club)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Belt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateJoined)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Club.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Belt.BeltName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.InstructorId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.InstructorId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.InstructorId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/instructor.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="instructor-index-page">
+    <div class="instructor-header">
+        <h1>Instructors</h1>
+    </div>
+
+    <div class="instructor-toolbar">
+        <div class="instructor-search-box">
+            <input type="text" id="instructorSearch" placeholder="Search instructors" />
+        </div>
+
+        <div class="instructor-toolbar-actions">
+            <div class="instructor-filters-wrap">
+                <button type="button" class="instructor-filters-btn" id="instructorFiltersBtn">
+                    <i class="bi bi-sliders"></i>
+                    More filters
+                </button>
+
+                <div class="instructor-filters-panel" id="instructorFiltersPanel">
+                    <div class="instructor-filter-section">
+                        <h3>Clubs</h3>
+
+                        @foreach (var club in Model.Where(i => i.Club != null).Select(i => i.Club.ClubName).Distinct().OrderBy(c => c))
+                        {
+                            <label>
+                                <input type="checkbox" class="instructor-extra-filter" data-filter-type="club" value="@club.ToLower()" />
+                                @club
+                            </label>
+                        }
+                    </div>
+
+                    <div class="instructor-filter-section">
+                        <h3>Belts</h3>
+
+                        @foreach (var belt in Model.Where(i => i.Belt != null).Select(i => i.Belt.BeltName).Distinct().OrderBy(b => b))
+                        {
+                            <label>
+                                <input type="checkbox" class="instructor-extra-filter" data-filter-type="belt" value="@belt.ToLower()" />
+                                @belt
+                            </label>
+                        }
+                    </div>
+
+                    <button type="button" class="instructor-clear-filters-btn" id="instructorClearFiltersBtn">Clear filters</button>
+                </div>
+            </div>
+
+            @if (isAdmin)
+            {
+                <a asp-action="Create" class="add-instructor-btn">
+                    <i class="bi bi-plus-lg"></i>
+                    Add Instructor
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="instructor-table-wrap">
+        <table class="instructor-table" id="instructorTable">
+            <thead>
+                <tr>
+                    <th>Instructor</th>
+                    <th>Club</th>
+                    <th>Belt</th>
+                    <th>Date Joined</th>
+
+                    @if (isAdmin)
+                    {
+                        <th class="instructor-actions-heading">Actions</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string fullName = "Unknown user";
+
+                    if (item.User != null)
+                    {
+                        fullName = item.User.FirstName + " " + item.User.LastName;
+                    }
+
+                    string clubName = "Not assigned";
+
+                    if (item.Club != null)
+                    {
+                        clubName = item.Club.ClubName;
+                    }
+
+                    string beltName = "Not assigned";
+
+                    if (item.Belt != null)
+                    {
+                        beltName = item.Belt.BeltName;
+                    }
+
+                    <tr data-club="@clubName.ToLower()" data-belt="@beltName.ToLower()">
+                        <td>
+                            <span class="instructor-name">@fullName</span>
+                        </td>
+                        <td>@clubName</td>
+                        <td>@beltName</td>
+                        <td>@item.DateJoined.ToString("dd MMM yyyy")</td>
+
+                        @if (isAdmin)
+                        {
+                            <td>
+                                <div class="instructor-actions">
+                                    <a asp-action="Details" asp-route-id="@item.InstructorId" class="details-instructor-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.InstructorId" class="edit-instructor-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.InstructorId" class="delete-instructor-link">Delete</a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById("instructorSearch");
+        const rows = document.querySelectorAll("#instructorTable tbody tr");
+        const extraFilters = document.querySelectorAll(".instructor-extra-filter");
+        const filtersBtn = document.getElementById("instructorFiltersBtn");
+        const filtersPanel = document.getElementById("instructorFiltersPanel");
+        const clearFiltersBtn = document.getElementById("instructorClearFiltersBtn");
+
+        function getCheckedValues(type) {
+            return Array.from(extraFilters)
+                .filter(filter => filter.checked && filter.getAttribute("data-filter-type") === type)
+                .map(filter => filter.value);
+        }
+
+        function matchesSelectedFilter(row, type, selectedValues) {
+            if (selectedValues.length === 0) {
+                return true;
+            }
+
+            const rowValue = row.getAttribute("data-" + type);
+
+            return selectedValues.includes(rowValue);
+        }
+
+        function filterInstructors() {
+            const searchValue = searchInput.value.toLowerCase();
+            const selectedClubs = getCheckedValues("club");
+            const selectedBelts = getCheckedValues("belt");
+
+            rows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                const matchesSearch = rowText.includes(searchValue);
+                const matchesClub = matchesSelectedFilter(row, "club", selectedClubs);
+                const matchesBelt = matchesSelectedFilter(row, "belt", selectedBelts);
+
+                if (matchesSearch && matchesClub && matchesBelt) {
+                    row.style.display = "";
+                }
+                else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener("input", filterInstructors);
+
+        extraFilters.forEach(filter => {
+            filter.addEventListener("change", filterInstructors);
+        });
+
+        filtersBtn.addEventListener("click", function () {
+            filtersPanel.classList.toggle("show");
+        });
+
+        clearFiltersBtn.addEventListener("click", function () {
+            extraFilters.forEach(filter => filter.checked = false);
+            searchInput.value = "";
+            filterInstructors();
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest(".instructor-filters-wrap")) {
+                filtersPanel.classList.remove("show");
+            }
+        });
+
+        window.addEventListener("pageshow", function () {
+            filterInstructors();
+        });
+
+        filterInstructors();
+    </script>
+}
