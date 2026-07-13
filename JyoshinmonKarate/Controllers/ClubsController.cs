@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JyoshinmonKarate.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class ClubsController : Controller
     {
         private readonly JyoshinmonKarateContext _context;
@@ -22,12 +22,14 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Clubs
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Clubs.ToListAsync());
         }
 
         // GET: Clubs/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +48,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Clubs/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -56,6 +59,7 @@ namespace JyoshinmonKarate.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ClubId,ClubName,Address,Email,Phone")] Club club)
         {
             if (ModelState.IsValid)
@@ -68,6 +72,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Clubs/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,6 +93,7 @@ namespace JyoshinmonKarate.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ClubId,ClubName,Address,Email,Phone")] Club club)
         {
             if (id != club.ClubId)
@@ -119,6 +125,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Clubs/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -139,6 +146,7 @@ namespace JyoshinmonKarate.Controllers
         // POST: Clubs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var club = await _context.Clubs.FindAsync(id);
