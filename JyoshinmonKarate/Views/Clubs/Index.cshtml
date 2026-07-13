@@ -1,53 +1,72 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Club>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dojos";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ClubName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClubName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ClubId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ClubId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ClubId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/dojo.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="dojo-index-page">
+
+    <div class="dojo-header-row">
+        <div class="dojo-header">
+            <h1>Dojos</h1>
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="add-dojo-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Dojo
+            </a>
+        }
+    </div>
+
+    <div class="dojo-table-wrap">
+        <table class="dojo-table">
+            <thead>
+                <tr>
+                    <th>Dojo Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+
+                    @if (isAdmin)
+                    {
+                        <th class="actions-heading">Actions</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="dojo-name">@item.ClubName</span>
+                        </td>
+
+                        <td>@item.Address</td>
+                        <td>@item.Email</td>
+                        <td>@item.Phone</td>
+
+                        @if (isAdmin)
+                        {
+                            <td>
+                                <div class="dojo-actions">
+                                    <a asp-action="Details" asp-route-id="@item.ClubId" class="details-dojo-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ClubId" class="edit-dojo-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.ClubId" class="delete-dojo-link">Delete</a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</section>
