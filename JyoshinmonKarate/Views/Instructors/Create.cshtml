@@ -23,7 +23,6 @@
                 <div class="instructor-form-group">
                     <label asp-for="UserId">User Account</label>
                     <select asp-for="UserId" class="instructor-form-control" asp-items="ViewBag.UserId">
-                        <option value="">Select a user</option>
                     </select>
                     <span asp-validation-for="UserId" class="instructor-field-error"></span>
                 </div>
@@ -31,15 +30,13 @@
                 <div class="instructor-form-group">
                     <label asp-for="ClubId">Club</label>
                     <select asp-for="ClubId" class="instructor-form-control" asp-items="ViewBag.ClubId">
-                        <option value="">Select a club</option>
                     </select>
-                    <span asp-validation-for="ClubId" class="instructor-field-error"></span>
+                    <span asp-validation-for="ClubId" class="instructor-field-error"></span>op
                 </div>
 
                 <div class="instructor-form-group">
                     <label asp-for="BeltId">Belt</label>
                     <select asp-for="BeltId" class="instructor-form-control" asp-items="ViewBag.BeltId">
-                        <option value="">Select a belt</option>
                     </select>
                     <span asp-validation-for="BeltId" class="instructor-field-error"></span>
                 </div>
