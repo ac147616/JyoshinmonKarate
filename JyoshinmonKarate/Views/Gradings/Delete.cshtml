@@ -1,45 +1,51 @@
 ﻿@model JyoshinmonKarate.Models.Grading
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Grading";
 }
 
-<h1>Delete</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/grading.css" asp-append-version="true" />
+}
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Grading</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GradingDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GradingDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GradingStartTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GradingStartTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GradingEndTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GradingEndTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Club)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Club.Address)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="GradingId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<section class="grading-form-page">
+    <div class="grading-form-card">
+
+        <div class="grading-form-header">
+            <h1>Delete Grading</h1>
+            <p>Deleting this grading will permanently remove it from the system.</p>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Dojo</span>
+                <p>@Model.Club.ClubName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Grading date</span>
+                <p>@Model.GradingDate.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="details-item">
+                <span>Start time</span>
+                <p>@Model.GradingStartTime.ToString("hh:mm tt")</p>
+            </div>
+
+            <div class="details-item">
+                <span>End time</span>
+                <p>@Model.GradingEndTime.ToString("hh:mm tt")</p>
+            </div>
+
+        </div>
+
+        <form asp-action="Delete" method="post" class="form-actions">
+            <input type="hidden" asp-for="GradingId" />
+
+            <button type="submit" class="delete-btn">Delete Grading</button>
+            <a asp-action="Index" class="cancel-link">Cancel</a>
+        </form>
+
+    </div>
+</section>
