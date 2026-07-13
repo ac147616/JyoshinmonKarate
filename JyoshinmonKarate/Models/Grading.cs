@@ -13,15 +13,17 @@ namespace JyoshinmonKarate.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "Grading Date")]
-        [Range(typeof(DateTime), "1/1/1900", "1/1/2200", ErrorMessage = "Date must be between 1900 and 2200")]
+        [Required(ErrorMessage ="Gradings date is required.")]
         public DateTime GradingDate { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Start Time")]
-        public DateTime GradingStartTime { get; set; }
+        [Required(ErrorMessage = "Start time is required.")]
+        public DateTime GradingStartTime { get; set; }  
 
         [DataType(DataType.Time)]
         [Display(Name = "End Time")]
+        [Required(ErrorMessage = "Endt time is required.")]
         public DateTime GradingEndTime { get; set; }
 
         //One club can hold many gradings 
