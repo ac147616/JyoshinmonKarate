@@ -167,3 +167,118 @@
         min-width: 850px;
     }
 }
+
+/* Dojo form and details pages */
+
+.dojo-form-page {
+    padding: 35px 10px 45px;
+}
+
+.dojo-form-card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid rgba(183, 25, 32, 0.18);
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    padding: 28px;
+}
+
+.dojo-form-header {
+    margin-bottom: 24px;
+}
+
+    .dojo-form-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #000000;
+        margin-bottom: 4px;
+    }
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(230px, 1fr));
+    gap: 12px 22px;
+    margin-bottom: 26px;
+}
+
+.details-item {
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 9px;
+}
+
+    .details-item span {
+        display: block;
+        color: #444444;
+        font-size: 0.78rem;
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .details-item p {
+        color: #666666;
+        font-size: 0.88rem;
+        margin: 0;
+        line-height: 1.35;
+    }
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.save-link {
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 7px;
+    background: #b71920;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .save-link:hover {
+        background: #9f151b;
+        color: #ffffff;
+    }
+
+.cancel-link {
+    color: #777777;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+    .cancel-link:hover {
+        color: #b71920;
+        text-decoration: underline;
+    }
+
+@media (max-width: 650px) {
+    .dojo-form-card {
+        padding: 22px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .save-link,
+    .cancel-link {
+        width: 100%;
+        text-align: center;
+    }
+}

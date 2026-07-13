@@ -1,42 +1,48 @@
 ﻿@model JyoshinmonKarate.Models.Club
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Dojo Details";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/dojo.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>Club</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClubName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClubName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ClubId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="dojo-form-page">
+    <div class="dojo-form-card">
+
+        <div class="dojo-form-header">
+            <h1>Dojo Info</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Dojo name</span>
+                <p>@Model.ClubName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Address</span>
+                <p>@Model.Address</p>
+            </div>
+
+            <div class="details-item">
+                <span>Email</span>
+                <p>@Model.Email</p>
+            </div>
+
+            <div class="details-item">
+                <span>Phone</span>
+                <p>@Model.Phone</p>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.ClubId" class="save-link">Edit Dojo</a>
+            <a asp-action="Index" class="cancel-link">Back to List</a>
+        </div>
+
+    </div>
+</section>
