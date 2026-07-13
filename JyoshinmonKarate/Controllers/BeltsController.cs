@@ -64,6 +64,11 @@ namespace JyoshinmonKarate.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BeltId,BeltName")] Belt belt)
         {
+            ModelState.Remove("Members");
+            ModelState.Remove("Instructors");
+            ModelState.Remove("BeltBeforeMemberGradings");
+            ModelState.Remove("BeltAfterMemberGradings");
+
             if (ModelState.IsValid)
             {
                 _context.Add(belt);
@@ -103,6 +108,11 @@ namespace JyoshinmonKarate.Controllers
             {
                 return NotFound();
             }
+
+            ModelState.Remove("Members");
+            ModelState.Remove("Instructors");
+            ModelState.Remove("BeltBeforeMemberGradings");
+            ModelState.Remove("BeltAfterMemberGradings");
 
             if (ModelState.IsValid)
             {
