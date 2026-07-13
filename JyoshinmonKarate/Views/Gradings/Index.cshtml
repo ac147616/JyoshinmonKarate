@@ -1,53 +1,224 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Grading>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gradings";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.GradingDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GradingStartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GradingEndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Club)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.GradingDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GradingStartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GradingEndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Club.Address)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GradingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GradingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GradingId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/grading.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="grading-index-page">
+
+    <div class="grading-header">
+        <h1>Gradings</h1>
+    </div>
+
+    <div class="grading-toolbar">
+
+        <div class="grading-search-box">
+            <input type="text" id="gradingSearch" placeholder="Search gradings" />
+        </div>
+
+        <div class="grading-toolbar-actions">
+
+            <div class="grading-filters-wrap">
+
+                <button type="button" class="grading-filters-btn" id="gradingFiltersBtn">
+                    <i class="bi bi-sliders"></i>
+                    More filters
+                </button>
+
+                <div class="grading-filters-panel" id="gradingFiltersPanel">
+
+                    <div class="grading-filter-section">
+                        <h3>Years</h3>
+
+                        @foreach (var year in Model.Select(g => g.GradingDate.Year).Distinct().OrderByDescending(y => y))
+                        {
+                            <label>
+                                <input type="checkbox" class="grading-extra-filter" data-filter-type="year" value="@year" />
+                                @year
+                            </label>
+                        }
+                    </div>
+
+                    <div class="grading-filter-section">
+                        <h3>Dojos</h3>
+
+                        @foreach (var club in Model.Select(g => g.Club.ClubName).Distinct().OrderBy(c => c))
+                        {
+                            <label>
+                                <input type="checkbox" class="grading-extra-filter" data-filter-type="club" value="@club.ToLower()" />
+                                @club
+                            </label>
+                        }
+                    </div>
+
+                    <button type="button" class="grading-clear-filters-btn" id="gradingClearFiltersBtn">Clear filters</button>
+
+                </div>
+            </div>
+
+            <a asp-action="Create" class="add-grading-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Grading
+            </a>
+
+        </div>
+    </div>
+
+    <div class="grading-table-wrap">
+
+        <table class="grading-table" id="gradingTable">
+            <thead>
+                <tr>
+                    <th>Grading Date</th>
+                    <th>Dojo</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th class="grading-actions-heading">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string clubName = item.Club.ClubName;
+                    string gradingYear = item.GradingDate.Year.ToString();
+
+                    <tr data-year="@gradingYear" data-club="@clubName.ToLower()">
+                        <td>
+                            <span class="grading-date">@item.GradingDate.ToString("dd MMM yyyy")</span>
+                        </td>
+
+                        <td>@clubName</td>
+                        <td>@item.GradingStartTime.ToString("hh:mm tt")</td>
+                        <td>@item.GradingEndTime.ToString("hh:mm tt")</td>
+
+                        <td>
+                            <div class="grading-actions">
+                                <a asp-action="Details" asp-route-id="@item.GradingId" class="details-grading-link">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.GradingId" class="edit-grading-link">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.GradingId" class="delete-grading-link">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="app-pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" class="app-page-link">&lt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&lt;</span>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                if (i == ViewBag.CurrentPage)
+                {
+                    <span class="app-page-link active">@i</span>
+                }
+                else
+                {
+                    <a asp-action="Index" asp-route-page="@i" class="app-page-link">@i</a>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" class="app-page-link">&gt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&gt;</span>
+            }
+
+        </div>
+    }
+
+</section>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById("gradingSearch");
+        const rows = document.querySelectorAll("#gradingTable tbody tr");
+        const extraFilters = document.querySelectorAll(".grading-extra-filter");
+        const filtersBtn = document.getElementById("gradingFiltersBtn");
+        const filtersPanel = document.getElementById("gradingFiltersPanel");
+        const clearFiltersBtn = document.getElementById("gradingClearFiltersBtn");
+
+        function getCheckedValues(type) {
+            return Array.from(extraFilters)
+                .filter(filter => filter.checked && filter.getAttribute("data-filter-type") === type)
+                .map(filter => filter.value);
+        }
+
+        function matchesSelectedFilter(row, type, selectedValues) {
+            if (selectedValues.length === 0) {
+                return true;
+            }
+
+            const rowValue = row.getAttribute("data-" + type);
+            return selectedValues.includes(rowValue);
+        }
+
+        function filterGradings() {
+            const searchValue = searchInput.value.toLowerCase();
+            const selectedYears = getCheckedValues("year");
+            const selectedClubs = getCheckedValues("club");
+
+            rows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                const matchesSearch = rowText.includes(searchValue);
+                const matchesYear = matchesSelectedFilter(row, "year", selectedYears);
+                const matchesClub = matchesSelectedFilter(row, "club", selectedClubs);
+
+                if (matchesSearch && matchesYear && matchesClub) {
+                    row.style.display = "";
+                }
+                else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener("input", filterGradings);
+
+        extraFilters.forEach(filter => {
+            filter.addEventListener("change", filterGradings);
+        });
+
+        filtersBtn.addEventListener("click", function () {
+            filtersPanel.classList.toggle("show");
+        });
+
+        clearFiltersBtn.addEventListener("click", function () {
+            extraFilters.forEach(filter => filter.checked = false);
+            searchInput.value = "";
+            filterGradings();
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest(".grading-filters-wrap")) {
+                filtersPanel.classList.remove("show");
+            }
+        });
+
+        window.addEventListener("pageshow", function () {
+            filterGradings();
+        });
+
+        filterGradings();
+    </script>
+}

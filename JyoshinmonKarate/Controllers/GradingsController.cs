@@ -22,10 +22,26 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Gradings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var jyoshinmonKarateContext = _context.Gradings.Include(g => g.Club);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            int pageSize = 20;
+
+            var gradingsQuery = _context.Gradings
+                .Include(g => g.Club)
+                .OrderByDescending(g => g.GradingDate)
+                .ThenBy(g => g.GradingStartTime);
+
+            int totalGradings = await gradingsQuery.CountAsync();
+
+            var gradings = await gradingsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalGradings / (double)pageSize);
+
+            return View(gradings);
         }
 
         // GET: Gradings/Details/5

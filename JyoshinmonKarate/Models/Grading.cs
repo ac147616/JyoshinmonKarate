@@ -16,7 +16,7 @@ namespace JyoshinmonKarate.Models
         [Required(ErrorMessage ="Gradings date is required.")]
         public DateTime GradingDate { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.Time)]
         [Display(Name = "Start Time")]
         [Required(ErrorMessage = "Start time is required.")]
         public DateTime GradingStartTime { get; set; }  
