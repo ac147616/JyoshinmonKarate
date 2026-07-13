@@ -42,10 +42,11 @@
                         {
                             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
 
-                            <li class="nav-item dropdown">
+                           <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="publicInfoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">More Info</a>
                                 <ul class="dropdown-menu" aria-labelledby="publicInfoDropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Schedules" asp-action="Index">Class Schedules</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Clubs" asp-action="Index">Dojos</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Memberships" asp-action="Index">Membership Plans</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Instructors" asp-action="Index">Instructors</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Belts" asp-action="Index">Belts</a></li>
@@ -64,6 +65,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="userInfoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">More Info</a>
                                 <ul class="dropdown-menu" aria-labelledby="userInfoDropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Schedules" asp-action="Index">Class Schedules</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Clubs" asp-action="Index">Dojos</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Memberships" asp-action="Index">Membership Plans</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Instructors" asp-action="Index">Instructors</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Belts" asp-action="Index">Belts</a></li>
@@ -106,7 +108,7 @@
                     <partial name = "_LoginPartial"/>
                 </div>
             </div>
-        </>
+        </nav>
     </header>
 
     <div class="container">
