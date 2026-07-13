@@ -57,17 +57,23 @@ namespace JyoshinmonKarate.Controllers
         // POST: Clubs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ClubId,ClubName,Address,Email,Phone")] Club club)
         {
+            ModelState.Remove("Members");
+            ModelState.Remove("Instructors");
+            ModelState.Remove("Schedules");
+            ModelState.Remove("Gradings");
+
             if (ModelState.IsValid)
             {
                 _context.Add(club);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(club);
         }
 
@@ -91,15 +97,20 @@ namespace JyoshinmonKarate.Controllers
         // POST: Clubs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ClubId,ClubName,Address,Email,Phone")] Club club)
         {
             if (id != club.ClubId)
             {
                 return NotFound();
             }
+
+            ModelState.Remove("Members");
+            ModelState.Remove("Instructors");
+            ModelState.Remove("Schedules");
+            ModelState.Remove("Gradings");
 
             if (ModelState.IsValid)
             {
@@ -119,8 +130,10 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(club);
         }
 
