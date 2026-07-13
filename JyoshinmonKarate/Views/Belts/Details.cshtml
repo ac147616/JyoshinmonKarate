@@ -1,24 +1,33 @@
 ﻿@model JyoshinmonKarate.Models.Belt
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Belt Details";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/belt.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>Belt</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BeltName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BeltName)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.BeltId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="belt-form-page">
+    <div class="belt-form-card">
+
+        <div class="belt-form-header">
+            <h1>Belt Info</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Belt name</span>
+                <p>@Model.BeltName</p>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.BeltId" class="save-link">Edit Belt</a>
+            <a asp-action="Index" class="cancel-link">Back to List</a>
+        </div>
+
+    </div>
+</section>
