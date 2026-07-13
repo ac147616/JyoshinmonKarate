@@ -62,27 +62,59 @@ namespace JyoshinmonKarate.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address");
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "InstructorId", "UserId");
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName");
+
+            var instructors = _context.Instructors
+                .Include(i => i.User)
+                .Select(i => new
+                {
+                    i.InstructorId,
+                    FullName = i.User.FirstName + " " + i.User.LastName
+                })
+                .OrderBy(i => i.FullName)
+                .ToList();
+
+            ViewData["InstructorId"] = new SelectList(instructors, "InstructorId", "FullName");
+
             return View();
         }
 
         // POST: Schedules/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ScheduleId,ClubId,InstructorId,Level,DayOfWeek,StartTime,EndTime")] Schedule schedule)
         {
+            ModelState.Remove("Club");
+            ModelState.Remove("Instructor");
+            ModelState.Remove("Attendances");
+
+            if (schedule.EndTime.TimeOfDay <= schedule.StartTime.TimeOfDay)
+            {
+                ModelState.AddModelError("EndTime", "End time must be later than the start time.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(schedule);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", schedule.ClubId);
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "InstructorId", "UserId", schedule.InstructorId);
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", schedule.ClubId);
+
+            var instructors = await _context.Instructors
+                .Include(i => i.User)
+                .Select(i => new
+                {
+                    i.InstructorId,
+                    FullName = i.User.FirstName + " " + i.User.LastName
+                })
+                .OrderBy(i => i.FullName)
+                .ToListAsync();
+
+            ViewData["InstructorId"] = new SelectList(instructors, "InstructorId", "FullName", schedule.InstructorId);
+
             return View(schedule);
         }
 
