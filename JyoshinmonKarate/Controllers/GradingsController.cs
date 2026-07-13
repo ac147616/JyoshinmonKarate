@@ -96,17 +96,18 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var grading = await _context.Gradings.FindAsync(id);
+
             if (grading == null)
             {
                 return NotFound();
             }
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", grading.ClubId);
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", grading.ClubId);
+
             return View(grading);
         }
 
         // POST: Gradings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GradingId,ClubId,GradingDate,GradingStartTime,GradingEndTime")] Grading grading)
@@ -114,6 +115,19 @@ namespace JyoshinmonKarate.Controllers
             if (id != grading.GradingId)
             {
                 return NotFound();
+            }
+
+            ModelState.Remove("Club");
+            ModelState.Remove("MemberGradings");
+
+            if (!IsDateBetween1900AndToday(grading.GradingDate))
+            {
+                ModelState.AddModelError("GradingDate", "Grading date must be between 1900 and today.");
+            }
+
+            if (grading.GradingEndTime.TimeOfDay <= grading.GradingStartTime.TimeOfDay)
+            {
+                ModelState.AddModelError("GradingEndTime", "End time must be later than the start time.");
             }
 
             if (ModelState.IsValid)
@@ -134,9 +148,12 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", grading.ClubId);
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", grading.ClubId);
+
             return View(grading);
         }
 
@@ -178,5 +195,15 @@ namespace JyoshinmonKarate.Controllers
         {
             return _context.Gradings.Any(e => e.GradingId == id);
         }
+
+        private bool IsDateBetween1900AndToday(DateTime date)
+        {
+            DateTime minimumDate = new DateTime(1900, 1, 1);
+            DateTime maximumDate = DateTime.Today;
+
+            return date.Date >= minimumDate && date.Date <= maximumDate;
+        }
     }
+
 }
+
