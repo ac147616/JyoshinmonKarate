@@ -66,24 +66,41 @@ namespace JyoshinmonKarate.Controllers
         // GET: Gradings/Create
         public IActionResult Create()
         {
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address");
-            return View();
+            Grading grading = new Grading();
+            grading.GradingDate = DateTime.Today;
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName");
+
+            return View(grading);
         }
 
         // POST: Gradings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GradingId,ClubId,GradingDate,GradingStartTime,GradingEndTime")] Grading grading)
         {
+            ModelState.Remove("Club");
+            ModelState.Remove("MemberGradings");
+
+            if (!IsDateBetween1900AndToday(grading.GradingDate))
+            {
+                ModelState.AddModelError("GradingDate", "Grading date must be between 1900 and today.");
+            }
+
+            if (grading.GradingEndTime.TimeOfDay <= grading.GradingStartTime.TimeOfDay)
+            {
+                ModelState.AddModelError("GradingEndTime", "End time must be later than the start time.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(grading);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", grading.ClubId);
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", grading.ClubId);
+
             return View(grading);
         }
 
