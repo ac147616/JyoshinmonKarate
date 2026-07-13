@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace JyoshinmonKarate.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class BeltsController : Controller
     {
         private readonly JyoshinmonKarateContext _context;
@@ -22,12 +22,18 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Belts
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Belts.ToListAsync());
+            var belts = await _context.Belts
+                .OrderBy(b => b.BeltId)
+                .ToListAsync();
+
+            return View(belts);
         }
 
         // GET: Belts/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,8 +41,8 @@ namespace JyoshinmonKarate.Controllers
                 return NotFound();
             }
 
-            var belt = await _context.Belts
-                .FirstOrDefaultAsync(m => m.BeltId == id);
+            var belt = await _context.Belts.FirstOrDefaultAsync(m => m.BeltId == id);
+
             if (belt == null)
             {
                 return NotFound();
@@ -46,14 +52,14 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Belts/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Belts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BeltId,BeltName")] Belt belt)
@@ -64,10 +70,12 @@ namespace JyoshinmonKarate.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(belt);
         }
 
         // GET: Belts/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,16 +84,17 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var belt = await _context.Belts.FindAsync(id);
+
             if (belt == null)
             {
                 return NotFound();
             }
+
             return View(belt);
         }
 
         // POST: Belts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BeltId,BeltName")] Belt belt)
@@ -113,12 +122,15 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(belt);
         }
 
         // GET: Belts/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,8 +138,8 @@ namespace JyoshinmonKarate.Controllers
                 return NotFound();
             }
 
-            var belt = await _context.Belts
-                .FirstOrDefaultAsync(m => m.BeltId == id);
+            var belt = await _context.Belts.FirstOrDefaultAsync(m => m.BeltId == id);
+
             if (belt == null)
             {
                 return NotFound();
@@ -137,17 +149,20 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // POST: Belts/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var belt = await _context.Belts.FindAsync(id);
+
             if (belt != null)
             {
                 _context.Belts.Remove(belt);
             }
 
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
