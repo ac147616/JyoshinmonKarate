@@ -139,7 +139,7 @@ namespace JyoshinmonKarate.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Details), new { id = instructor.InstructorId });
+                return RedirectToAction(nameof(Index));
             }
 
             PopulateInstructorViewData(instructor);
@@ -255,7 +255,7 @@ namespace JyoshinmonKarate.Controllers
                     }
                 }
 
-                return RedirectToAction(nameof(Details), new { id = existingInstructor.InstructorId });
+                return RedirectToAction(nameof(Index));
             }
 
             PopulateInstructorViewData(instructor);

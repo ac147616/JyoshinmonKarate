@@ -1,49 +1,65 @@
 ﻿@model JyoshinmonKarate.Models.Instructor
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Instructor";
 }
 
-<h1>Edit</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/instructor.css" asp-append-version="true" />
+}
 
-<h4>Instructor</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<section class="instructor-form-page">
+    <div class="instructor-form-card">
+
+        <div class="instructor-form-header">
+            <h1>Edit Instructor</h1>
+        </div>
+
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <input type="hidden" asp-for="InstructorId" />
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
+
+            <div class="instructor-form-row">
+
+                <div class="instructor-form-group">
+                    <label asp-for="UserId">User Account</label>
+                    <select asp-for="UserId" class="instructor-form-control" asp-items="ViewBag.UserId"></select>
+                    <span asp-validation-for="UserId" class="instructor-field-error"></span>
+                </div>
+
+                <div class="instructor-form-group">
+                    <label asp-for="ClubId">Club</label>
+                    <select asp-for="ClubId" class="instructor-form-control" asp-items="ViewBag.ClubId"></select>
+                    <span asp-validation-for="ClubId" class="instructor-field-error"></span>
+                </div>
+
+                <div class="instructor-form-group">
+                    <label asp-for="BeltId">Belt</label>
+                    <select asp-for="BeltId" class="instructor-form-control" asp-items="ViewBag.BeltId"></select>
+                    <span asp-validation-for="BeltId" class="instructor-field-error"></span>
+                </div>
+
+                <div class="instructor-form-group">
+                    <label asp-for="DateJoined">Date Joined</label>
+                    <input asp-for="DateJoined" class="instructor-form-control" />
+                    <span asp-validation-for="DateJoined" class="instructor-field-error"></span>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="ClubId" class="control-label"></label>
-                <select asp-for="ClubId" class="form-control" asp-items="ViewBag.ClubId"></select>
-                <span asp-validation-for="ClubId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BeltId" class="control-label"></label>
-                <select asp-for="BeltId" class="form-control" asp-items="ViewBag.BeltId"></select>
-                <span asp-validation-for="BeltId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateJoined" class="control-label"></label>
-                <input asp-for="DateJoined" class="form-control" />
-                <span asp-validation-for="DateJoined" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="instructor-form-actions">
+                <button type="submit" class="instructor-primary-btn">Save Changes</button>
+                <a asp-action="Index" class="instructor-cancel-link">Cancel</a>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+```
