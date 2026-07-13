@@ -1,65 +1,86 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Schedule>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Class Schedules";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DayOfWeek)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Club)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Instructor)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DayOfWeek)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Club.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Instructor.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ScheduleId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ScheduleId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ScheduleId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/schedule.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="schedule-index-page">
+
+    <div class="schedule-header-row">
+        <div class="schedule-header">
+            <h1>Class Schedules</h1>
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="add-schedule-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Class Schedule
+            </a>
+        }
+    </div>
+
+    @foreach (var dojoGroup in Model.GroupBy(s => s.Club.ClubName).OrderBy(g => g.Key))
+    {
+        <div class="dojo-schedule-section">
+
+            <div class="dojo-schedule-header">
+                <h2>@dojoGroup.Key</h2>
+            </div>
+
+            <div class="schedule-table-wrap">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Instructor</th>
+                            <th>Level</th>
+                            <th>Day</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+
+                            @if (isAdmin)
+                            {
+                                <th class="schedule-actions-heading">Actions</th>
+                            }
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in dojoGroup)
+                        {
+                            string instructorName = item.Instructor.User.FirstName + " " + item.Instructor.User.LastName;
+
+                            <tr>
+                                <td>
+                                    <span class="schedule-instructor">@instructorName</span>
+                                </td>
+                                <td>@item.Level</td>
+                                <td>@item.DayOfWeek</td>
+                                <td>@item.StartTime.ToString("hh:mm tt")</td>
+                                <td>@item.EndTime.ToString("hh:mm tt")</td>
+
+                                @if (isAdmin)
+                                {
+                                    <td>
+                                        <div class="schedule-actions">
+                                            <a asp-action="Details" asp-route-id="@item.ScheduleId" class="details-schedule-link">Details</a>
+                                            <a asp-action="Edit" asp-route-id="@item.ScheduleId" class="edit-schedule-link">Edit</a>
+                                            <a asp-action="Delete" asp-route-id="@item.ScheduleId" class="delete-schedule-link">Delete</a>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    }
+
+</section>

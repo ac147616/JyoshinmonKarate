@@ -22,13 +22,23 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Schedules
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var jyoshinmonKarateContext = _context.Schedules.Include(s => s.Club).Include(s => s.Instructor);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            var schedules = await _context.Schedules
+                .Include(s => s.Club)
+                .Include(s => s.Instructor)
+                .ThenInclude(i => i.User)
+                .OrderBy(s => s.Club.ClubName)
+                .ThenBy(s => s.DayOfWeek)
+                .ThenBy(s => s.StartTime)
+                .ToListAsync();
+
+            return View(schedules);
         }
 
         // GET: Schedules/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
