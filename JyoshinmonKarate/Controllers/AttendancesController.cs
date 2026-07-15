@@ -155,86 +155,119 @@ namespace JyoshinmonKarate.Controllers
 
         // GET: Attendances/Create
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName");
-            ViewData["ScheduleId"] = new SelectList(_context.Schedules, "ScheduleId", "ScheduleId");
-            return View();
+            Attendance attendance = new Attendance();
+            attendance.Date = DateTime.Today;
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var schedules = await _context.Schedules
+                .Include(s => s.Club)
+                .OrderBy(s => s.Club.ClubName)
+                .ThenBy(s => s.DayOfWeek)
+                .ThenBy(s => s.StartTime)
+                .ToListAsync();
+
+            List<SelectListItem> scheduleOptions = new List<SelectListItem>();
+
+            foreach (Schedule schedule in schedules)
+            {
+                scheduleOptions.Add(new SelectListItem
+                {
+                    Value = schedule.ScheduleId.ToString(),
+                    Text = schedule.Club.ClubName + " | " + schedule.DayOfWeek + " | " + schedule.StartTime.ToString("hh:mm tt")
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text");
+            ViewData["ScheduleId"] = new SelectList(scheduleOptions, "Value", "Text");
+
+            return View(attendance);
         }
 
         // POST: Attendances/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AttendanceId,ScheduleId,MemberId,Date")] Attendance attendance)
         {
+            ModelState.Remove("Member");
+            ModelState.Remove("Schedule");
+
+            if (!IsDateBetween1900AndToday(attendance.Date))
+            {
+                ModelState.AddModelError("Date", "Attendance date must be between 1900 and today.");
+            }
+
+            bool attendanceAlreadyExists = await _context.Attendances.AnyAsync(a =>
+                a.MemberId == attendance.MemberId &&
+                a.ScheduleId == attendance.ScheduleId &&
+                a.Date.Date == attendance.Date.Date);
+
+            if (attendanceAlreadyExists)
+            {
+                ModelState.AddModelError("", "This attendance record already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(attendance);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", attendance.MemberId);
-            ViewData["ScheduleId"] = new SelectList(_context.Schedules, "ScheduleId", "ScheduleId", attendance.ScheduleId);
-            return View(attendance);
-        }
 
-        // GET: Attendances/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
 
-            var attendance = await _context.Attendances.FindAsync(id);
-            if (attendance == null)
-            {
-                return NotFound();
-            }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", attendance.MemberId);
-            ViewData["ScheduleId"] = new SelectList(_context.Schedules, "ScheduleId", "ScheduleId", attendance.ScheduleId);
-            return View(attendance);
-        }
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
 
-        // POST: Attendances/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AttendanceId,ScheduleId,MemberId,Date")] Attendance attendance)
-        {
-            if (id != attendance.AttendanceId)
+            foreach (Member member in members)
             {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                memberOptions.Add(new SelectListItem
                 {
-                    _context.Update(attendance);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AttendanceExists(attendance.AttendanceId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", attendance.MemberId);
-            ViewData["ScheduleId"] = new SelectList(_context.Schedules, "ScheduleId", "ScheduleId", attendance.ScheduleId);
+
+            var schedules = await _context.Schedules
+                .Include(s => s.Club)
+                .OrderBy(s => s.Club.ClubName)
+                .ThenBy(s => s.DayOfWeek)
+                .ThenBy(s => s.StartTime)
+                .ToListAsync();
+
+            List<SelectListItem> scheduleOptions = new List<SelectListItem>();
+
+            foreach (Schedule schedule in schedules)
+            {
+                scheduleOptions.Add(new SelectListItem
+                {
+                    Value = schedule.ScheduleId.ToString(),
+                    Text = schedule.Club.ClubName + " | " + schedule.DayOfWeek + " | " + schedule.StartTime.ToString("hh:mm tt")
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", attendance.MemberId);
+            ViewData["ScheduleId"] = new SelectList(scheduleOptions, "Value", "Text", attendance.ScheduleId);
+
             return View(attendance);
         }
 
@@ -278,6 +311,14 @@ namespace JyoshinmonKarate.Controllers
         private bool AttendanceExists(int id)
         {
             return _context.Attendances.Any(e => e.AttendanceId == id);
+        }
+
+        private bool IsDateBetween1900AndToday(DateTime date)
+        {
+            DateTime minimumDate = new DateTime(1900, 1, 1);
+            DateTime maximumDate = DateTime.Today;
+
+            return date.Date >= minimumDate && date.Date <= maximumDate;
         }
     }
 }
