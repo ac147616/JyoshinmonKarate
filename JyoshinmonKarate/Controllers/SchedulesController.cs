@@ -224,7 +224,9 @@ namespace JyoshinmonKarate.Controllers
             var schedule = await _context.Schedules
                 .Include(s => s.Club)
                 .Include(s => s.Instructor)
+                .ThenInclude(i => i.User)
                 .FirstOrDefaultAsync(m => m.ScheduleId == id);
+
             if (schedule == null)
             {
                 return NotFound();
