@@ -130,18 +130,30 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var schedule = await _context.Schedules.FindAsync(id);
+
             if (schedule == null)
             {
                 return NotFound();
             }
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", schedule.ClubId);
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "InstructorId", "UserId", schedule.InstructorId);
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", schedule.ClubId);
+
+            var instructors = await _context.Instructors
+                .Include(i => i.User)
+                .Select(i => new
+                {
+                    i.InstructorId,
+                    FullName = i.User.FirstName + " " + i.User.LastName
+                })
+                .OrderBy(i => i.FullName)
+                .ToListAsync();
+
+            ViewData["InstructorId"] = new SelectList(instructors, "InstructorId", "FullName", schedule.InstructorId);
+
             return View(schedule);
         }
 
         // POST: Schedules/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -150,6 +162,15 @@ namespace JyoshinmonKarate.Controllers
             if (id != schedule.ScheduleId)
             {
                 return NotFound();
+            }
+
+            ModelState.Remove("Club");
+            ModelState.Remove("Instructor");
+            ModelState.Remove("Attendances");
+
+            if (schedule.EndTime.TimeOfDay <= schedule.StartTime.TimeOfDay)
+            {
+                ModelState.AddModelError("EndTime", "End time must be later than the start time.");
             }
 
             if (ModelState.IsValid)
@@ -170,10 +191,24 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "Address", schedule.ClubId);
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "InstructorId", "UserId", schedule.InstructorId);
+
+            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", schedule.ClubId);
+
+            var instructors = await _context.Instructors
+                .Include(i => i.User)
+                .Select(i => new
+                {
+                    i.InstructorId,
+                    FullName = i.User.FirstName + " " + i.User.LastName
+                })
+                .OrderBy(i => i.FullName)
+                .ToListAsync();
+
+            ViewData["InstructorId"] = new SelectList(instructors, "InstructorId", "FullName", schedule.InstructorId);
+
             return View(schedule);
         }
 
