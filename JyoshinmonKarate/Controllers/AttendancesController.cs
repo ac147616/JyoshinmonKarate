@@ -22,12 +22,117 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Attendances
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int memberId = 0, int scheduleId = 0, string startDate = "", string endDate = "", int page = 1)
         {
-            var jyoshinmonKarateContext = _context.Attendances.Include(a => a.Member).Include(a => a.Schedule);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            int pageSize = 20;
+
+            var attendancesQuery = _context.Attendances
+                .Include(a => a.Member)
+                .Include(a => a.Schedule)
+                .ThenInclude(s => s.Club)
+                .AsQueryable();
+
+            var membersQuery = _context.Members.AsQueryable();
+
+            if (!User.IsInRole("Admin"))
+            {
+                string currentUserName = User.Identity.Name;
+
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == currentUserName);
+
+                if (currentUser == null)
+                {
+                    return NotFound();
+                }
+
+                attendancesQuery = attendancesQuery.Where(a => a.Member.UserId == currentUser.Id);
+                membersQuery = membersQuery.Where(m => m.UserId == currentUser.Id);
+            }
+
+            if (memberId != 0)
+            {
+                attendancesQuery = attendancesQuery.Where(a => a.MemberId == memberId);
+            }
+
+            if (scheduleId != 0)
+            {
+                attendancesQuery = attendancesQuery.Where(a => a.ScheduleId == scheduleId);
+            }
+
+            DateTime selectedStartDate;
+
+            if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out selectedStartDate))
+            {
+                attendancesQuery = attendancesQuery.Where(a => a.Date >= selectedStartDate.Date);
+            }
+
+            DateTime selectedEndDate;
+
+            if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out selectedEndDate))
+            {
+                attendancesQuery = attendancesQuery.Where(a => a.Date <= selectedEndDate.Date);
+            }
+
+            attendancesQuery = attendancesQuery
+                .OrderByDescending(a => a.Date)
+                .ThenBy(a => a.Member.FirstName)
+                .ThenBy(a => a.Member.LastName);
+
+            int totalAttendances = await attendancesQuery.CountAsync();
+
+            var attendances = await attendancesQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var members = await membersQuery
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var scheduleRecords = await _context.Schedules
+                .Include(s => s.Club)
+                .OrderBy(s => s.Club.ClubName)
+                .ThenBy(s => s.DayOfWeek)
+                .ThenBy(s => s.StartTime)
+                .ToListAsync();
+
+            List<SelectListItem> scheduleOptions = new List<SelectListItem>();
+
+            foreach (Schedule schedule in scheduleRecords)
+            {
+                scheduleOptions.Add(new SelectListItem
+                {
+                    Value = schedule.ScheduleId.ToString(),
+                    Text = schedule.Club.ClubName + " | " + schedule.DayOfWeek + " | " + schedule.StartTime.ToString("hh:mm tt")
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberId);
+            ViewData["ScheduleId"] = new SelectList(scheduleOptions, "Value", "Text", scheduleId);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalAttendances / (double)pageSize);
+            ViewBag.SelectedMemberId = memberId;
+            ViewBag.SelectedScheduleId = scheduleId;
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+
+            return View(attendances);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Attendances/Details/5
         public async Task<IActionResult> Details(int? id)
         {
