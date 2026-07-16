@@ -273,6 +273,154 @@ namespace JyoshinmonKarate.Controllers
             return View(attendance);
         }
 
+        // GET: Attendances/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var attendance = await _context.Attendances.FindAsync(id);
+
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var schedules = await _context.Schedules
+                .Include(s => s.Club)
+                .OrderBy(s => s.Club.ClubName)
+                .ThenBy(s => s.DayOfWeek)
+                .ThenBy(s => s.StartTime)
+                .ToListAsync();
+
+            List<SelectListItem> scheduleOptions = new List<SelectListItem>();
+
+            foreach (Schedule schedule in schedules)
+            {
+                scheduleOptions.Add(new SelectListItem
+                {
+                    Value = schedule.ScheduleId.ToString(),
+                    Text = schedule.Club.ClubName + " | " + schedule.DayOfWeek + " | " + schedule.StartTime.ToString("hh:mm tt")
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", attendance.MemberId);
+            ViewData["ScheduleId"] = new SelectList(scheduleOptions, "Value", "Text", attendance.ScheduleId);
+
+            return View(attendance);
+        }
+
+        // POST: Attendances/Edit/5
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("AttendanceId,ScheduleId,MemberId,Date")] Attendance attendance)
+        {
+            if (id != attendance.AttendanceId)
+            {
+                return NotFound();
+            }
+
+            ModelState.Remove("Member");
+            ModelState.Remove("Schedule");
+
+            if (!IsDateBetween1900AndToday(attendance.Date))
+            {
+                ModelState.AddModelError("Date", "Attendance date must be between 1900 and today.");
+            }
+
+            bool attendanceAlreadyExists = await _context.Attendances.AnyAsync(a =>
+                a.MemberId == attendance.MemberId &&
+                a.ScheduleId == attendance.ScheduleId &&
+                a.Date.Date == attendance.Date.Date &&
+                a.AttendanceId != attendance.AttendanceId);
+
+            if (attendanceAlreadyExists)
+            {
+                ModelState.AddModelError("", "This attendance record already exists.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(attendance);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AttendanceExists(attendance.AttendanceId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var schedules = await _context.Schedules
+                .Include(s => s.Club)
+                .OrderBy(s => s.Club.ClubName)
+                .ThenBy(s => s.DayOfWeek)
+                .ThenBy(s => s.StartTime)
+                .ToListAsync();
+
+            List<SelectListItem> scheduleOptions = new List<SelectListItem>();
+
+            foreach (Schedule schedule in schedules)
+            {
+                scheduleOptions.Add(new SelectListItem
+                {
+                    Value = schedule.ScheduleId.ToString(),
+                    Text = schedule.Club.ClubName + " | " + schedule.DayOfWeek + " | " + schedule.StartTime.ToString("hh:mm tt")
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", attendance.MemberId);
+            ViewData["ScheduleId"] = new SelectList(scheduleOptions, "Value", "Text", attendance.ScheduleId);
+
+            return View(attendance);
+        }
+
         // GET: Attendances/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
