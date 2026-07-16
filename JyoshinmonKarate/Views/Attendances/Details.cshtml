@@ -1,36 +1,57 @@
 ﻿@model JyoshinmonKarate.Models.Attendance
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Attendance Details";
+
+    string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
+    string className = Model.Schedule.Level + " | " + Model.Schedule.DayOfWeek;
+    string classTime = Model.Schedule.StartTime.ToString("hh:mm tt") + " to " + Model.Schedule.EndTime.ToString("hh:mm tt");
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/attendance.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>Attendance</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Schedule)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Schedule.ScheduleId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Member)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Member.FirstName)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.AttendanceId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="attendance-form-page">
+    <div class="attendance-form-card">
+
+        <div class="attendance-form-header">
+            <h1>Attendance Info</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Member</span>
+                <p>@memberName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Attendance date</span>
+                <p>@Model.Date.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="details-item">
+                <span>Dojo</span>
+                <p>@Model.Schedule.Club.ClubName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Class</span>
+                <p>@className</p>
+            </div>
+
+            <div class="details-item">
+                <span>Class time</span>
+                <p>@classTime</p>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.AttendanceId" class="save-link">Edit Attendance</a>
+            <a asp-action="Index" class="cancel-link">Back to List</a>
+        </div>
+
+    </div>
+</section>
