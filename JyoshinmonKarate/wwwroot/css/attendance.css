@@ -497,12 +497,42 @@
         color: #ffffff;
     }
 
+.attendance-form-header p {
+    color: #b71920;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.delete-btn {
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 7px;
+    background: #b71920;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+    .delete-btn:hover {
+        background: #9f151b;
+        color: #ffffff;
+    }
+
 @media (max-width: 650px) {
     .attendance-form-card {
         padding: 22px;
     }
 
-    .form-grid {
+    .form-grid,
+    .details-grid {
         grid-template-columns: 1fr;
     }
 
@@ -512,6 +542,8 @@
     }
 
     .save-btn,
+    .save-link,
+    .delete-btn,
     .cancel-link {
         width: 100%;
         text-align: center;

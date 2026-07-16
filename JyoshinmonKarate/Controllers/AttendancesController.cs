@@ -433,7 +433,9 @@ namespace JyoshinmonKarate.Controllers
             var attendance = await _context.Attendances
                 .Include(a => a.Member)
                 .Include(a => a.Schedule)
-                .FirstOrDefaultAsync(m => m.AttendanceId == id);
+                .ThenInclude(s => s.Club)
+                .FirstOrDefaultAsync(a => a.AttendanceId == id);
+
             if (attendance == null)
             {
                 return NotFound();
