@@ -150,27 +150,71 @@ namespace JyoshinmonKarate.Controllers
 
         // GET: Payments/Create
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName");
-            return View();
+            Payment payment = new Payment();
+            payment.DateDue = DateTime.Today;
+            payment.Status = PaymentStatus.Pending;
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text");
+
+            return View(payment);
         }
 
         // POST: Payments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,MemberId,PaymentName,Amount,DateDue,PaymentMethod,Status")] Payment payment)
         {
+            ModelState.Remove("Member");
+
+            if (!IsDateBetween1900And2200(payment.DateDue))
+            {
+                ModelState.AddModelError("DateDue", "Due date must be between 1900 and 2200.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(payment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", payment.MemberId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", payment.MemberId);
+
             return View(payment);
         }
 
@@ -268,6 +312,14 @@ namespace JyoshinmonKarate.Controllers
         private bool PaymentExists(int id)
         {
             return _context.Payments.Any(e => e.PaymentId == id);
+        }
+
+        private bool IsDateBetween1900And2200(DateTime date)
+        {
+            DateTime minimumDate = new DateTime(1900, 1, 1);
+            DateTime maximumDate = new DateTime(2200, 1, 1);
+
+            return date.Date >= minimumDate && date.Date <= maximumDate;
         }
     }
 }
