@@ -139,7 +139,8 @@ namespace JyoshinmonKarate.Controllers
 
             var payment = await _context.Payments
                 .Include(p => p.Member)
-                .FirstOrDefaultAsync(m => m.PaymentId == id);
+                .FirstOrDefaultAsync(p => p.PaymentId == id);
+
             if (payment == null)
             {
                 return NotFound();
