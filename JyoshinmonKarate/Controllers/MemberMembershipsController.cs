@@ -149,6 +149,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberMemberships/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -160,6 +161,7 @@ namespace JyoshinmonKarate.Controllers
                 .Include(m => m.Member)
                 .Include(m => m.Membership)
                 .FirstOrDefaultAsync(m => m.MemberMembershipId == id);
+
             if (memberMembership == null)
             {
                 return NotFound();

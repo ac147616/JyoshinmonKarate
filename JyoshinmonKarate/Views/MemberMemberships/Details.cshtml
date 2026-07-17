@@ -1,48 +1,60 @@
 ﻿@model JyoshinmonKarate.Models.MemberMembership
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Member Membership Details";
+
+    string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membermembership.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>MemberMembership</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MembershipStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MembershipStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Member)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Member.EmergencyContactName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Membership)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Membership.AgeGroup)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MemberMembershipId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="member-membership-form-page">
+    <div class="member-membership-form-card">
+
+        <div class="member-membership-form-header">
+            <h1>Membership Details</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Member</span>
+                <p>@memberName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Membership</span>
+                <p>@Model.Membership.MembershipName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Start Date</span>
+                <p>@Model.StartDate.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="details-item">
+                <span>End Date</span>
+                <p>@Model.EndDate.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="details-item">
+                <span>Membership Status</span>
+                <p>@Model.MembershipStatus</p>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit"
+                   asp-route-id="@Model.MemberMembershipId"
+                   class="save-link">
+                Edit Membership
+            </a>
+
+            <a asp-action="Index" class="cancel-link">Back to List</a>
+        </div>
+
+    </div>
+</section>
