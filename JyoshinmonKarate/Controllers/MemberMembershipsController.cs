@@ -170,29 +170,126 @@ namespace JyoshinmonKarate.Controllers
 
         // GET: MemberMemberships/Create
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "EmergencyContactName");
-            ViewData["MembershipId"] = new SelectList(_context.Memberships, "MembershipId", "AgeGroup");
-            return View();
+            MemberMembership memberMembership = new MemberMembership();
+            memberMembership.StartDate = DateTime.Today;
+            memberMembership.EndDate = DateTime.Today;
+            memberMembership.MembershipStatus = MembershipStatus.Active;
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var memberships = await _context.Memberships
+                .OrderBy(m => m.MembershipName)
+                .ToListAsync();
+
+            List<SelectListItem> membershipOptions = new List<SelectListItem>();
+
+            foreach (Membership membership in memberships)
+            {
+                membershipOptions.Add(new SelectListItem
+                {
+                    Value = membership.MembershipId.ToString(),
+                    Text = membership.MembershipName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text");
+            ViewData["MembershipId"] = new SelectList(membershipOptions, "Value", "Text");
+
+            return View(memberMembership);
         }
 
         // POST: MemberMemberships/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberMembershipId,MemberId,MembershipId,StartDate,EndDate,MembershipStatus")] MemberMembership memberMembership)
         {
+            ModelState.Remove("Member");
+            ModelState.Remove("Membership");
+
+            if (!IsDateBetween1900And2200(memberMembership.StartDate))
+            {
+                ModelState.AddModelError("StartDate", "Start date must be between 1900 and 2200.");
+            }
+
+            if (!IsDateBetween1900And2200(memberMembership.EndDate))
+            {
+                ModelState.AddModelError("EndDate", "End date must be between 1900 and 2200.");
+            }
+
+            if (memberMembership.EndDate < memberMembership.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "End date cannot be earlier than start date.");
+            }
+
+            bool membershipExists = await _context.MemberMemberships.AnyAsync(m =>
+                m.MemberId == memberMembership.MemberId &&
+                m.MembershipId == memberMembership.MembershipId &&
+                memberMembership.StartDate <= m.EndDate &&
+                memberMembership.EndDate >= m.StartDate);
+
+            if (membershipExists)
+            {
+                ModelState.AddModelError("", "This member already has this membership during the selected dates.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(memberMembership);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "EmergencyContactName", memberMembership.MemberId);
-            ViewData["MembershipId"] = new SelectList(_context.Memberships, "MembershipId", "AgeGroup", memberMembership.MembershipId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var memberships = await _context.Memberships
+                .OrderBy(m => m.MembershipName)
+                .ToListAsync();
+
+            List<SelectListItem> membershipOptions = new List<SelectListItem>();
+
+            foreach (Membership membership in memberships)
+            {
+                membershipOptions.Add(new SelectListItem
+                {
+                    Value = membership.MembershipId.ToString(),
+                    Text = membership.MembershipName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberMembership.MemberId);
+            ViewData["MembershipId"] = new SelectList(membershipOptions, "Value", "Text", memberMembership.MembershipId);
+
             return View(memberMembership);
         }
 
@@ -293,6 +390,14 @@ namespace JyoshinmonKarate.Controllers
         private bool MemberMembershipExists(int id)
         {
             return _context.MemberMemberships.Any(e => e.MemberMembershipId == id);
+        }
+
+        private bool IsDateBetween1900And2200(DateTime date)
+        {
+            DateTime minimumDate = new DateTime(1900, 1, 1);
+            DateTime maximumDate = new DateTime(2200, 1, 1);
+
+            return date.Date >= minimumDate && date.Date <= maximumDate;
         }
     }
 }
