@@ -1,59 +1,193 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.MemberMembership>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Member Memberships";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MembershipStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Membership)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MembershipStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.EmergencyContactName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Membership.AgeGroup)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MemberMembershipId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MemberMembershipId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MemberMembershipId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membermembership.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="member-membership-index-page">
+
+    <div class="member-membership-header">
+        <h1>Member Memberships</h1>
+    </div>
+
+    <form asp-action="Index" method="get" class="member-membership-toolbar">
+
+        <div class="member-membership-filter-fields">
+
+            <div class="member-membership-filter-group">
+                <label for="memberId">Member</label>
+                <select name="memberId" id="memberId" asp-items="ViewBag.MemberId">
+                    <option value="0">All members</option>
+                </select>
+            </div>
+
+            <div class="member-membership-filter-group">
+                <label for="membershipId">Membership</label>
+                <select name="membershipId" id="membershipId" asp-items="ViewBag.MembershipId">
+                    <option value="0">All memberships</option>
+                </select>
+            </div>
+
+            <div class="member-membership-filter-group">
+                <label for="membershipStatus">Status</label>
+                <select name="membershipStatus" id="membershipStatus">
+                    <option value="">All statuses</option>
+                    <option value="Active" selected="@(ViewBag.SelectedMembershipStatus == "Active")">Active</option>
+                    <option value="Suspended" selected="@(ViewBag.SelectedMembershipStatus == "Suspended")">Suspended</option>
+                    <option value="Cancelled" selected="@(ViewBag.SelectedMembershipStatus == "Cancelled")">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="member-membership-filter-group">
+                <label for="startDate">Start Date From</label>
+                <input type="date" name="startDate" id="startDate" value="@ViewBag.StartDate" />
+            </div>
+
+            <div class="member-membership-filter-group">
+                <label for="endDate">End Date To</label>
+                <input type="date" name="endDate" id="endDate" value="@ViewBag.EndDate" />
+            </div>
+
+            <div class="member-membership-filter-actions">
+                <button type="submit" class="apply-member-membership-filters-btn">Apply</button>
+                <a asp-action="Index" class="clear-member-membership-filters-link">Clear</a>
+            </div>
+
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="add-member-membership-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Membership
+            </a>
+        }
+
+    </form>
+
+    <div class="member-membership-table-wrap">
+        <table class="member-membership-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Membership</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+
+                    @if (isAdmin)
+                    {
+                        <th>Actions</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string memberName = item.Member.FirstName + " " + item.Member.LastName;
+                    string statusName = item.MembershipStatus.ToString();
+                    string statusClass = statusName.ToLower();
+
+                    <tr>
+                        <td>
+                            <span class="member-membership-member-name">@memberName</span>
+                        </td>
+
+                        <td>@item.Membership.MembershipName</td>
+                        <td>@item.StartDate.ToString("dd MMM yyyy")</td>
+                        <td>@item.EndDate.ToString("dd MMM yyyy")</td>
+
+                        <td>
+                            <span class="member-membership-status status-@statusClass">
+                                @statusName
+                            </span>
+                        </td>
+
+                        @if (isAdmin)
+                        {
+                            <td>
+                                <div class="member-membership-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MemberMembershipId" class="details-member-membership-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.MemberMembershipId" class="edit-member-membership-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MemberMembershipId" class="delete-member-membership-link">Delete</a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="member-membership-empty-message">
+            No member memberships were found.
+        </div>
+    }
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="app-pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <a asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   asp-route-memberId="@ViewBag.SelectedMemberId"
+                   asp-route-membershipId="@ViewBag.SelectedMembershipId"
+                   asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus"
+                   asp-route-startDate="@ViewBag.StartDate"
+                   asp-route-endDate="@ViewBag.EndDate"
+                   class="app-page-link">&lt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&lt;</span>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                if (i == ViewBag.CurrentPage)
+                {
+                    <span class="app-page-link active">@i</span>
+                }
+                else
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-memberId="@ViewBag.SelectedMemberId"
+                       asp-route-membershipId="@ViewBag.SelectedMembershipId"
+                       asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus"
+                       asp-route-startDate="@ViewBag.StartDate"
+                       asp-route-endDate="@ViewBag.EndDate"
+                       class="app-page-link">@i</a>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <a asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   asp-route-memberId="@ViewBag.SelectedMemberId"
+                   asp-route-membershipId="@ViewBag.SelectedMembershipId"
+                   asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus"
+                   asp-route-startDate="@ViewBag.StartDate"
+                   asp-route-endDate="@ViewBag.EndDate"
+                   class="app-page-link">&gt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&gt;</span>
+            }
+
+        </div>
+    }
+
+</section>

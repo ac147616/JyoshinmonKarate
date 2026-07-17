@@ -22,10 +22,130 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberMemberships
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int memberId = 0, int membershipId = 0, string membershipStatus = "", string startDate = "", string endDate = "", int page = 1)
         {
-            var jyoshinmonKarateContext = _context.MemberMemberships.Include(m => m.Member).Include(m => m.Membership);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            int pageSize = 20;
+
+            var memberMembershipsQuery = _context.MemberMemberships
+                .Include(m => m.Member)
+                .Include(m => m.Membership)
+                .AsQueryable();
+
+            var membersQuery = _context.Members.AsQueryable();
+
+            if (!User.IsInRole("Admin"))
+            {
+                string currentUserName = User.Identity.Name;
+
+                var currentUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.UserName == currentUserName);
+
+                if (currentUser == null)
+                {
+                    return NotFound();
+                }
+
+                memberMembershipsQuery = memberMembershipsQuery
+                    .Where(m => m.Member.UserId == currentUser.Id);
+
+                membersQuery = membersQuery
+                    .Where(m => m.UserId == currentUser.Id);
+            }
+
+            if (memberId != 0)
+            {
+                memberMembershipsQuery = memberMembershipsQuery
+                    .Where(m => m.MemberId == memberId);
+            }
+
+            if (membershipId != 0)
+            {
+                memberMembershipsQuery = memberMembershipsQuery
+                    .Where(m => m.MembershipId == membershipId);
+            }
+
+            if (!string.IsNullOrEmpty(membershipStatus))
+            {
+                MembershipStatus selectedStatus;
+
+                if (Enum.TryParse(membershipStatus, out selectedStatus))
+                {
+                    memberMembershipsQuery = memberMembershipsQuery
+                        .Where(m => m.MembershipStatus == selectedStatus);
+                }
+            }
+
+            DateTime selectedStartDate;
+
+            if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out selectedStartDate))
+            {
+                memberMembershipsQuery = memberMembershipsQuery
+                    .Where(m => m.StartDate >= selectedStartDate.Date);
+            }
+
+            DateTime selectedEndDate;
+
+            if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out selectedEndDate))
+            {
+                memberMembershipsQuery = memberMembershipsQuery
+                    .Where(m => m.EndDate <= selectedEndDate.Date);
+            }
+
+            memberMembershipsQuery = memberMembershipsQuery
+                .OrderByDescending(m => m.StartDate)
+                .ThenBy(m => m.Member.FirstName)
+                .ThenBy(m => m.Member.LastName);
+
+            int totalRecords = await memberMembershipsQuery.CountAsync();
+
+            var memberMemberships = await memberMembershipsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var members = await membersQuery
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var memberships = await _context.Memberships
+                .OrderBy(m => m.MembershipName)
+                .ToListAsync();
+
+            List<SelectListItem> membershipOptions = new List<SelectListItem>();
+
+            foreach (Membership membership in memberships)
+            {
+                membershipOptions.Add(new SelectListItem
+                {
+                    Value = membership.MembershipId.ToString(),
+                    Text = membership.MembershipName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberId);
+            ViewData["MembershipId"] = new SelectList(membershipOptions, "Value", "Text", membershipId);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            ViewBag.SelectedMemberId = memberId;
+            ViewBag.SelectedMembershipId = membershipId;
+            ViewBag.SelectedMembershipStatus = membershipStatus;
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+
+            return View(memberMemberships);
         }
 
         // GET: MemberMemberships/Details/5
