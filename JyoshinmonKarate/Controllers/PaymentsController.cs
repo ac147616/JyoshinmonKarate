@@ -23,26 +23,113 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index(bool showOutstanding = false)
+        public async Task<IActionResult> Index(int memberId = 0, string paymentStatus = "", string paymentMethod = "", string startDate = "", string endDate = "", int page = 1)
         {
-            // Start by creating a query for all payments
-            // Include Member so we can show which member the payment belongs to
-            IQueryable<Payment> payments = _context.Payments
-                .Include(p => p.Member);
+            int pageSize = 20;
 
-            // If the user clicked the "Show Outstanding Payments" button
-            if (showOutstanding)
+            var paymentsQuery = _context.Payments
+                .Include(p => p.Member)
+                .AsQueryable();
+
+            var membersQuery = _context.Members.AsQueryable();
+
+            if (!User.IsInRole("Admin"))
             {
-                // Filter the results to only include:
-                // Pending (not paid yet) OR Failed (payment did not go through)
-                payments = payments.Where(p => p.Status == PaymentStatus.Pending || p.Status == PaymentStatus.Failed);
+                string currentUserName = User.Identity.Name;
+
+                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == currentUserName);
+
+                if (currentUser == null)
+                {
+                    return NotFound();
+                }
+
+                paymentsQuery = paymentsQuery.Where(p => p.Member.UserId == currentUser.Id);
+                membersQuery = membersQuery.Where(m => m.UserId == currentUser.Id);
             }
 
-            // Execute the query and return the results to the view
-            return View(await payments.ToListAsync());
+            if (memberId != 0)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.MemberId == memberId);
+            }
+
+            if (!string.IsNullOrEmpty(paymentStatus))
+            {
+                PaymentStatus selectedStatus;
+
+                if (Enum.TryParse(paymentStatus, out selectedStatus))
+                {
+                    paymentsQuery = paymentsQuery.Where(p => p.Status == selectedStatus);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(paymentMethod))
+            {
+                PaymentMethods selectedMethod;
+
+                if (Enum.TryParse(paymentMethod, out selectedMethod))
+                {
+                    paymentsQuery = paymentsQuery.Where(p => p.PaymentMethod == selectedMethod);
+                }
+            }
+
+            DateTime selectedStartDate;
+
+            if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out selectedStartDate))
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.DateDue >= selectedStartDate.Date);
+            }
+
+            DateTime selectedEndDate;
+
+            if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out selectedEndDate))
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.DateDue <= selectedEndDate.Date);
+            }
+
+            paymentsQuery = paymentsQuery
+                .OrderBy(p => p.DateDue)
+                .ThenBy(p => p.Member.FirstName)
+                .ThenBy(p => p.Member.LastName);
+
+            int totalPayments = await paymentsQuery.CountAsync();
+
+            var payments = await paymentsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var members = await membersQuery
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberId);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalPayments / (double)pageSize);
+            ViewBag.SelectedMemberId = memberId;
+            ViewBag.SelectedPaymentStatus = paymentStatus;
+            ViewBag.SelectedPaymentMethod = paymentMethod;
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+
+            return View(payments);
         }
 
         // GET: Payments/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

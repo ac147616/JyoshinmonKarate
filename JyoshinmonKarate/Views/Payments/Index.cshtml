@@ -1,71 +1,261 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.Payment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Payments";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<form method="get">
-    <button type="submit" name="showOutstanding" value="true">
-        Show Outstanding Payments
-    </button>
-</form>
-<a asp-action="Index">Show All</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateDue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.FirstName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PaymentId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PaymentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PaymentId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/payment.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="payment-index-page">
+
+    <div class="payment-header">
+        <h1>Payments</h1>
+    </div>
+
+    <form asp-action="Index" method="get" class="payment-toolbar">
+
+        <div class="payment-filter-fields">
+
+            <div class="payment-filter-group">
+                <label for="memberSearch">Member</label>
+
+                <div class="member-search-select" id="memberSearchSelect">
+                    <input type="text" id="memberSearch" placeholder="Search members" autocomplete="off" />
+                    <input type="hidden" name="memberId" id="memberId" value="@ViewBag.SelectedMemberId" />
+
+                    <div class="member-options" id="memberOptions">
+                        <button type="button" class="member-option" data-value="0">All members</button>
+
+                        @foreach (var member in ViewBag.MemberId)
+                        {
+                            <button type="button" class="member-option" data-value="@member.Value">@member.Text</button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-filter-group">
+                <label for="paymentStatus">Status</label>
+                <select name="paymentStatus" id="paymentStatus">
+                    <option value="">All statuses</option>
+                    <option value="Pending" selected="@(ViewBag.SelectedPaymentStatus == "Pending")">Pending</option>
+                    <option value="Completed" selected="@(ViewBag.SelectedPaymentStatus == "Completed")">Completed</option>
+                    <option value="Failed" selected="@(ViewBag.SelectedPaymentStatus == "Failed")">Failed</option>
+                </select>
+            </div>
+
+            <div class="payment-filter-group">
+                <label for="paymentMethod">Payment Method</label>
+                <select name="paymentMethod" id="paymentMethod">
+                    <option value="">All methods</option>
+                    <option value="CreditCard" selected="@(ViewBag.SelectedPaymentMethod == "CreditCard")">Credit Card</option>
+                    <option value="BankTransfer" selected="@(ViewBag.SelectedPaymentMethod == "BankTransfer")">Bank Transfer</option>
+                    <option value="Cash" selected="@(ViewBag.SelectedPaymentMethod == "Cash")">Cash</option>
+                    <option value="MobilePayment" selected="@(ViewBag.SelectedPaymentMethod == "MobilePayment")">Mobile Payment</option>
+                </select>
+            </div>
+
+            <div class="payment-filter-group">
+                <label for="startDate">Due From</label>
+                <input type="date" name="startDate" id="startDate" value="@ViewBag.StartDate" />
+            </div>
+
+            <div class="payment-filter-group">
+                <label for="endDate">Due To</label>
+                <input type="date" name="endDate" id="endDate" value="@ViewBag.EndDate" />
+            </div>
+
+            <div class="payment-filter-actions">
+                <button type="submit" class="apply-payment-filters-btn">Apply</button>
+                <a asp-action="Index" class="clear-payment-filters-link">Clear</a>
+            </div>
+
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="add-payment-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Payment
+            </a>
+        }
+
+    </form>
+
+    <div class="payment-table-wrap">
+        <table class="payment-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Payment</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Method</th>
+                    <th>Status</th>
+
+                    @if (isAdmin)
+                    {
+                        <th class="payment-actions-heading">Actions</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string memberName = item.Member.FirstName + " " + item.Member.LastName;
+                    string methodName = item.PaymentMethod.ToString();
+                    string statusName = item.Status.ToString();
+                    string statusClass = statusName.ToLower();
+
+                    if (item.PaymentMethod == JyoshinmonKarate.Models.PaymentMethods.CreditCard)
+                    {
+                        methodName = "Credit Card";
+                    }
+                    else if (item.PaymentMethod == JyoshinmonKarate.Models.PaymentMethods.BankTransfer)
+                    {
+                        methodName = "Bank Transfer";
+                    }
+                    else if (item.PaymentMethod == JyoshinmonKarate.Models.PaymentMethods.MobilePayment)
+                    {
+                        methodName = "Mobile Payment";
+                    }
+
+                    <tr>
+                        <td>
+                            <span class="payment-member-name">@memberName</span>
+                        </td>
+
+                        <td>@item.PaymentName</td>
+                        <td>$@item.Amount.ToString("0.00")</td>
+                        <td>@item.DateDue.ToString("dd MMM yyyy")</td>
+                        <td>@methodName</td>
+
+                        <td>
+                            <span class="payment-status status-@statusClass">@statusName</span>
+                        </td>
+
+                        @if (isAdmin)
+                        {
+                            <td>
+                                <div class="payment-actions">
+                                    <a asp-action="Details" asp-route-id="@item.PaymentId" class="details-payment-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.PaymentId" class="edit-payment-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.PaymentId" class="delete-payment-link">Delete</a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="payment-empty-message">No payment records were found.</div>
+    }
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="app-pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-paymentStatus="@ViewBag.SelectedPaymentStatus" asp-route-paymentMethod="@ViewBag.SelectedPaymentMethod" asp-route-startDate="@ViewBag.StartDate" asp-route-endDate="@ViewBag.EndDate" class="app-page-link">&lt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&lt;</span>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                if (i == ViewBag.CurrentPage)
+                {
+                    <span class="app-page-link active">@i</span>
+                }
+                else
+                {
+                    <a asp-action="Index" asp-route-page="@i" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-paymentStatus="@ViewBag.SelectedPaymentStatus" asp-route-paymentMethod="@ViewBag.SelectedPaymentMethod" asp-route-startDate="@ViewBag.StartDate" asp-route-endDate="@ViewBag.EndDate" class="app-page-link">@i</a>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-paymentStatus="@ViewBag.SelectedPaymentStatus" asp-route-paymentMethod="@ViewBag.SelectedPaymentMethod" asp-route-startDate="@ViewBag.StartDate" asp-route-endDate="@ViewBag.EndDate" class="app-page-link">&gt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&gt;</span>
+            }
+
+        </div>
+    }
+
+</section>
+
+@section Scripts {
+    <script>
+        const memberSearchSelect = document.getElementById("memberSearchSelect");
+        const memberSearch = document.getElementById("memberSearch");
+        const memberId = document.getElementById("memberId");
+        const memberOptions = document.getElementById("memberOptions");
+        const memberOptionButtons = document.querySelectorAll(".member-option");
+
+        function setSelectedMemberText() {
+            const selectedValue = memberId.value;
+
+            memberOptionButtons.forEach(option => {
+                if (option.getAttribute("data-value") === selectedValue) {
+                    memberSearch.value = option.innerText;
+                }
+            });
+        }
+
+        memberSearch.addEventListener("focus", function () {
+            memberOptions.classList.add("show");
+            this.select();
+        });
+
+        memberSearch.addEventListener("input", function () {
+            const searchValue = this.value.toLowerCase();
+
+            memberOptionButtons.forEach(option => {
+                const optionText = option.innerText.toLowerCase();
+
+                if (optionText.includes(searchValue)) {
+                    option.style.display = "block";
+                }
+                else {
+                    option.style.display = "none";
+                }
+            });
+
+            memberOptions.classList.add("show");
+        });
+
+        memberOptionButtons.forEach(option => {
+            option.addEventListener("click", function () {
+                memberId.value = this.getAttribute("data-value");
+                memberSearch.value = this.innerText;
+                memberOptions.classList.remove("show");
+
+                memberOptionButtons.forEach(button => {
+                    button.style.display = "block";
+                });
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest("#memberSearchSelect")) {
+                memberOptions.classList.remove("show");
+            }
+        });
+
+        setSelectedMemberText();
+    </script>
+}
