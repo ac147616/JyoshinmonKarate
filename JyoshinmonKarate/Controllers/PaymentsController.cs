@@ -229,17 +229,34 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var payment = await _context.Payments.FindAsync(id);
+
             if (payment == null)
             {
                 return NotFound();
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", payment.MemberId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", payment.MemberId);
+
             return View(payment);
         }
 
         // POST: Payments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -248,6 +265,13 @@ namespace JyoshinmonKarate.Controllers
             if (id != payment.PaymentId)
             {
                 return NotFound();
+            }
+
+            ModelState.Remove("Member");
+
+            if (!IsDateBetween1900And2200(payment.DateDue))
+            {
+                ModelState.AddModelError("DateDue", "Due date must be between 1900 and 2200.");
             }
 
             if (ModelState.IsValid)
@@ -268,9 +292,28 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", payment.MemberId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", payment.MemberId);
+
             return View(payment);
         }
 
