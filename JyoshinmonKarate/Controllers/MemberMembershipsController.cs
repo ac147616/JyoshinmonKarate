@@ -305,18 +305,50 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var memberMembership = await _context.MemberMemberships.FindAsync(id);
+
             if (memberMembership == null)
             {
                 return NotFound();
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "EmergencyContactName", memberMembership.MemberId);
-            ViewData["MembershipId"] = new SelectList(_context.Memberships, "MembershipId", "AgeGroup", memberMembership.MembershipId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var memberships = await _context.Memberships
+                .OrderBy(m => m.MembershipName)
+                .ToListAsync();
+
+            List<SelectListItem> membershipOptions = new List<SelectListItem>();
+
+            foreach (Membership membership in memberships)
+            {
+                membershipOptions.Add(new SelectListItem
+                {
+                    Value = membership.MembershipId.ToString(),
+                    Text = membership.MembershipName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberMembership.MemberId);
+            ViewData["MembershipId"] = new SelectList(membershipOptions, "Value", "Text", memberMembership.MembershipId);
+
             return View(memberMembership);
         }
 
         // POST: MemberMemberships/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -325,6 +357,36 @@ namespace JyoshinmonKarate.Controllers
             if (id != memberMembership.MemberMembershipId)
             {
                 return NotFound();
+            }
+
+            ModelState.Remove("Member");
+            ModelState.Remove("Membership");
+
+            if (!IsDateBetween1900And2200(memberMembership.StartDate))
+            {
+                ModelState.AddModelError("StartDate", "Start date must be between 1900 and 2200.");
+            }
+
+            if (!IsDateBetween1900And2200(memberMembership.EndDate))
+            {
+                ModelState.AddModelError("EndDate", "End date must be between 1900 and 2200.");
+            }
+
+            if (memberMembership.EndDate < memberMembership.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "End date cannot be earlier than start date.");
+            }
+
+            bool membershipExists = await _context.MemberMemberships.AnyAsync(m =>
+                m.MemberMembershipId != memberMembership.MemberMembershipId &&
+                m.MemberId == memberMembership.MemberId &&
+                m.MembershipId == memberMembership.MembershipId &&
+                memberMembership.StartDate <= m.EndDate &&
+                memberMembership.EndDate >= m.StartDate);
+
+            if (membershipExists)
+            {
+                ModelState.AddModelError("", "This member already has this membership during the selected dates.");
             }
 
             if (ModelState.IsValid)
@@ -345,10 +407,44 @@ namespace JyoshinmonKarate.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "EmergencyContactName", memberMembership.MemberId);
-            ViewData["MembershipId"] = new SelectList(_context.Memberships, "MembershipId", "AgeGroup", memberMembership.MembershipId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var memberships = await _context.Memberships
+                .OrderBy(m => m.MembershipName)
+                .ToListAsync();
+
+            List<SelectListItem> membershipOptions = new List<SelectListItem>();
+
+            foreach (Membership membership in memberships)
+            {
+                membershipOptions.Add(new SelectListItem
+                {
+                    Value = membership.MembershipId.ToString(),
+                    Text = membership.MembershipName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberMembership.MemberId);
+            ViewData["MembershipId"] = new SelectList(membershipOptions, "Value", "Text", memberMembership.MembershipId);
+
             return View(memberMembership);
         }
 
