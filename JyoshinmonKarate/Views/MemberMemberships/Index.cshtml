@@ -20,10 +20,36 @@
         <div class="member-membership-filter-fields">
 
             <div class="member-membership-filter-group">
-                <label for="memberId">Member</label>
-                <select name="memberId" id="memberId" asp-items="ViewBag.MemberId">
-                    <option value="0">All members</option>
-                </select>
+                <label for="memberSearch">Member</label>
+
+                <div class="member-search-select" id="memberSearchSelect">
+                    <input type="text"
+                           id="memberSearch"
+                           placeholder="Search members"
+                           autocomplete="off" />
+
+                    <input type="hidden"
+                           name="memberId"
+                           id="memberId"
+                           value="@ViewBag.SelectedMemberId" />
+
+                    <div class="member-options" id="memberOptions">
+                        <button type="button"
+                                class="member-option"
+                                data-value="0">
+                            All members
+                        </button>
+
+                        @foreach (var member in ViewBag.MemberId)
+                        {
+                            <button type="button"
+                                    class="member-option"
+                                    data-value="@member.Value">
+                                @member.Text
+                            </button>
+                        }
+                    </div>
+                </div>
             </div>
 
             <div class="member-membership-filter-group">
@@ -191,3 +217,64 @@
     }
 
 </section>
+
+@section Scripts {
+    <script>
+        const memberSearch = document.getElementById("memberSearch");
+        const memberId = document.getElementById("memberId");
+        const memberOptions = document.getElementById("memberOptions");
+        const memberOptionButtons = document.querySelectorAll(".member-option");
+
+        function setSelectedMemberText() {
+            const selectedValue = memberId.value;
+
+            memberOptionButtons.forEach(option => {
+                if (option.getAttribute("data-value") === selectedValue) {
+                    memberSearch.value = option.innerText.trim();
+                }
+            });
+        }
+
+        memberSearch.addEventListener("focus", function () {
+            memberOptions.classList.add("show");
+            this.select();
+        });
+
+        memberSearch.addEventListener("input", function () {
+            const searchValue = this.value.toLowerCase();
+
+            memberOptionButtons.forEach(option => {
+                const optionText = option.innerText.toLowerCase();
+
+                if (optionText.includes(searchValue)) {
+                    option.style.display = "block";
+                }
+                else {
+                    option.style.display = "none";
+                }
+            });
+
+            memberOptions.classList.add("show");
+        });
+
+        memberOptionButtons.forEach(option => {
+            option.addEventListener("click", function () {
+                memberId.value = this.getAttribute("data-value");
+                memberSearch.value = this.innerText.trim();
+                memberOptions.classList.remove("show");
+
+                memberOptionButtons.forEach(button => {
+                    button.style.display = "block";
+                });
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest("#memberSearchSelect")) {
+                memberOptions.classList.remove("show");
+            }
+        });
+
+        setSelectedMemberText();
+    </script>
+}

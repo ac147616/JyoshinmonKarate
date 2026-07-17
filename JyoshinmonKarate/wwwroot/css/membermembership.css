@@ -61,6 +61,10 @@
             box-shadow: 0 0 0 1px rgba(183, 25, 32, 0.2);
         }
 
+.member-membership-filter-group input[type="date"] {
+    min-width: 125px;
+}
+
 .member-membership-filter-actions {
     display: flex;
     align-items: center;
@@ -415,6 +419,66 @@
 
     .delete-btn:hover {
         background: #921219;
+    }
+
+.member-search-select {
+    position: relative;
+    width: 190px;
+}
+
+    .member-search-select input[type="text"] {
+        width: 100%;
+        height: 34px;
+        border: 1px solid #d7d7d7;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #333333;
+        font-size: 0.8rem;
+        padding: 0 9px;
+        outline: none;
+    }
+
+        .member-search-select input[type="text"]:focus {
+            border-color: #b71920;
+            box-shadow: 0 0 0 1px rgba(183, 25, 32, 0.2);
+        }
+
+.member-options {
+    display: none;
+    position: absolute;
+    top: 39px;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    padding: 5px;
+    z-index: 30;
+}
+
+    .member-options.show {
+        display: block;
+    }
+
+.member-option {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #333333;
+    text-align: left;
+    font-size: 0.8rem;
+    padding: 7px 8px;
+    cursor: pointer;
+}
+
+    .member-option:hover {
+        background: #f3f3f3;
+        color: #b71920;
     }
 
 @media (max-width: 650px) {
