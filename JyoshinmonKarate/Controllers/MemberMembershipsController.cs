@@ -461,6 +461,7 @@ namespace JyoshinmonKarate.Controllers
                 .Include(m => m.Member)
                 .Include(m => m.Membership)
                 .FirstOrDefaultAsync(m => m.MemberMembershipId == id);
+
             if (memberMembership == null)
             {
                 return NotFound();
