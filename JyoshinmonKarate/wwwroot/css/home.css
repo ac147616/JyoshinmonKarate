@@ -425,12 +425,13 @@ body {
     margin-bottom: 22px;
 }
 
+
 .admin-summary-card {
-    min-height: 112px;
+    min-height: 82px;
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 18px;
+    padding: 14px;
     background: #ffffff;
     border: 1px solid rgba(183, 25, 32, 0.18);
     border-radius: 16px;
@@ -518,8 +519,8 @@ body {
 }
 
 .attention-card {
-    min-height: 130px;
-    padding: 16px;
+    min-height: 95px;
+    padding: 13px;
     border-radius: 13px;
     background: #f8f8f9;
     border: 1px solid transparent;
@@ -550,9 +551,9 @@ body {
 
 .attention-card h3 {
     color: #000000;
-    font-size: 1.45rem;
+    font-size: 1.2rem;
+    margin: 9px 0 2px;
     font-weight: 750;
-    margin: 14px 0 4px;
 }
 
 .attention-card p {
@@ -598,10 +599,35 @@ body {
 
 .admin-management-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 10px;
 }
 
+.admin-management-link {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 13px;
+    border-radius: 10px;
+    background: #f8f8f9;
+    border: 1px solid transparent;
+    color: #333333;
+    font-size: 0.83rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .admin-management-link i {
+        color: #b71920;
+        font-size: 1.05rem;
+    }
+
+    .admin-management-link:hover {
+        color: #b71920;
+        background: #fff3f3;
+        border-color: rgba(183, 25, 32, 0.3);
+    }
 .admin-management-tile {
     min-height: 145px;
     padding: 18px;
