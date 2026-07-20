@@ -185,33 +185,152 @@ namespace JyoshinmonKarate.Controllers
 
         // GET: MemberGradings/Create
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["BeltAfterId"] = new SelectList(_context.Belts, "BeltId", "BeltName");
-            ViewData["BeltBeforeId"] = new SelectList(_context.Belts, "BeltId", "BeltName");
-            ViewData["GradingId"] = new SelectList(_context.Gradings, "GradingId", "GradingId");
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName");
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var gradings = await _context.Gradings
+                .Include(g => g.Club)
+                .OrderByDescending(g => g.GradingDate)
+                .ToListAsync();
+
+            List<SelectListItem> gradingOptions = new List<SelectListItem>();
+
+            foreach (Grading grading in gradings)
+            {
+                gradingOptions.Add(new SelectListItem
+                {
+                    Value = grading.GradingId.ToString(),
+                    Text = grading.GradingDate.ToString("dd MMM yyyy") + " - " + grading.Club.ClubName
+                });
+            }
+
+            var belts = await _context.Belts
+                .OrderBy(b => b.BeltName)
+                .ToListAsync();
+
+            List<SelectListItem> beltOptions = new List<SelectListItem>();
+
+            foreach (Belt belt in belts)
+            {
+                beltOptions.Add(new SelectListItem
+                {
+                    Value = belt.BeltId.ToString(),
+                    Text = belt.BeltName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text");
+            ViewData["GradingId"] = new SelectList(gradingOptions, "Value", "Text");
+            ViewData["BeltBeforeId"] = new SelectList(beltOptions, "Value", "Text");
+            ViewData["BeltAfterId"] = new SelectList(beltOptions, "Value", "Text");
+
             return View();
         }
 
         // POST: MemberGradings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberGradingId,GradingId,MemberId,BeltBeforeId,BeltAfterId,Passed")] MemberGrading memberGrading)
         {
+            ModelState.Remove("Grading");
+            ModelState.Remove("Member");
+            ModelState.Remove("BeltBefore");
+            ModelState.Remove("BeltAfter");
+
+            if (memberGrading.Passed && memberGrading.BeltBeforeId == memberGrading.BeltAfterId)
+            {
+                ModelState.AddModelError("BeltAfterId", "The new belt must be different from the previous belt when the member has passed.");
+            }
+
+            if (!memberGrading.Passed && memberGrading.BeltBeforeId != memberGrading.BeltAfterId)
+            {
+                ModelState.AddModelError("BeltAfterId", "The belt should remain the same when the member has not passed.");
+            }
+
+            bool gradingExists = await _context.MemberGradings.AnyAsync(m =>
+                m.MemberId == memberGrading.MemberId &&
+                m.GradingId == memberGrading.GradingId);
+
+            if (gradingExists)
+            {
+                ModelState.AddModelError("", "This member already has a result recorded for this grading.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(memberGrading);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BeltAfterId"] = new SelectList(_context.Belts, "BeltId", "BeltName", memberGrading.BeltAfterId);
-            ViewData["BeltBeforeId"] = new SelectList(_context.Belts, "BeltId", "BeltName", memberGrading.BeltBeforeId);
-            ViewData["GradingId"] = new SelectList(_context.Gradings, "GradingId", "GradingId", memberGrading.GradingId);
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "FirstName", memberGrading.MemberId);
+
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var gradings = await _context.Gradings
+                .Include(g => g.Club)
+                .OrderByDescending(g => g.GradingDate)
+                .ToListAsync();
+
+            List<SelectListItem> gradingOptions = new List<SelectListItem>();
+
+            foreach (Grading grading in gradings)
+            {
+                gradingOptions.Add(new SelectListItem
+                {
+                    Value = grading.GradingId.ToString(),
+                    Text = grading.GradingDate.ToString("dd MMM yyyy") + " - " + grading.Club.ClubName
+                });
+            }
+
+            var belts = await _context.Belts
+                .OrderBy(b => b.BeltName)
+                .ToListAsync();
+
+            List<SelectListItem> beltOptions = new List<SelectListItem>();
+
+            foreach (Belt belt in belts)
+            {
+                beltOptions.Add(new SelectListItem
+                {
+                    Value = belt.BeltId.ToString(),
+                    Text = belt.BeltName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberGrading.MemberId);
+            ViewData["GradingId"] = new SelectList(gradingOptions, "Value", "Text", memberGrading.GradingId);
+            ViewData["BeltBeforeId"] = new SelectList(beltOptions, "Value", "Text", memberGrading.BeltBeforeId);
+            ViewData["BeltAfterId"] = new SelectList(beltOptions, "Value", "Text", memberGrading.BeltAfterId);
+
             return View(memberGrading);
         }
 

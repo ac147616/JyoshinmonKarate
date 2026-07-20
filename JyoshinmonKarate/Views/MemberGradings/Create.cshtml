@@ -1,49 +1,89 @@
 ﻿@model JyoshinmonKarate.Models.MemberGrading
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Member Grading";
 }
 
-<h1>Create</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
+}
 
-<h4>MemberGrading</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<section class="member-grading-form-page">
+    <div class="member-grading-form-card">
+
+        <div class="member-grading-form-header">
+            <h1>Add Member Grading</h1>
+        </div>
+
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GradingId" class="control-label"></label>
-                <select asp-for="GradingId" class ="form-control" asp-items="ViewBag.GradingId"></select>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label asp-for="MemberId">Member</label>
+                    <select asp-for="MemberId"
+                            class="form-control"
+                            asp-items="ViewBag.MemberId">
+                        <option value="">Select a member</option>
+                    </select>
+                    <span asp-validation-for="MemberId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="GradingId">Grading</label>
+                    <select asp-for="GradingId"
+                            class="form-control"
+                            asp-items="ViewBag.GradingId">
+                        <option value="">Select a grading</option>
+                    </select>
+                    <span asp-validation-for="GradingId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="BeltBeforeId">Belt Before</label>
+                    <select asp-for="BeltBeforeId"
+                            class="form-control"
+                            asp-items="ViewBag.BeltBeforeId">
+                        <option value="">Select previous belt</option>
+                    </select>
+                    <span asp-validation-for="BeltBeforeId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="BeltAfterId">Belt After</label>
+                    <select asp-for="BeltAfterId"
+                            class="form-control"
+                            asp-items="ViewBag.BeltAfterId">
+                        <option value="">Select new belt</option>
+                    </select>
+                    <span asp-validation-for="BeltAfterId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label asp-for="Passed">Passed</label>
+
+                    <div class="checkbox-row">
+                        <input asp-for="Passed" />
+                        <span>Member passed the grading</span>
+                    </div>
+
+                    <span asp-validation-for="Passed" class="text-danger"></span>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <select asp-for="MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BeltBeforeId" class="control-label"></label>
-                <select asp-for="BeltBeforeId" class ="form-control" asp-items="ViewBag.BeltBeforeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BeltAfterId" class="control-label"></label>
-                <select asp-for="BeltAfterId" class ="form-control" asp-items="ViewBag.BeltAfterId"></select>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Passed" /> @Html.DisplayNameFor(model => model.Passed)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Add Member Grading</button>
+                <a asp-action="Index" class="cancel-link">Cancel</a>
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    </div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
