@@ -23,10 +23,139 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberGradings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int memberId = 0, int gradingId = 0, int beltAfterId = 0, string result = "", int page = 1)
         {
-            var jyoshinmonKarateContext = _context.MemberGradings.Include(m => m.BeltAfter).Include(m => m.BeltBefore).Include(m => m.Grading).Include(m => m.Member);
-            return View(await jyoshinmonKarateContext.ToListAsync());
+            int pageSize = 20;
+
+            var memberGradingsQuery = _context.MemberGradings
+                .Include(m => m.BeltAfter)
+                .Include(m => m.BeltBefore)
+                .Include(m => m.Grading)
+                .ThenInclude(g => g.Club)
+                .Include(m => m.Member)
+                .AsQueryable();
+
+            var membersQuery = _context.Members.AsQueryable();
+
+            if (!User.IsInRole("Admin"))
+            {
+                string currentUserName = User.Identity.Name;
+
+                var currentUser = await _context.Users
+                    .FirstOrDefaultAsync(u => u.UserName == currentUserName);
+
+                if (currentUser == null)
+                {
+                    return NotFound();
+                }
+
+                memberGradingsQuery = memberGradingsQuery
+                    .Where(m => m.Member.UserId == currentUser.Id);
+
+                membersQuery = membersQuery
+                    .Where(m => m.UserId == currentUser.Id);
+            }
+
+            if (memberId != 0)
+            {
+                memberGradingsQuery = memberGradingsQuery
+                    .Where(m => m.MemberId == memberId);
+            }
+
+            if (gradingId != 0)
+            {
+                memberGradingsQuery = memberGradingsQuery
+                    .Where(m => m.GradingId == gradingId);
+            }
+
+            if (beltAfterId != 0)
+            {
+                memberGradingsQuery = memberGradingsQuery
+                    .Where(m => m.BeltAfterId == beltAfterId);
+            }
+
+            if (result == "Passed")
+            {
+                memberGradingsQuery = memberGradingsQuery
+                    .Where(m => m.Passed == true);
+            }
+            else if (result == "NotPassed")
+            {
+                memberGradingsQuery = memberGradingsQuery
+                    .Where(m => m.Passed == false);
+            }
+
+            memberGradingsQuery = memberGradingsQuery
+                .OrderByDescending(m => m.Grading.GradingDate)
+                .ThenBy(m => m.Member.FirstName)
+                .ThenBy(m => m.Member.LastName);
+
+            int totalRecords = await memberGradingsQuery.CountAsync();
+
+            var memberGradings = await memberGradingsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var members = await membersQuery
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            var gradings = await _context.Gradings
+                .Include(g => g.Club)
+                .OrderByDescending(g => g.GradingDate)
+                .ToListAsync();
+
+            List<SelectListItem> gradingOptions = new List<SelectListItem>();
+
+            foreach (Grading grading in gradings)
+            {
+                gradingOptions.Add(new SelectListItem
+                {
+                    Value = grading.GradingId.ToString(),
+                    Text = grading.GradingDate.ToString("dd MMM yyyy") + " - " + grading.Club.ClubName
+                });
+            }
+
+            var belts = await _context.Belts
+                .OrderBy(b => b.BeltName)
+                .ToListAsync();
+
+            List<SelectListItem> beltOptions = new List<SelectListItem>();
+
+            foreach (Belt belt in belts)
+            {
+                beltOptions.Add(new SelectListItem
+                {
+                    Value = belt.BeltId.ToString(),
+                    Text = belt.BeltName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberId);
+            ViewData["GradingId"] = new SelectList(gradingOptions, "Value", "Text", gradingId);
+            ViewData["BeltAfterId"] = new SelectList(beltOptions, "Value", "Text", beltAfterId);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            ViewBag.SelectedMemberId = memberId;
+            ViewBag.SelectedGradingId = gradingId;
+            ViewBag.SelectedBeltAfterId = beltAfterId;
+            ViewBag.SelectedResult = result;
+
+            return View(memberGradings);
         }
 
         // GET: MemberGradings/Details/5

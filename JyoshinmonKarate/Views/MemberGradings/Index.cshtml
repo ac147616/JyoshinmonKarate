@@ -1,59 +1,319 @@
 ﻿@model IEnumerable<JyoshinmonKarate.Models.MemberGrading>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Member Gradings";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Passed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Grading)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BeltBefore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BeltAfter)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Passed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grading.GradingId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BeltBefore.BeltName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BeltAfter.BeltName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MemberGradingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MemberGradingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MemberGradingId">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+
+<section class="member-grading-index-page">
+
+    <div class="member-grading-header">
+        <h1>Member Gradings</h1>
+    </div>
+
+    <form asp-action="Index" method="get" class="member-grading-toolbar">
+
+        <div class="member-grading-filter-fields">
+
+            <div class="member-grading-filter-group">
+                <label for="memberSearch">Member</label>
+
+                <div class="member-search-select" id="memberSearchSelect">
+                    <input type="text"
+                           id="memberSearch"
+                           placeholder="Search members"
+                           autocomplete="off" />
+
+                    <input type="hidden"
+                           name="memberId"
+                           id="memberId"
+                           value="@ViewBag.SelectedMemberId" />
+
+                    <div class="member-options" id="memberOptions">
+                        <button type="button"
+                                class="member-option"
+                                data-value="0">
+                            All members
+                        </button>
+
+                        @foreach (var member in ViewBag.MemberId)
+                        {
+                            <button type="button"
+                                    class="member-option"
+                                    data-value="@member.Value">
+                                @member.Text
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="member-grading-filter-group">
+                <label for="gradingId">Grading</label>
+
+                <select name="gradingId"
+                        id="gradingId"
+                        asp-items="ViewBag.GradingId">
+                    <option value="0">All gradings</option>
+                </select>
+            </div>
+
+            <div class="member-grading-filter-group">
+                <label for="beltAfterId">New Belt</label>
+
+                <select name="beltAfterId"
+                        id="beltAfterId"
+                        asp-items="ViewBag.BeltAfterId">
+                    <option value="0">All belts</option>
+                </select>
+            </div>
+
+            <div class="member-grading-filter-group">
+                <label for="result">Result</label>
+
+                <select name="result" id="result">
+                    <option value="">All results</option>
+                    <option value="Passed"
+                            selected="@(ViewBag.SelectedResult == "Passed")">
+                        Passed
+                    </option>
+                    <option value="NotPassed"
+                            selected="@(ViewBag.SelectedResult == "NotPassed")">
+                        Not Passed
+                    </option>
+                </select>
+            </div>
+
+            <div class="member-grading-filter-actions">
+                <button type="submit" class="apply-member-grading-filters-btn">
+                    Apply
+                </button>
+
+                <a asp-action="Index"
+                       class="clear-member-grading-filters-link">
+                    Clear
+                </a>
+            </div>
+
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="add-member-grading-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Member Grading
+            </a>
+        }
+
+    </form>
+
+    <div class="member-grading-table-wrap">
+        <table class="member-grading-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Grading Date</th>
+                    <th>Dojo</th>
+                    <th>Belt Before</th>
+                    <th>Belt After</th>
+                    <th>Result</th>
+
+                    @if (isAdmin)
+                    {
+                        <th>Actions</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string memberName = item.Member.FirstName + " " + item.Member.LastName;
+                    string resultName = item.Passed ? "Passed" : "Not Passed";
+                    string resultClass = item.Passed ? "result-passed" : "result-not-passed";
+
+                    <tr>
+                        <td>
+                            <span class="member-grading-member-name">
+                                @memberName
+                            </span>
+                        </td>
+
+                        <td>@item.Grading.GradingDate.ToString("dd MMM yyyy")</td>
+
+                        <td>@item.Grading.Club.ClubName</td>
+
+                        <td>@item.BeltBefore.BeltName</td>
+
+                        <td>@item.BeltAfter.BeltName</td>
+
+                        <td>
+                            <span class="member-grading-result @resultClass">
+                                @resultName
+                            </span>
+                        </td>
+
+                        @if (isAdmin)
+                        {
+                            <td>
+                                <div class="member-grading-actions">
+                                    <a asp-action="Details"
+                                           asp-route-id="@item.MemberGradingId"
+                                           class="details-member-grading-link">
+                                        Details
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                           asp-route-id="@item.MemberGradingId"
+                                           class="edit-member-grading-link">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                           asp-route-id="@item.MemberGradingId"
+                                           class="delete-member-grading-link">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="member-grading-empty-message">
+            No member grading records were found.
+        </div>
+    }
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="app-pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <a asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)"
+                       asp-route-memberId="@ViewBag.SelectedMemberId"
+                       asp-route-gradingId="@ViewBag.SelectedGradingId"
+                       asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId"
+                       asp-route-result="@ViewBag.SelectedResult"
+                       class="app-page-link">
+                    &lt;
+                </a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&lt;</span>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                if (i == ViewBag.CurrentPage)
+                {
+                    <span class="app-page-link active">@i</span>
+                }
+                else
+                {
+                    <a asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-memberId="@ViewBag.SelectedMemberId"
+                           asp-route-gradingId="@ViewBag.SelectedGradingId"
+                           asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId"
+                           asp-route-result="@ViewBag.SelectedResult"
+                           class="app-page-link">
+                        @i
+                    </a>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <a asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)"
+                       asp-route-memberId="@ViewBag.SelectedMemberId"
+                       asp-route-gradingId="@ViewBag.SelectedGradingId"
+                       asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId"
+                       asp-route-result="@ViewBag.SelectedResult"
+                       class="app-page-link">
+                    &gt;
+                </a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&gt;</span>
+            }
+
+        </div>
+    }
+
+</section>
+
+@section Scripts {
+    <script>
+        const memberSearch = document.getElementById("memberSearch");
+        const memberId = document.getElementById("memberId");
+        const memberOptions = document.getElementById("memberOptions");
+        const memberOptionButtons = document.querySelectorAll(".member-option");
+
+        function setSelectedMemberText() {
+            const selectedValue = memberId.value;
+
+            memberOptionButtons.forEach(option => {
+                if (option.getAttribute("data-value") === selectedValue) {
+                    memberSearch.value = option.innerText.trim();
+                }
+            });
+        }
+
+        memberSearch.addEventListener("focus", function () {
+            memberOptions.classList.add("show");
+            this.select();
+        });
+
+        memberSearch.addEventListener("input", function () {
+            const searchValue = this.value.toLowerCase();
+
+            memberOptionButtons.forEach(option => {
+                const optionText = option.innerText.toLowerCase();
+
+                if (optionText.includes(searchValue)) {
+                    option.style.display = "block";
+                }
+                else {
+                    option.style.display = "none";
+                }
+            });
+
+            memberOptions.classList.add("show");
+        });
+
+        memberOptionButtons.forEach(option => {
+            option.addEventListener("click", function () {
+                memberId.value = this.getAttribute("data-value");
+                memberSearch.value = this.innerText.trim();
+                memberOptions.classList.remove("show");
+
+                memberOptionButtons.forEach(button => {
+                    button.style.display = "block";
+                });
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest("#memberSearchSelect")) {
+                memberOptions.classList.remove("show");
+            }
+        });
+
+        setSelectedMemberText();
+    </script>
+}
