@@ -159,6 +159,7 @@ namespace JyoshinmonKarate.Controllers
         }
 
         // GET: MemberGradings/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -167,11 +168,13 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var memberGrading = await _context.MemberGradings
-                .Include(m => m.BeltAfter)
-                .Include(m => m.BeltBefore)
-                .Include(m => m.Grading)
                 .Include(m => m.Member)
+                .Include(m => m.Grading)
+                    .ThenInclude(g => g.Club)
+                .Include(m => m.BeltBefore)
+                .Include(m => m.BeltAfter)
                 .FirstOrDefaultAsync(m => m.MemberGradingId == id);
+
             if (memberGrading == null)
             {
                 return NotFound();

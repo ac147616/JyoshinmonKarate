@@ -332,3 +332,96 @@
         min-width: 1000px;
     }
 }
+
+.member-grading-form-page {
+    padding: 35px 10px 45px;
+}
+
+.member-grading-form-card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid rgba(183, 25, 32, 0.18);
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(0,0,0,.08);
+    padding: 28px;
+}
+
+.member-grading-form-header {
+    margin-bottom: 24px;
+}
+
+    .member-grading-form-header h1 {
+        color: #000;
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(230px,1fr));
+    gap: 12px 22px;
+    margin-bottom: 26px;
+}
+
+.details-item {
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 9px;
+}
+
+    .details-item span {
+        display: block;
+        color: #444444;
+        font-size: .78rem;
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .details-item p {
+        margin: 0;
+        color: #666666;
+        font-size: .88rem;
+        line-height: 1.35;
+    }
+
+.save-link {
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    border-radius: 7px;
+    background: #b71920;
+    color: #fff;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .save-link:hover {
+        background: #921219;
+        color: #fff;
+    }
+
+@media (max-width:650px) {
+
+    .member-grading-form-card {
+        padding: 22px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cancel-link {
+    color: #777777;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+    .cancel-link:hover {
+        color: #b71920;
+        text-decoration: underline;
+    }

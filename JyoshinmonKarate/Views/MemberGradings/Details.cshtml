@@ -1,48 +1,68 @@
 ﻿@model JyoshinmonKarate.Models.MemberGrading
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Member Grading Details";
+
+    string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
+    string result = Model.Passed ? "Passed" : "Not Passed";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>MemberGrading</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Passed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Passed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Grading)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Grading.GradingId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Member)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Member.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BeltBefore)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BeltBefore.BeltName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BeltAfter)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BeltAfter.BeltName)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MemberGradingId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="member-grading-form-page">
+    <div class="member-grading-form-card">
+
+        <div class="member-grading-form-header">
+            <h1>Member Grading Details</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Member</span>
+                <p>@memberName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Grading Date</span>
+                <p>@Model.Grading.GradingDate.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="details-item">
+                <span>Dojo</span>
+                <p>@Model.Grading.Club.ClubName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Belt Before</span>
+                <p>@Model.BeltBefore.BeltName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Belt After</span>
+                <p>@Model.BeltAfter.BeltName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Result</span>
+                <p>@result</p>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit"
+               asp-route-id="@Model.MemberGradingId"
+               class="save-link">
+                Edit Member Grading
+            </a>
+
+            <a asp-action="Index" class="cancel-link">
+                Back to List
+            </a>
+        </div>
+
+    </div>
+</section>
