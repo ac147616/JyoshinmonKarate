@@ -307,32 +307,6 @@
         cursor: default;
     }
 
-@media (max-width: 1100px) {
-    .member-grading-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .member-grading-filter-fields {
-        align-items: stretch;
-    }
-
-    .member-grading-filter-group select,
-    .member-grading-filter-group input,
-    .member-search-select {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .add-member-grading-btn {
-        align-self: flex-start;
-    }
-
-    .member-grading-table {
-        min-width: 1000px;
-    }
-}
-
 .member-grading-form-page {
     padding: 35px 10px 45px;
 }
@@ -404,16 +378,94 @@
         color: #fff;
     }
 
-@media (max-width:650px) {
-
-    .member-grading-form-card {
-        padding: 22px;
-    }
-
-    .details-grid {
-        grid-template-columns: 1fr;
-    }
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 16px 18px;
 }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label {
+        display: block;
+        color: #444444;
+        font-size: 0.84rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+.form-control {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid #d6d6d6;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 0.9rem;
+    padding: 0 10px;
+    outline: none;
+}
+
+    .form-control:focus {
+        border-color: #b71920;
+        box-shadow: 0 0 0 1px rgba(183, 25, 32, 0.25);
+    }
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-row {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+    .checkbox-row input {
+        width: 17px;
+        height: 17px;
+        accent-color: #b71920;
+    }
+
+    .checkbox-row span {
+        color: #555555;
+        font-size: 0.88rem;
+    }
+
+.text-danger {
+    display: block;
+    color: #b71920;
+    font-size: 0.78rem;
+    margin-top: 3px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.save-btn {
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 7px;
+    background: #b71920;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .save-btn:hover {
+        background: #921219;
+    }
 
 .cancel-link {
     color: #777777;
@@ -425,3 +477,51 @@
         color: #b71920;
         text-decoration: underline;
     }
+
+.cancel-link {
+    color: #777777;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+    .cancel-link:hover {
+        color: #b71920;
+        text-decoration: underline;
+    }
+
+@media (max-width: 650px) {
+    .member-grading-form-card {
+        padding: 22px;
+    }
+
+    .form-grid,
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1100px) {
+    .member-grading-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .member-grading-filter-fields {
+        align-items: stretch;
+    }
+
+    .member-grading-filter-group select,
+    .member-grading-filter-group input,
+    .member-search-select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .add-member-grading-btn {
+        align-self: flex-start;
+    }
+
+    .member-grading-table {
+        min-width: 1000px;
+    }
+}
