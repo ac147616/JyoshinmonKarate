@@ -1,6 +1,75 @@
-﻿namespace JyoshinmonKarate.Views.Users
-{
-    public class Details
+﻿@model JyoshinmonKarate.Areas.Identity.Data.User
+
+@{
+    ViewData["Title"] = "Account Details";
+
+    string fullName = Model.FirstName + " " + Model.LastName;
+    string phoneNumber = "Not provided";
+    string userRole = ViewBag.UserRole ?? "No role";
+
+    if (!string.IsNullOrEmpty(Model.PhoneNumber))
     {
+        phoneNumber = Model.PhoneNumber;
     }
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/user.css" asp-append-version="true" />
+}
+
+<section class="user-form-page">
+    <div class="user-form-card">
+
+        <div class="user-form-header">
+            <h1>Account Details</h1>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Full Name</span>
+                <p>@fullName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Role</span>
+                <p>@userRole</p>
+            </div>
+
+            <div class="details-item">
+                <span>Email</span>
+                <p>@Model.Email</p>
+            </div>
+
+            <div class="details-item">
+                <span>Phone Number</span>
+                <p>@phoneNumber</p>
+            </div>
+
+            <div class="details-item">
+                <span>Username</span>
+                <p>@Model.UserName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Email Confirmed</span>
+
+                @if (Model.EmailConfirmed)
+                {
+                    <p>Yes</p>
+                }
+                else
+                {
+                    <p>No</p>
+                }
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="save-link">Edit Account</a>
+            <a asp-action="Index" class="cancel-link">Back to List</a>
+        </div>
+
+    </div>
+</section>

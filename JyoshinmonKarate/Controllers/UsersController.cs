@@ -74,6 +74,33 @@ namespace JyoshinmonKarate.Controllers
             return View(users);
         }
 
+        // GET: Users/Details/id
+        public async Task<IActionResult> Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
 
+            User user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.Count > 0)
+            {
+                ViewBag.UserRole = roles[0];
+            }
+            else
+            {
+                ViewBag.UserRole = "No role";
+            }
+
+            return View(user);
+        }
     }
 }
