@@ -30,20 +30,14 @@ namespace JyoshinmonKarate.Controllers
                     u.Email.Contains(search));
             }
 
-            usersQuery = usersQuery
+            var allUsers = await usersQuery
                 .OrderBy(u => u.FirstName)
-                .ThenBy(u => u.LastName);
-
-            int totalUsers = await usersQuery.CountAsync();
-
-            var users = await usersQuery
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .ThenBy(u => u.LastName)
                 .ToListAsync();
 
             Dictionary<string, string> userRoles = new Dictionary<string, string>();
 
-            foreach (User user in users)
+            foreach (User user in allUsers)
             {
                 var roles = await _userManager.GetRolesAsync(user);
 
@@ -59,10 +53,17 @@ namespace JyoshinmonKarate.Controllers
 
             if (!string.IsNullOrEmpty(role))
             {
-                users = users
+                allUsers = allUsers
                     .Where(u => userRoles.ContainsKey(u.Id) && userRoles[u.Id] == role)
                     .ToList();
             }
+
+            int totalUsers = allUsers.Count;
+
+            var users = allUsers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             ViewBag.UserRoles = userRoles;
             ViewBag.Search = search;
