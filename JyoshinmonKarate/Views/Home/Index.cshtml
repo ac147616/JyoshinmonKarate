@@ -222,6 +222,364 @@
         }
     </section>
 }
+@if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    int totalMembers = ViewBag.TotalMembers ?? 0;
+    int totalInstructors = ViewBag.TotalInstructors ?? 0;
+    int totalDojos = ViewBag.TotalDojos ?? 0;
+    int activeMemberships = ViewBag.ActiveMemberships ?? 0;
+    int pendingPayments = ViewBag.PendingPayments ?? 0;
+    int failedPayments = ViewBag.FailedPayments ?? 0;
+    int upcomingGradings = ViewBag.UpcomingGradings ?? 0;
+
+    decimal outstandingPaymentTotal = 0;
+
+    if (ViewBag.OutstandingPaymentTotal != null)
+    {
+        outstandingPaymentTotal = Convert.ToDecimal(ViewBag.OutstandingPaymentTotal);
+    }
+
+    var recentMembers = ViewBag.RecentMembers as List<JyoshinmonKarate.Models.Member>;
+
+    <section class="admin-dashboard-page">
+
+        <div class="admin-dashboard-header">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage members, classes, payments, memberships and grading activity.</p>
+            </div>
+
+            <a asp-controller="Members"
+                   asp-action="Create"
+                   class="admin-primary-btn">
+                <i class="bi bi-person-plus"></i>
+                Add Member
+            </a>
+        </div>
+
+        <div class="admin-summary-grid">
+
+            <a asp-controller="Members"
+                   asp-action="Index"
+                   class="admin-summary-card">
+                <div class="admin-summary-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <div>
+                    <p>Total Members</p>
+                    <h2>@totalMembers</h2>
+                </div>
+            </a>
+
+            <a asp-controller="Instructors"
+                   asp-action="Index"
+                   class="admin-summary-card">
+                <div class="admin-summary-icon">
+                    <i class="bi bi-person-badge"></i>
+                </div>
+
+                <div>
+                    <p>Instructors</p>
+                    <h2>@totalInstructors</h2>
+                </div>
+            </a>
+
+            <a asp-controller="Clubs"
+                   asp-action="Index"
+                   class="admin-summary-card">
+                <div class="admin-summary-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+
+                <div>
+                    <p>Dojos</p>
+                    <h2>@totalDojos</h2>
+                </div>
+            </a>
+
+            <a asp-controller="MemberMemberships"
+                   asp-action="Index"
+                   asp-route-membershipStatus="Active"
+                   class="admin-summary-card">
+                <div class="admin-summary-icon">
+                    <i class="bi bi-card-checklist"></i>
+                </div>
+
+                <div>
+                    <p>Active Memberships</p>
+                    <h2>@activeMemberships</h2>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="admin-dashboard-main">
+
+            <div class="admin-attention-panel">
+
+                <div class="admin-panel-heading">
+                    <div>
+                        <h2>Needs Attention</h2>
+                        <p>Important records that may need admin action.</p>
+                    </div>
+                </div>
+
+                <div class="attention-grid">
+
+                    <a asp-controller="Payments"
+                           asp-action="Index"
+                           asp-route-paymentStatus="Pending"
+                           class="attention-card">
+                        <div class="attention-card-top">
+                            <i class="bi bi-hourglass-split"></i>
+                            <span>Pending Payments</span>
+                        </div>
+
+                        <h3>@pendingPayments</h3>
+                        <p>Payments waiting to be completed.</p>
+                    </a>
+
+                    <a asp-controller="Payments"
+                           asp-action="Index"
+                           asp-route-paymentStatus="Failed"
+                           class="attention-card attention-danger">
+                        <div class="attention-card-top">
+                            <i class="bi bi-exclamation-circle"></i>
+                            <span>Failed Payments</span>
+                        </div>
+
+                        <h3>@failedPayments</h3>
+                        <p>Payments that were not successful.</p>
+                    </a>
+
+                    <a asp-controller="Payments"
+                           asp-action="Index"
+                           class="attention-card">
+                        <div class="attention-card-top">
+                            <i class="bi bi-cash-stack"></i>
+                            <span>Outstanding Total</span>
+                        </div>
+
+                        <h3>$@outstandingPaymentTotal.ToString("0.00")</h3>
+                        <p>Total pending and failed payment amount.</p>
+                    </a>
+
+                    <a asp-controller="Gradings"
+                           asp-action="Index"
+                           class="attention-card">
+                        <div class="attention-card-top">
+                            <i class="bi bi-calendar-event"></i>
+                            <span>Upcoming Gradings</span>
+                        </div>
+
+                        <h3>@upcomingGradings</h3>
+                        <p>Gradings scheduled from today onwards.</p>
+                    </a>
+
+                </div>
+            </div>
+
+            <aside class="admin-quick-actions-panel">
+                <div class="admin-panel-heading">
+                    <div>
+                        <h2>Quick Actions</h2>
+                        <p>Create common records.</p>
+                    </div>
+                </div>
+
+                <div class="admin-quick-links">
+
+                    <a asp-controller="Attendances" asp-action="Create">
+                        <i class="bi bi-calendar-check"></i>
+                        Record Attendance
+                    </a>
+
+                    <a asp-controller="Payments" asp-action="Create">
+                        <i class="bi bi-cash-stack"></i>
+                        Add Payment
+                    </a>
+
+                    <a asp-controller="MemberMemberships" asp-action="Create">
+                        <i class="bi bi-card-checklist"></i>
+                        Assign Membership
+                    </a>
+
+                    <a asp-controller="MemberGradings" asp-action="Create">
+                        <i class="bi bi-trophy"></i>
+                        Record Grading
+                    </a>
+
+                    <a asp-controller="Schedules" asp-action="Create">
+                        <i class="bi bi-calendar-plus"></i>
+                        Add Schedule
+                    </a>
+
+                    <a asp-controller="Instructors" asp-action="Create">
+                        <i class="bi bi-person-badge"></i>
+                        Add Instructor
+                    </a>
+
+                </div>
+            </aside>
+
+        </div>
+
+        <div class="admin-management-panel">
+
+            <div class="admin-panel-heading">
+                <div>
+                    <h2>Manage Karate Portal</h2>
+                    <p>Open an area to view and manage its records.</p>
+                </div>
+            </div>
+
+            <div class="admin-management-grid">
+
+                <a asp-controller="Members" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-people"></i>
+                    <h3>Members</h3>
+                    <p>Manage member profiles and information.</p>
+                </a>
+
+                <a asp-controller="Attendances" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-calendar-check"></i>
+                    <h3>Attendance</h3>
+                    <p>View and record class attendance.</p>
+                </a>
+
+                <a asp-controller="Payments" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-cash-stack"></i>
+                    <h3>Payments</h3>
+                    <p>Manage fees and payment records.</p>
+                </a>
+
+                <a asp-controller="MemberMemberships" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-card-checklist"></i>
+                    <h3>Member Memberships</h3>
+                    <p>Assign and manage member plans.</p>
+                </a>
+
+                <a asp-controller="Gradings" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-calendar-event"></i>
+                    <h3>Gradings</h3>
+                    <p>Manage grading events.</p>
+                </a>
+
+                <a asp-controller="MemberGradings" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-trophy"></i>
+                    <h3>Member Gradings</h3>
+                    <p>Manage member grading results.</p>
+                </a>
+
+                <a asp-controller="Schedules" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-calendar3"></i>
+                    <h3>Schedules</h3>
+                    <p>Manage class days and times.</p>
+                </a>
+
+                <a asp-controller="Instructors" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-person-badge"></i>
+                    <h3>Instructors</h3>
+                    <p>Manage instructors and dojo assignments.</p>
+                </a>
+
+                <a asp-controller="Clubs" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-building"></i>
+                    <h3>Dojos</h3>
+                    <p>Manage dojo information.</p>
+                </a>
+
+                <a asp-controller="Belts" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-award"></i>
+                    <h3>Belts</h3>
+                    <p>Manage available belt levels.</p>
+                </a>
+
+                <a asp-controller="Memberships" asp-action="Index" class="admin-management-tile">
+                    <i class="bi bi-tags"></i>
+                    <h3>Membership Plans</h3>
+                    <p>Manage plan names and costs.</p>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="admin-recent-panel">
+
+            <div class="admin-panel-heading recent-heading">
+                <div>
+                    <h2>Recently Added Members</h2>
+                    <p>The latest members added to the portal.</p>
+                </div>
+
+                <a asp-controller="Members"
+                       asp-action="Index"
+                       class="view-all-link">
+                    View all
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+
+            @if (recentMembers != null && recentMembers.Count > 0)
+            {
+                <div class="admin-recent-table-wrap">
+                    <table class="admin-recent-table">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Dojo</th>
+                                <th>Belt</th>
+                                <th>Date Joined</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var member in recentMembers)
+                            {
+                                string dojoName = "Not assigned";
+                                string beltName = "Not assigned";
+
+                                if (member.Club != null)
+                                {
+                                    dojoName = member.Club.ClubName;
+                                }
+
+                                if (member.Belt != null)
+                                {
+                                    beltName = member.Belt.BeltName;
+                                }
+
+                                <tr>
+                                    <td>
+                                        <strong>@member.FirstName @member.LastName</strong>
+                                    </td>
+                                    <td>@dojoName</td>
+                                    <td>@beltName</td>
+                                    <td>@member.DateJoined.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <a asp-controller="Members"
+                                               asp-action="Details"
+                                               asp-route-id="@member.MemberId">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="admin-empty-message">No members have been added yet.</p>
+            }
+
+        </div>
+
+    </section>
+}
 
 @section Scripts {
     <script>

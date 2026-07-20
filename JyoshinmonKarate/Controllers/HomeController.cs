@@ -115,6 +115,36 @@ namespace JyoshinmonKarate.Controllers
                 }
             }
 
+            if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                ViewBag.TotalMembers = await _context.Members.CountAsync();
+                ViewBag.TotalInstructors = await _context.Instructors.CountAsync();
+                ViewBag.TotalDojos = await _context.Clubs.CountAsync();
+
+                ViewBag.ActiveMemberships = await _context.MemberMemberships
+                    .CountAsync(m => m.MembershipStatus == MembershipStatus.Active);
+
+                ViewBag.PendingPayments = await _context.Payments
+                    .CountAsync(p => p.Status == PaymentStatus.Pending);
+
+                ViewBag.FailedPayments = await _context.Payments
+                    .CountAsync(p => p.Status == PaymentStatus.Failed);
+
+                ViewBag.OutstandingPaymentTotal = await _context.Payments
+                    .Where(p => p.Status == PaymentStatus.Pending || p.Status == PaymentStatus.Failed)
+                    .SumAsync(p => (decimal?)p.Amount) ?? 0;
+
+                ViewBag.UpcomingGradings = await _context.Gradings
+                    .CountAsync(g => g.GradingDate >= DateTime.Today);
+
+                ViewBag.RecentMembers = await _context.Members
+                    .Include(m => m.Belt)
+                    .Include(m => m.Club)
+                    .OrderByDescending(m => m.DateJoined)
+                    .Take(5)
+                    .ToListAsync();
+            }
+
             ViewBag.MembershipNames = membershipNames;
             ViewBag.LastClassDates = lastClassDates;
             ViewBag.OutstandingPayments = outstandingPayments;
