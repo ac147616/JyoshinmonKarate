@@ -73,5 +73,7 @@ namespace JyoshinmonKarate.Controllers
 
             return View(users);
         }
+
+
     }
 }

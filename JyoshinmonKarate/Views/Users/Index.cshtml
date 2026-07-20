@@ -1,1 +1,146 @@
-﻿
+﻿@model IEnumerable<JyoshinmonKarate.Areas.Identity.Data.User>
+
+@{
+    ViewData["Title"] = "User Accounts";
+
+    var userRoles = ViewBag.UserRoles as Dictionary<string, string>;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/user.css" asp-append-version="true" />
+}
+
+<section class="user-index-page">
+
+    <div class="user-header">
+        <div>
+            <h1>User Accounts</h1>
+        </div>
+    </div>
+
+    <form asp-action="Index" method="get" class="user-filter-toolbar">
+
+        <div class="user-search-group">
+            <label for="search">Search</label>
+            <input type="text" name="search" id="search" value="@ViewBag.Search" placeholder="Search name or email" />
+        </div>
+
+        <div class="user-filter-group">
+            <label for="role">Role</label>
+
+            <select name="role" id="role">
+                <option value="">All roles</option>
+                <option value="Admin" selected="@(ViewBag.SelectedRole == "Admin")">Admin</option>
+                <option value="User" selected="@(ViewBag.SelectedRole == "User")">User</option>
+                <option value="No role" selected="@(ViewBag.SelectedRole == "No role")">No role</option>
+            </select>
+        </div>
+
+        <div class="user-filter-actions">
+            <button type="submit" class="apply-user-filter-btn">Apply</button>
+            <a asp-action="Index" class="clear-user-filter-link">Clear</a>
+        </div>
+
+    </form>
+
+    <div class="user-table-wrap">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string fullName = item.FirstName + " " + item.LastName;
+                    string userRole = "No role";
+
+                    if (userRoles != null && userRoles.ContainsKey(item.Id))
+                    {
+                        userRole = userRoles[item.Id];
+                    }
+
+                    string roleClass = "role-none";
+
+                    if (userRole == "Admin")
+                    {
+                        roleClass = "role-admin";
+                    }
+                    else if (userRole == "User")
+                    {
+                        roleClass = "role-user";
+                    }
+
+                    <tr>
+                        <td><span class="user-name">@fullName</span></td>
+                        <td>@item.Email</td>
+                        <td>@(string.IsNullOrEmpty(item.PhoneNumber) ? "Not provided" : item.PhoneNumber)</td>
+
+                        <td>
+                            <span class="user-role @roleClass">@userRole</span>
+                        </td>
+
+                        <td>
+                            <div class="user-actions">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="details-user-link">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="edit-user-link">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="delete-user-link">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="user-empty-message">
+            No user accounts were found.
+        </div>
+    }
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="app-pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-search="@ViewBag.Search" asp-route-role="@ViewBag.SelectedRole" class="app-page-link">&lt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&lt;</span>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                if (i == ViewBag.CurrentPage)
+                {
+                    <span class="app-page-link active">@i</span>
+                }
+                else
+                {
+                    <a asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-role="@ViewBag.SelectedRole" class="app-page-link">@i</a>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-search="@ViewBag.Search" asp-route-role="@ViewBag.SelectedRole" class="app-page-link">&gt;</a>
+            }
+            else
+            {
+                <span class="app-page-link disabled">&gt;</span>
+            }
+
+        </div>
+    }
+
+</section>
