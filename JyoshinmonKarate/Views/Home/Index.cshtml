@@ -29,18 +29,14 @@
             Manage Your Karate<br />
             Journey in One Place
         </h1>
+
         <p>
             Welcome to Jyoshinmon Karate's online portal for members and instructors to view attendance, manage payments, and track progress!
         </p>
 
         <div class="hero-buttons">
-            <a class="primary-btn" asp-area="Identity" asp-page="/Account/Register">
-                Register
-            </a>
-
-            <a class="secondary-btn" asp-area="Identity" asp-page="/Account/Login">
-                Login
-            </a>
+            <a class="primary-btn" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="secondary-btn" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </div>
 
         <div class="scene">
@@ -50,10 +46,7 @@
                 {
                     for (int i = 0; i < carouselImages.Length; i++)
                     {
-                        <img class="card"
-                             src="~/images/@carouselImages[i]"
-                             style="--i:@(repeat* carouselImages.Length + i)"
-                             alt="Karate Image" />
+                        <img class="card" src="~/images/@carouselImages[i]" style="--i:@(repeat* carouselImages.Length + i)" alt="Karate Image" />
                     }
                 }
 
@@ -65,15 +58,14 @@
 @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("User"))
 {
     <section class="member-home">
+
         <div class="member-home-top">
             <div>
                 <h1>My Members</h1>
                 <p>Select a member to manage their profile, attendance, payments, progress and more.</p>
             </div>
 
-            <a class="add-member-btn"
-                   asp-controller="Members"
-                   asp-action="Create">
+            <a class="add-member-btn" asp-controller="Members" asp-action="Create">
                 <i class="bi bi-person-plus"></i>
                 Add Member
             </a>
@@ -82,11 +74,13 @@
         @if (Model != null && Model.Count > 0)
         {
             <div class="member-carousel-wrap">
+
                 <button class="carousel-arrow left-arrow" type="button" onclick="scrollMembers(-1)">
                     <i class="bi bi-chevron-left"></i>
                 </button>
 
                 <div class="member-carousel" id="memberCarousel">
+
                     @{
                         var membershipNames = ViewBag.MembershipNames as Dictionary<int, string>;
                         var lastClassDates = ViewBag.LastClassDates as Dictionary<int, string>;
@@ -138,27 +132,20 @@
                                 <h2>@member.FirstName @member.LastName</h2>
 
                                 <div class="dropdown">
-                                    <button class="member-menu-btn"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
+                                    <button class="member-menu-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
 
                                     <ul class="dropdown-menu dropdown-menu-end member-dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item"
-                                                   asp-controller="Members"
-                                                   asp-action="Edit"
-                                                   asp-route-id="@member.MemberId">
+                                            <a class="dropdown-item" asp-controller="Members" asp-action="Edit" asp-route-id="@member.MemberId">
                                                 <i class="bi bi-pencil-square"></i>
                                                 Edit member
                                             </a>
                                         </li>
 
                                         <li>
-                                            <a class="dropdown-item text-danger"
-                                                   href="#">
+                                            <a class="dropdown-item text-danger" href="#">
                                                 <i class="bi bi-trash3"></i>
                                                 Request delete
                                             </a>
@@ -170,6 +157,7 @@
                             <div class="member-info-list">
                                 <p>
                                     <span>Current belt:</span>
+
                                     @if (member.Belt != null)
                                     {
                                         @member.Belt.BeltName
@@ -192,26 +180,24 @@
 
                                 <p>
                                     <span>Outstanding payment:</span>
-                                    <span class="@paymentClass">
-                                        $@outstandingPayment
-                                    </span>
+                                    <span class="@paymentClass">$@outstandingPayment</span>
                                 </p>
                             </div>
 
-                            <a class="manage-member-link"
-                                   asp-controller="Members"
-                                   asp-action="Details"
-                                   asp-route-id="@member.MemberId">
+                            <a class="manage-member-link" asp-controller="Members" asp-action="Details" asp-route-id="@member.MemberId">
                                 Manage Member
                                 <i class="bi bi-chevron-right"></i>
                             </a>
+
                         </div>
                     }
+
                 </div>
 
                 <button class="carousel-arrow right-arrow" type="button" onclick="scrollMembers(1)">
                     <i class="bi bi-chevron-right"></i>
                 </button>
+
             </div>
         }
         else
@@ -220,8 +206,10 @@
                 <h2>No members added yet</h2>
             </div>
         }
+
     </section>
 }
+
 @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
     int totalMembers = ViewBag.TotalMembers ?? 0;
@@ -249,9 +237,7 @@
                 <p>Manage members, classes, payments, memberships and grading activity.</p>
             </div>
 
-            <a asp-controller="Members"
-                   asp-action="Create"
-                   class="admin-primary-btn">
+            <a asp-controller="Members" asp-action="Create" class="admin-primary-btn">
                 <i class="bi bi-person-plus"></i>
                 Add Member
             </a>
@@ -259,9 +245,7 @@
 
         <div class="admin-summary-grid">
 
-            <a asp-controller="Members"
-                   asp-action="Index"
-                   class="admin-summary-card">
+            <a asp-controller="Members" asp-action="Index" class="admin-summary-card">
                 <div class="admin-summary-icon">
                     <i class="bi bi-people"></i>
                 </div>
@@ -272,9 +256,7 @@
                 </div>
             </a>
 
-            <a asp-controller="Instructors"
-                   asp-action="Index"
-                   class="admin-summary-card">
+            <a asp-controller="Instructors" asp-action="Index" class="admin-summary-card">
                 <div class="admin-summary-icon">
                     <i class="bi bi-person-badge"></i>
                 </div>
@@ -285,9 +267,7 @@
                 </div>
             </a>
 
-            <a asp-controller="Clubs"
-                   asp-action="Index"
-                   class="admin-summary-card">
+            <a asp-controller="Clubs" asp-action="Index" class="admin-summary-card">
                 <div class="admin-summary-icon">
                     <i class="bi bi-building"></i>
                 </div>
@@ -298,10 +278,7 @@
                 </div>
             </a>
 
-            <a asp-controller="MemberMemberships"
-                   asp-action="Index"
-                   asp-route-membershipStatus="Active"
-                   class="admin-summary-card">
+            <a asp-controller="MemberMemberships" asp-action="Index" asp-route-membershipStatus="Active" class="admin-summary-card">
                 <div class="admin-summary-icon">
                     <i class="bi bi-card-checklist"></i>
                 </div>
@@ -327,10 +304,7 @@
 
                 <div class="attention-grid">
 
-                    <a asp-controller="Payments"
-                           asp-action="Index"
-                           asp-route-paymentStatus="Pending"
-                           class="attention-card">
+                    <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Pending" class="attention-card">
                         <div class="attention-card-top">
                             <i class="bi bi-hourglass-split"></i>
                             <span>Pending Payments</span>
@@ -340,10 +314,7 @@
                         <p>Payments waiting to be completed.</p>
                     </a>
 
-                    <a asp-controller="Payments"
-                           asp-action="Index"
-                           asp-route-paymentStatus="Failed"
-                           class="attention-card attention-danger">
+                    <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Failed" class="attention-card attention-danger">
                         <div class="attention-card-top">
                             <i class="bi bi-exclamation-circle"></i>
                             <span>Failed Payments</span>
@@ -353,9 +324,7 @@
                         <p>Payments that were not successful.</p>
                     </a>
 
-                    <a asp-controller="Payments"
-                           asp-action="Index"
-                           class="attention-card">
+                    <a asp-controller="Payments" asp-action="Index" class="attention-card">
                         <div class="attention-card-top">
                             <i class="bi bi-cash-stack"></i>
                             <span>Outstanding Total</span>
@@ -365,9 +334,7 @@
                         <p>Total pending and failed payment amount.</p>
                     </a>
 
-                    <a asp-controller="Gradings"
-                           asp-action="Index"
-                           class="attention-card">
+                    <a asp-controller="Gradings" asp-action="Index" class="attention-card">
                         <div class="attention-card-top">
                             <i class="bi bi-calendar-event"></i>
                             <span>Upcoming Gradings</span>
@@ -381,6 +348,7 @@
             </div>
 
             <aside class="admin-quick-actions-panel">
+
                 <div class="admin-panel-heading">
                     <div>
                         <h2>Quick Actions</h2>
@@ -513,9 +481,7 @@
                     <p>The latest members added to the portal.</p>
                 </div>
 
-                <a asp-controller="Members"
-                       asp-action="Index"
-                       class="view-all-link">
+                <a asp-controller="Members" asp-action="Index" class="view-all-link">
                     View all
                     <i class="bi bi-chevron-right"></i>
                 </a>
@@ -555,15 +521,13 @@
                                     <td>
                                         <strong>@member.FirstName @member.LastName</strong>
                                     </td>
+
                                     <td>@dojoName</td>
                                     <td>@beltName</td>
                                     <td>@member.DateJoined.ToString("dd MMM yyyy")</td>
+
                                     <td>
-                                        <a asp-controller="Members"
-                                               asp-action="Details"
-                                               asp-route-id="@member.MemberId">
-                                            View
-                                        </a>
+                                        <a asp-controller="Members" asp-action="Details" asp-route-id="@member.MemberId">View</a>
                                     </td>
                                 </tr>
                             }
@@ -599,4 +563,4 @@
             });
         }
     </script>
-}
+}e c
