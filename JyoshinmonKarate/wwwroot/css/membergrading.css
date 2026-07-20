@@ -525,3 +525,26 @@
         min-width: 1000px;
     }
 }
+
+.delete-warning {
+    color: #b71920;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 6px 0 0;
+}
+
+.delete-btn {
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 7px;
+    background: #b71920;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .delete-btn:hover {
+        background: #921219;
+    }

@@ -528,11 +528,13 @@ namespace JyoshinmonKarate.Controllers
             }
 
             var memberGrading = await _context.MemberGradings
-                .Include(m => m.BeltAfter)
-                .Include(m => m.BeltBefore)
-                .Include(m => m.Grading)
                 .Include(m => m.Member)
+                .Include(m => m.Grading)
+                    .ThenInclude(g => g.Club)
+                .Include(m => m.BeltBefore)
+                .Include(m => m.BeltAfter)
                 .FirstOrDefaultAsync(m => m.MemberGradingId == id);
+
             if (memberGrading == null)
             {
                 return NotFound();

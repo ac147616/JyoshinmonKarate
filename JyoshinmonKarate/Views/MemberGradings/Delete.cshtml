@@ -1,51 +1,74 @@
 ﻿@model JyoshinmonKarate.Models.MemberGrading
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Member Grading";
+
+    string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
+    string result = Model.Passed ? "Passed" : "Not Passed";
 }
 
-<h1>Delete</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
+}
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>MemberGrading</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Passed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Passed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Grading)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Grading.GradingId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Member)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Member.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BeltBefore)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BeltBefore.BeltName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BeltAfter)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BeltAfter.BeltName)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="MemberGradingId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<section class="member-grading-form-page">
+    <div class="member-grading-form-card">
+
+        <div class="member-grading-form-header">
+            <h1>Delete Member Grading</h1>
+
+            <p class="delete-warning">
+                Are you sure you want to delete this member grading record?
+            </p>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Member</span>
+                <p>@memberName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Grading Date</span>
+                <p>@Model.Grading.GradingDate.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="details-item">
+                <span>Dojo</span>
+                <p>@Model.Grading.Club.ClubName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Belt Before</span>
+                <p>@Model.BeltBefore.BeltName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Belt After</span>
+                <p>@Model.BeltAfter.BeltName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Result</span>
+                <p>@result</p>
+            </div>
+
+        </div>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="MemberGradingId" />
+
+            <div class="form-actions">
+                <button type="submit" class="delete-btn">
+                    Delete Member Grading
+                </button>
+
+                <a asp-action="Index" class="cancel-link">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+    </div>
+</section>
