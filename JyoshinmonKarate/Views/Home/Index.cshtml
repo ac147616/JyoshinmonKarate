@@ -214,8 +214,6 @@
 {
     int totalMembers = ViewBag.TotalMembers ?? 0;
     int totalInstructors = ViewBag.TotalInstructors ?? 0;
-    int totalDojos = ViewBag.TotalDojos ?? 0;
-    int activeMemberships = ViewBag.ActiveMemberships ?? 0;
     int pendingPayments = ViewBag.PendingPayments ?? 0;
     int failedPayments = ViewBag.FailedPayments ?? 0;
     int upcomingGradings = ViewBag.UpcomingGradings ?? 0;
@@ -234,7 +232,7 @@
         <div class="admin-dashboard-header">
             <div>
                 <h1>Admin Dashboard</h1>
-                <p>Manage members, classes, payments, memberships and grading activity.</p>
+                <p>Overview of current club records.</p>
             </div>
 
             <a asp-controller="Members" asp-action="Create" class="admin-primary-btn">
@@ -251,7 +249,7 @@
                 </div>
 
                 <div>
-                    <p>Total Members</p>
+                    <p>Members</p>
                     <h2>@totalMembers</h2>
                 </div>
             </a>
@@ -267,25 +265,25 @@
                 </div>
             </a>
 
-            <a asp-controller="Clubs" asp-action="Index" class="admin-summary-card">
+            <a asp-controller="Payments" asp-action="Index" class="admin-summary-card">
                 <div class="admin-summary-icon">
-                    <i class="bi bi-building"></i>
+                    <i class="bi bi-cash-stack"></i>
                 </div>
 
                 <div>
-                    <p>Dojos</p>
-                    <h2>@totalDojos</h2>
+                    <p>Outstanding</p>
+                    <h2>$@outstandingPaymentTotal.ToString("0.00")</h2>
                 </div>
             </a>
 
-            <a asp-controller="MemberMemberships" asp-action="Index" asp-route-membershipStatus="Active" class="admin-summary-card">
+            <a asp-controller="Gradings" asp-action="Index" class="admin-summary-card">
                 <div class="admin-summary-icon">
-                    <i class="bi bi-card-checklist"></i>
+                    <i class="bi bi-calendar-event"></i>
                 </div>
 
                 <div>
-                    <p>Active Memberships</p>
-                    <h2>@activeMemberships</h2>
+                    <p>Upcoming Gradings</p>
+                    <h2>@upcomingGradings</h2>
                 </div>
             </a>
 
@@ -296,52 +294,29 @@
             <div class="admin-attention-panel">
 
                 <div class="admin-panel-heading">
-                    <div>
-                        <h2>Needs Attention</h2>
-                        <p>Important records that may need admin action.</p>
-                    </div>
+                    <h2>Needs Attention</h2>
                 </div>
 
-                <div class="attention-grid">
+                <div class="admin-attention-list">
 
-                    <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Pending" class="attention-card">
-                        <div class="attention-card-top">
-                            <i class="bi bi-hourglass-split"></i>
-                            <span>Pending Payments</span>
-                        </div>
-
-                        <h3>@pendingPayments</h3>
-                        <p>Payments waiting to be completed.</p>
+                    <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Pending">
+                        <span>Pending payments</span>
+                        <strong>@pendingPayments</strong>
                     </a>
 
-                    <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Failed" class="attention-card attention-danger">
-                        <div class="attention-card-top">
-                            <i class="bi bi-exclamation-circle"></i>
-                            <span>Failed Payments</span>
-                        </div>
-
-                        <h3>@failedPayments</h3>
-                        <p>Payments that were not successful.</p>
+                    <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Failed">
+                        <span>Failed payments</span>
+                        <strong class="attention-value-danger">@failedPayments</strong>
                     </a>
 
-                    <a asp-controller="Payments" asp-action="Index" class="attention-card">
-                        <div class="attention-card-top">
-                            <i class="bi bi-cash-stack"></i>
-                            <span>Outstanding Total</span>
-                        </div>
-
-                        <h3>$@outstandingPaymentTotal.ToString("0.00")</h3>
-                        <p>Total pending and failed payment amount.</p>
+                    <a asp-controller="Payments" asp-action="Index">
+                        <span>Outstanding total</span>
+                        <strong>$@outstandingPaymentTotal.ToString("0.00")</strong>
                     </a>
 
-                    <a asp-controller="Gradings" asp-action="Index" class="attention-card">
-                        <div class="attention-card-top">
-                            <i class="bi bi-calendar-event"></i>
-                            <span>Upcoming Gradings</span>
-                        </div>
-
-                        <h3>@upcomingGradings</h3>
-                        <p>Gradings scheduled from today onwards.</p>
+                    <a asp-controller="Gradings" asp-action="Index">
+                        <span>Upcoming gradings</span>
+                        <strong>@upcomingGradings</strong>
                     </a>
 
                 </div>
@@ -350,35 +325,16 @@
             <aside class="admin-quick-actions-panel">
 
                 <div class="admin-panel-heading">
-                    <div>
-                        <h2>Quick Actions</h2>
-                        <p>Create common records.</p>
-                    </div>
+                    <h2>Quick Actions</h2>
                 </div>
 
                 <div class="admin-quick-links">
-
-                    <a asp-controller="Attendances" asp-action="Create">
-                        <i class="bi bi-calendar-check"></i>
-                        Record Attendance
-                    </a>
-
-                    <a asp-controller="Payments" asp-action="Create">
-                        <i class="bi bi-cash-stack"></i>
-                        Add Payment
-                    </a>
-
-                    <a asp-controller="MemberMemberships" asp-action="Create">
-                        <i class="bi bi-card-checklist"></i>
-                        Assign Membership
-                    </a>
-
-                    <a asp-controller="MemberGradings" asp-action="Create">
-                        <i class="bi bi-trophy"></i>
-                        Record Grading
-                    </a>
-
+                    <a asp-controller="Attendances" asp-action="Create"><i class="bi bi-calendar-check"></i>Record Attendance</a>
+                    <a asp-controller="Payments" asp-action="Create"><i class="bi bi-cash-stack"></i>Add Payment</a>
+                    <a asp-controller="MemberMemberships" asp-action="Create"><i class="bi bi-card-checklist"></i>Assign Membership</a>
+                    <a asp-controller="MemberGradings" asp-action="Create"><i class="bi bi-trophy"></i>Record Grading</a>
                 </div>
+
             </aside>
 
         </div>
@@ -386,79 +342,30 @@
         <div class="admin-management-panel">
 
             <div class="admin-panel-heading">
-                <div>
-                    <h2>Manage Karate Portal</h2>
-                    <p>Open an area to view and manage its records.</p>
-                </div>
+                <h2>Manage Records</h2>
             </div>
 
-            <div class="admin-management-grid">
-
-                <a asp-controller="Members" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-people"></i>
-                    <span>Members</span>
-                </a>
-
-                <a asp-controller="Attendances" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-calendar-check"></i>
-                    <span>Attendance</span>
-                </a>
-
-                <a asp-controller="Payments" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-cash-stack"></i>
-                    <span>Payments</span>
-                </a>
-
-                <a asp-controller="MemberMemberships" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-card-checklist"></i>
-                    <span>Member Memberships</span>
-                </a>
-
-                <a asp-controller="Gradings" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-calendar-event"></i>
-                    <span>Gradings</span>
-                </a>
-
-                <a asp-controller="MemberGradings" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-trophy"></i>
-                    <span>Member Gradings</span>
-                </a>
-
-                <a asp-controller="Schedules" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-calendar3"></i>
-                    <span>Schedules</span>
-                </a>
-
-                <a asp-controller="Instructors" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-person-badge"></i>
-                    <span>Instructors</span>
-                </a>
-
-                <a asp-controller="Clubs" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-building"></i>
-                    <span>Dojos</span>
-                </a>
-
-                <a asp-controller="Belts" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-award"></i>
-                    <span>Belts</span>
-                </a>
-
-                <a asp-controller="Memberships" asp-action="Index" class="admin-management-link">
-                    <i class="bi bi-tags"></i>
-                    <span>Membership Plans</span>
-                </a>
-
+            <div class="admin-record-links">
+                <a asp-controller="Users" asp-action="Index">Accounts</a>
+                <a asp-controller="Members" asp-action="Index">Members</a>
+                <a asp-controller="Attendances" asp-action="Index">Attendance</a>
+                <a asp-controller="Payments" asp-action="Index">Payments</a>
+                <a asp-controller="MemberMemberships" asp-action="Index">Member Memberships</a>
+                <a asp-controller="Gradings" asp-action="Index">Gradings</a>
+                <a asp-controller="MemberGradings" asp-action="Index">Grading Results</a>
+                <a asp-controller="Schedules" asp-action="Index">Schedules</a>
+                <a asp-controller="Instructors" asp-action="Index">Instructors</a>
+                <a asp-controller="Clubs" asp-action="Index">Dojos</a>
+                <a asp-controller="Memberships" asp-action="Index">Membership Plans</a>
+                <a asp-controller="Belts" asp-action="Index">Belts</a>
             </div>
+
         </div>
 
         <div class="admin-recent-panel">
 
             <div class="admin-panel-heading recent-heading">
-                <div>
-                    <h2>Recently Added Members</h2>
-                    <p>The latest members added to the portal.</p>
-                </div>
+                <h2>Recently Added Members</h2>
 
                 <a asp-controller="Members" asp-action="Index" class="view-all-link">
                     View all
@@ -497,17 +404,11 @@
                                 }
 
                                 <tr>
-                                    <td>
-                                        <strong>@member.FirstName @member.LastName</strong>
-                                    </td>
-
+                                    <td><strong>@member.FirstName @member.LastName</strong></td>
                                     <td>@dojoName</td>
                                     <td>@beltName</td>
                                     <td>@member.DateJoined.ToString("dd MMM yyyy")</td>
-
-                                    <td>
-                                        <a asp-controller="Members" asp-action="Details" asp-route-id="@member.MemberId">View</a>
-                                    </td>
+                                    <td><a asp-controller="Members" asp-action="Details" asp-route-id="@member.MemberId">View</a></td>
                                 </tr>
                             }
                         </tbody>
