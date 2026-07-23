@@ -480,16 +480,11 @@ body {
 
 .admin-attention-panel,
 .admin-quick-actions-panel,
-.admin-management-panel,
 .admin-recent-panel {
     padding: 16px;
     background: #ffffff;
     border: 1px solid rgba(183, 25, 32, 0.22);
     border-radius: 10px;
-}
-
-.admin-management-panel {
-    margin-bottom: 16px;
 }
 
 .admin-panel-heading {
@@ -681,5 +676,76 @@ body {
 
     .admin-recent-table {
         min-width: 650px;
+    }
+}
+
+.admin-management-panel {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(183, 25, 32, 0.22);
+    border-radius: 10px;
+}
+
+    .admin-management-panel .admin-panel-heading {
+        margin-bottom: 12px;
+    }
+
+        .admin-management-panel .admin-panel-heading h2 {
+            color: #2f2f38;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0 0 2px;
+        }
+
+        .admin-management-panel .admin-panel-heading p {
+            color: #777777;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+.admin-management-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 8px;
+}
+
+.admin-management-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 11px;
+    border: 1px solid #eeeeee;
+    border-radius: 7px;
+    background: #f7f7f8;
+    color: #3f3f45;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .admin-management-link i {
+        width: 17px;
+        color: #b71920;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .admin-management-link:hover {
+        background: #f3f3f4;
+        border-color: #d7d7d7;
+        color: #b71920;
+    }
+
+@media (max-width: 950px) {
+    .admin-management-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .admin-management-grid {
+        grid-template-columns: 1fr;
     }
 }

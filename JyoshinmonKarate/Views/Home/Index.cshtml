@@ -216,7 +216,7 @@
     int totalInstructors = ViewBag.TotalInstructors ?? 0;
     int pendingPayments = ViewBag.PendingPayments ?? 0;
     int failedPayments = ViewBag.FailedPayments ?? 0;
-    int upcomingGradings = ViewBag.UpcomingGradings ?? 0;
+    int activeMemberships = ViewBag.ActiveMemberships ?? 0;
 
     decimal outstandingPaymentTotal = 0;
 
@@ -232,7 +232,6 @@
         <div class="admin-dashboard-header">
             <div>
                 <h1>Admin Dashboard</h1>
-                <p>Overview of current club records.</p>
             </div>
 
             <a asp-controller="Members" asp-action="Create" class="admin-primary-btn">
@@ -276,14 +275,14 @@
                 </div>
             </a>
 
-            <a asp-controller="Gradings" asp-action="Index" class="admin-summary-card">
+            <a asp-controller="MemberMemberships" asp-action="Index" asp-route-membershipStatus="Active" class="admin-summary-card">
                 <div class="admin-summary-icon">
-                    <i class="bi bi-calendar-event"></i>
+                    <i class="bi bi-card-checklist"></i>
                 </div>
 
                 <div>
-                    <p>Upcoming Gradings</p>
-                    <h2>@upcomingGradings</h2>
+                    <p>Active Memberships</p>
+                    <h2>@activeMemberships</h2>
                 </div>
             </a>
 
@@ -314,9 +313,9 @@
                         <strong>$@outstandingPaymentTotal.ToString("0.00")</strong>
                     </a>
 
-                    <a asp-controller="Gradings" asp-action="Index">
-                        <span>Upcoming gradings</span>
-                        <strong>@upcomingGradings</strong>
+                    <a asp-controller="Memberships" asp-action="Index">
+                        <span>Active memberships</span>
+                        <strong>@activeMemberships</strong>
                     </a>
 
                 </div>
@@ -342,22 +341,71 @@
         <div class="admin-management-panel">
 
             <div class="admin-panel-heading">
-                <h2>Manage Records</h2>
+                <h2>Manage Karate Portal</h2>
             </div>
 
-            <div class="admin-record-links">
-                <a asp-controller="Users" asp-action="Index">Accounts</a>
-                <a asp-controller="Members" asp-action="Index">Members</a>
-                <a asp-controller="Attendances" asp-action="Index">Attendance</a>
-                <a asp-controller="Payments" asp-action="Index">Payments</a>
-                <a asp-controller="MemberMemberships" asp-action="Index">Member Memberships</a>
-                <a asp-controller="Gradings" asp-action="Index">Gradings</a>
-                <a asp-controller="MemberGradings" asp-action="Index">Grading Results</a>
-                <a asp-controller="Schedules" asp-action="Index">Schedules</a>
-                <a asp-controller="Instructors" asp-action="Index">Instructors</a>
-                <a asp-controller="Clubs" asp-action="Index">Dojos</a>
-                <a asp-controller="Memberships" asp-action="Index">Membership Plans</a>
-                <a asp-controller="Belts" asp-action="Index">Belts</a>
+            <div class="admin-management-grid">
+
+                <a asp-controller="Users" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Accounts</span>
+                </a>
+
+                <a asp-controller="Members" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-people"></i>
+                    <span>Members</span>
+                </a>
+
+                <a asp-controller="Attendances" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a asp-controller="Payments" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Payments</span>
+                </a>
+
+                <a asp-controller="MemberMemberships" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>Member Memberships</span>
+                </a>
+
+                <a asp-controller="Gradings" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Gradings</span>
+                </a>
+
+                <a asp-controller="MemberGradings" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-trophy"></i>
+                    <span>Member Gradings</span>
+                </a>
+
+                <a asp-controller="Schedules" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-calendar3"></i>
+                    <span>Schedules</span>
+                </a>
+
+                <a asp-controller="Instructors" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-person-badge"></i>
+                    <span>Instructors</span>
+                </a>
+
+                <a asp-controller="Clubs" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-building"></i>
+                    <span>Dojos</span>
+                </a>
+
+                <a asp-controller="Belts" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-award"></i>
+                    <span>Belts</span>
+                </a>
+
+                <a asp-controller="Memberships" asp-action="Index" class="admin-management-link">
+                    <i class="bi bi-tags"></i>
+                    <span>Membership Plans</span>
+                </a>
+
             </div>
 
         </div>
