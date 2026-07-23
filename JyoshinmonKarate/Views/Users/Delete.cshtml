@@ -1,6 +1,92 @@
-﻿namespace JyoshinmonKarate.Views.Users
-{
-    public class Delete
+﻿@model JyoshinmonKarate.Areas.Identity.Data.User
+
+@{
+    ViewData["Title"] = "Delete Account";
+
+    string fullName = Model.FirstName + " " + Model.LastName;
+    string phoneNumber = "Not provided";
+    string userRole = ViewBag.UserRole ?? "No role";
+    bool canDelete = ViewBag.CanDelete == true;
+    bool hasMembers = ViewBag.HasMembers == true;
+    bool isInstructor = ViewBag.IsInstructor == true;
+
+    if (!string.IsNullOrEmpty(Model.PhoneNumber))
     {
+        phoneNumber = Model.PhoneNumber;
     }
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/user.css" asp-append-version="true" />
+}
+
+<section class="user-form-page">
+    <div class="user-form-card">
+
+        <div class="user-form-header">
+            <h1>Delete Account</h1>
+
+            @if (canDelete)
+            {
+                <p class="delete-warning">Are you sure you want to delete this account?</p>
+            }
+            else
+            {
+                <p class="delete-blocked-message">This account cannot be deleted because it is connected to existing records.</p>
+            }
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-item">
+                <span>Full Name</span>
+                <p>@fullName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Role</span>
+                <p>@userRole</p>
+            </div>
+
+            <div class="details-item">
+                <span>Email</span>
+                <p>@Model.Email</p>
+            </div>
+
+            <div class="details-item">
+                <span>Phone Number</span>
+                <p>@phoneNumber</p>
+            </div>
+
+        </div>
+
+        @if (!canDelete)
+        {
+            <div class="delete-reasons">
+                @if (hasMembers)
+                {
+                    <p>This account manages one or more members.</p>
+                }
+
+                @if (isInstructor)
+                {
+                    <p>This account is connected to an instructor record.</p>
+                }
+            </div>
+        }
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-actions">
+                @if (canDelete)
+                {
+                    <button type="submit" class="delete-btn">Delete Account</button>
+                }
+
+                <a asp-action="Index" class="cancel-link">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</section>
