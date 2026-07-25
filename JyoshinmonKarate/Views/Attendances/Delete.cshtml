@@ -8,16 +8,12 @@
     string classTime = Model.Schedule.StartTime.ToString("hh:mm tt") + " to " + Model.Schedule.EndTime.ToString("hh:mm tt");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/attendance.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="attendance-form-page">
-    <div class="attendance-form-card">
-
-        <div class="attendance-form-header">
+        <div class="app-form-header">
             <h1>Delete Attendance</h1>
-            <p>Deleting this attendance record will permanently remove it from the system.</p>
+            <p class="warning">Deleting this attendance record will permanently remove it from the system.</p>
         </div>
 
         <div class="details-grid">
@@ -28,7 +24,7 @@
             </div>
 
             <div class="details-item">
-                <span>Attendance date</span>
+                <span>Attendance Date</span>
                 <p>@Model.Date.ToString("dd MMM yyyy")</p>
             </div>
 
@@ -43,17 +39,19 @@
             </div>
 
             <div class="details-item">
-                <span>Class time</span>
+                <span>Class Time</span>
                 <p>@classTime</p>
             </div>
 
         </div>
 
-        <form asp-action="Delete" method="post" class="form-actions">
+        <form asp-action="Delete" method="post">
             <input type="hidden" asp-for="AttendanceId" />
 
-            <button type="submit" class="delete-btn">Delete Attendance</button>
-            <a asp-action="Index" class="cancel-link">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="app-danger-btn">Delete Attendance</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
+            </div>
         </form>
 
     </div>

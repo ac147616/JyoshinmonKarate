@@ -4,14 +4,10 @@
     ViewData["Title"] = "Edit Attendance";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/attendance.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="attendance-form-page">
-    <div class="attendance-form-card">
-
-        <div class="attendance-form-header">
+        <div class="app-form-header">
             <h1>Edit Attendance</h1>
         </div>
 
@@ -43,8 +39,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Save Changes</button>
-                <a asp-action="Index" class="cancel-link">Cancel</a>
+                <button type="submit" class="app-primary-btn">Save Changes</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
 

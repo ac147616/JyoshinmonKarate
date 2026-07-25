@@ -8,14 +8,10 @@
     string classTime = Model.Schedule.StartTime.ToString("hh:mm tt") + " to " + Model.Schedule.EndTime.ToString("hh:mm tt");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/attendance.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="attendance-form-page">
-    <div class="attendance-form-card">
-
-        <div class="attendance-form-header">
+        <div class="app-form-header">
             <h1>Attendance Info</h1>
         </div>
 
@@ -27,7 +23,7 @@
             </div>
 
             <div class="details-item">
-                <span>Attendance date</span>
+                <span>Attendance Date</span>
                 <p>@Model.Date.ToString("dd MMM yyyy")</p>
             </div>
 
@@ -42,15 +38,15 @@
             </div>
 
             <div class="details-item">
-                <span>Class time</span>
+                <span>Class Time</span>
                 <p>@classTime</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.AttendanceId" class="save-link">Edit Attendance</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.AttendanceId" class="app-primary-btn">Edit Attendance</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>
