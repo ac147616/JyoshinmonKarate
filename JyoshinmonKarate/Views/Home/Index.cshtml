@@ -46,7 +46,7 @@
                 {
                     for (int i = 0; i < carouselImages.Length; i++)
                     {
-                        <img class="card" src="~/images/@carouselImages[i]" style="--i:@(repeat* carouselImages.Length + i)" alt="Karate Image" />
+                        <img class="guest-carousel-image" src="~/images/@carouselImages[i]" style="--i:@(repeat* carouselImages.Length + i)" alt="Karate Image" />
                     }
                 }
 
@@ -65,7 +65,7 @@
                 <p>Select a member to manage their profile, attendance, payments, progress and more.</p>
             </div>
 
-            <a class="add-member-btn" asp-controller="Members" asp-action="Create">
+            <a class="add-member-home-btn" asp-controller="Members" asp-action="Create">
                 <i class="bi bi-person-plus"></i>
                 Add Member
             </a>
@@ -108,11 +108,11 @@
                             outstandingPayment = outstandingPayments[member.MemberId];
                         }
 
-                        string paymentClass = "payment-clear";
+                        string paymentClass = "status status-success";
 
                         if (outstandingPayment > 0)
                         {
-                            paymentClass = "payment-due";
+                            paymentClass = "status status-danger";
                         }
 
                         <div class="member-card-box">
@@ -180,7 +180,7 @@
 
                                 <p>
                                     <span>Outstanding payment:</span>
-                                    <span class="@paymentClass">$@outstandingPayment</span>
+                                    <span class="@paymentClass">$@outstandingPayment.ToString("0.00")</span>
                                 </p>
                             </div>
 
@@ -290,7 +290,7 @@
 
         <div class="admin-dashboard-main">
 
-            <div class="admin-attention-panel">
+            <div class="admin-panel admin-attention-panel">
 
                 <div class="admin-panel-heading">
                     <h2>Needs Attention</h2>
@@ -305,7 +305,7 @@
 
                     <a asp-controller="Payments" asp-action="Index" asp-route-paymentStatus="Failed">
                         <span>Failed payments</span>
-                        <strong class="attention-value-danger">@failedPayments</strong>
+                        <strong class="status-danger">@failedPayments</strong>
                     </a>
 
                     <a asp-controller="Payments" asp-action="Index">
@@ -313,7 +313,7 @@
                         <strong>$@outstandingPaymentTotal.ToString("0.00")</strong>
                     </a>
 
-                    <a asp-controller="Memberships" asp-action="Index">
+                    <a asp-controller="MemberMemberships" asp-action="Index" asp-route-membershipStatus="Active">
                         <span>Active memberships</span>
                         <strong>@activeMemberships</strong>
                     </a>
@@ -321,7 +321,7 @@
                 </div>
             </div>
 
-            <aside class="admin-quick-actions-panel">
+            <aside class="admin-panel admin-quick-actions-panel">
 
                 <div class="admin-panel-heading">
                     <h2>Quick Actions</h2>
@@ -338,7 +338,7 @@
 
         </div>
 
-        <div class="admin-management-panel">
+        <div class="admin-panel admin-management-panel">
 
             <div class="admin-panel-heading">
                 <h2>Manage Karate Portal</h2>
@@ -410,7 +410,7 @@
 
         </div>
 
-        <div class="admin-recent-panel">
+        <div class="admin-panel admin-recent-panel">
 
             <div class="admin-panel-heading recent-heading">
                 <h2>Recently Added Members</h2>
@@ -477,6 +477,11 @@
     <script>
         function scrollMembers(direction) {
             const carousel = document.getElementById("memberCarousel");
+
+            if (!carousel) {
+                return;
+            }
+
             const card = carousel.querySelector(".member-card-box");
 
             if (!card) {

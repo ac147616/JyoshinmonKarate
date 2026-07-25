@@ -88,7 +88,7 @@ body {
     }
 }
 
-.card {
+.guest-carousel-image {
     --w: 165px;
     --ba: calc(1turn / var(--n));
     grid-area: 1 / 1;
