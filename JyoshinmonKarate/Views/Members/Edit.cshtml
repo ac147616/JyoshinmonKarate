@@ -8,12 +8,13 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/member-edit.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/member.css" asp-append-version="true" />
 }
 
-<section class="edit-member-page">
-    <div class="edit-member-card">
-        <div class="edit-member-header">
+<section class="app-form-page">
+    <div class="app-form-card wide">
+
+        <div class="app-form-header">
             <h1>Edit Member Details</h1>
         </div>
 
@@ -44,7 +45,7 @@
             }
 
             <div class="form-grid">
-                <div class="form-group photo-form-group">
+                <div class="form-group full-width">
                     <label>Profile Photo</label>
 
                     @if (!string.IsNullOrEmpty(Model.ProfilePhotoPath))
@@ -146,7 +147,7 @@
                 {
                     <div class="form-group">
                         <label>Current Belt</label>
-                        <input class="form-control" value="@Model.Belt?.BeltName" readonly />
+                        <input class="form-control readonly" value="@Model.Belt?.BeltName" readonly />
                     </div>
                 }
 
@@ -172,7 +173,7 @@
                 {
                     <div class="form-group">
                         <label>Date Joined</label>
-                        <input class="form-control"
+                        <input class="form-control readonly"
                                value="@Model.DateJoined.ToString("dd/MM/yyyy")"
                                readonly />
                     </div>
@@ -193,26 +194,21 @@
                 {
                     <div class="form-group">
                         <label>Status</label>
-                        <input class="form-control" value="@Model.Status" readonly />
+                        <input class="form-control readonly" value="@Model.Status" readonly />
                     </div>
                 }
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Save Changes</button>
+                <button type="submit" class="app-primary-btn">Save Changes</button>
 
-                @if (isAdmin){
-                    <a asp-action="Index"
-                           class="cancel-link">
-                        Cancel
-                    </a>
+                @if (isAdmin)
+                {
+                    <a asp-action="Index" class="app-cancel-link">Cancel</a>
                 }
-                else{
-                    <a asp-action="Details"
-                           asp-route-id="@Model.MemberId"
-                           class="cancel-link">
-                        Cancel
-                    </a>
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@Model.MemberId" class="app-cancel-link">Cancel</a>
                 }
             </div>
         </form>

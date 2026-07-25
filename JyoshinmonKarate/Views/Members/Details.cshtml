@@ -27,11 +27,11 @@
         paymentDue = Convert.ToDecimal(ViewBag.PaymentDue);
     }
 
-    string paymentClass = "payment-clear";
+    string paymentClass = "status status-success";
 
     if (paymentDue > 0)
     {
-        paymentClass = "payment-due";
+        paymentClass = "status status-danger";
     }
 
     int age = 0;
@@ -46,7 +46,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/member-dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/member.css" asp-append-version="true" />
 }
 
 <section class="member-dashboard-page">
@@ -96,7 +96,7 @@
                 <i class="bi bi-cash-stack"></i>
             </div>
             <p>Payment Due</p>
-            <h2 class="@paymentClass">$@paymentDue</h2>
+            <h2 class="@paymentClass">$@paymentDue.ToString("0.00")</h2>
         </div>
 
     </div>

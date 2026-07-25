@@ -233,6 +233,123 @@
         object-fit: cover;
     }
 
+.delete-member-page {
+    padding: 22px 10px 34px;
+}
+
+.delete-member-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 22px;
+    border: 1px solid rgba(183, 25, 32, 0.18);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+    .delete-member-card .app-form-header {
+        margin-bottom: 15px;
+    }
+
+        .delete-member-card .app-form-header h1 {
+            margin: 0 0 5px;
+            font-size: 1.65rem;
+        }
+
+        .delete-member-card .app-form-header p {
+            max-width: 680px;
+            font-size: 0.84rem;
+            line-height: 1.35;
+        }
+
+.delete-member-profile {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 15px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--app-light-border);
+}
+
+    .delete-member-profile h2 {
+        margin: 0 0 3px;
+        color: var(--app-heading);
+        font-size: 1.08rem;
+        font-weight: 750;
+    }
+
+    .delete-member-profile p {
+        margin: 0;
+        color: #666666;
+        font-size: 0.82rem;
+    }
+
+.delete-photo-box {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(183, 25, 32, 0.28);
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+    .delete-photo-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .delete-photo-box i {
+        color: var(--app-red);
+        font-size: 1.8rem;
+    }
+
+.delete-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 8px 18px;
+    margin-bottom: 18px;
+}
+
+.delete-detail-item {
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--app-light-border);
+}
+
+    .delete-detail-item span {
+        display: block;
+        margin-bottom: 2px;
+        color: #444444;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .delete-detail-item p {
+        margin: 0;
+        color: #666666;
+        font-size: 0.8rem;
+        line-height: 1.25;
+        word-break: break-word;
+    }
+
+.delete-member-card .form-actions {
+    margin-top: 18px;
+}
+
+@media (max-width: 650px) {
+    .delete-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .delete-member-profile {
+        align-items: flex-start;
+    }
+}
+
 /* Member delete */
 
 .delete-member-card {
@@ -453,4 +570,114 @@
         flex-direction: column;
         text-align: center;
     }
+}
+
+.profile-card-info h1 {
+    margin: 0 0 4px;
+    color: var(--app-heading);
+    font-size: 1.35rem;
+    font-weight: 750;
+}
+
+.profile-club {
+    margin: 0 0 8px;
+    color: #666666;
+    font-size: 0.88rem;
+}
+
+.profile-basic-line {
+    margin: 6px 0 0;
+    color: #666666;
+    font-size: 0.88rem;
+}
+
+.summary-card p {
+    margin: 0 0 6px;
+    color: var(--app-muted);
+    font-size: 0.82rem;
+}
+
+.summary-card h2 {
+    margin: 0;
+    color: var(--app-heading);
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+    .panel-header h2 {
+        margin: 0;
+        color: var(--app-heading);
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+.small-edit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--app-red);
+    font-size: 0.82rem;
+    text-decoration: none;
+}
+
+    .small-edit-link:hover {
+        color: var(--app-red-dark);
+        text-decoration: underline;
+    }
+
+.info-list p {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 0 10px;
+    color: #666666;
+    font-size: 0.84rem;
+    line-height: 1.35;
+}
+
+.info-list span {
+    display: block;
+    color: #444444;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.member-action-area h2 {
+    margin: 0 0 4px;
+    color: var(--app-heading);
+    font-size: 1.35rem;
+    font-weight: 750;
+}
+
+.member-action-area > p {
+    margin: 0 0 18px;
+    color: var(--app-muted);
+    font-size: 0.9rem;
+}
+
+.action-tile i {
+    margin-bottom: 16px;
+    color: #0b0b3f;
+    font-size: 2rem;
+}
+
+.action-tile h3 {
+    margin: 0 0 6px;
+    color: #0b0b3f;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.action-tile p {
+    margin: 0;
+    color: #666666;
+    font-size: 0.84rem;
 }

@@ -8,12 +8,13 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/member-edit.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/member.css" asp-append-version="true" />
 }
 
-<section class="edit-member-page">
-    <div class="edit-member-card">
-        <div class="edit-member-header">
+<section class="app-form-page">
+    <div class="app-form-card wide">
+
+        <div class="app-form-header">
             <h1>Create Member</h1>
         </div>
 
@@ -31,23 +32,11 @@
 
             <div class="form-section-title">Member Details</div>
 
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="text-danger">
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <p>@error.ErrorMessage</p>
-                    }
-                </div>
-            }
-
             <div class="form-grid">
-                <div class="form-group">
+
+                <div class="form-group full-width">
                     <label>Profile Photo</label>
-                    <input type="file"
-                           name="profilePhoto"
-                           class="form-control"
-                           accept="image/*" />
+                    <input type="file" name="profilePhoto" class="form-control" accept="image/*" />
                     <span asp-validation-for="ProfilePhotoPath" class="text-danger"></span>
                 </div>
 
@@ -63,7 +52,7 @@
                 {
                     <div class="form-group">
                         <label>User</label>
-                        <input class="form-control" value="@User.Identity?.Name" readonly />
+                        <input class="form-control readonly" value="@User.Identity?.Name" readonly />
                     </div>
                 }
 
@@ -81,20 +70,13 @@
 
                 <div class="form-group">
                     <label asp-for="DateOfBirth">Date of Birth</label>
-                    <input asp-for="DateOfBirth"
-                           class="form-control"
-                           type="date"
-                           min="1900-01-01"
-                           max="@todayDate" />
+                    <input asp-for="DateOfBirth" class="form-control" type="date" min="1900-01-01" max="@todayDate" />
                     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Gender">Gender</label>
-                    <select asp-for="Gender"
-                            class="form-control"
-                            asp-items="Html.GetEnumSelectList<Gender>()">
-                    </select>
+                    <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
                     <span asp-validation-for="Gender" class="text-danger"></span>
                 </div>
 
@@ -140,7 +122,7 @@
                 {
                     <div class="form-group">
                         <label>Current Belt</label>
-                        <input class="form-control" value="White" readonly />
+                        <input class="form-control readonly" value="White" readonly />
                     </div>
                 }
 
@@ -154,11 +136,7 @@
                 {
                     <div class="form-group">
                         <label asp-for="DateJoined">Date Joined</label>
-                        <input asp-for="DateJoined"
-                               class="form-control"
-                               type="date"
-                               min="1900-01-01"
-                               max="@todayDate" />
+                        <input asp-for="DateJoined" class="form-control" type="date" min="1900-01-01" max="@todayDate" />
                         <span asp-validation-for="DateJoined" class="text-danger"></span>
                     </div>
                 }
@@ -166,9 +144,7 @@
                 {
                     <div class="form-group">
                         <label>Date Joined</label>
-                        <input class="form-control"
-                               value="@Model.DateJoined.ToString("dd/MM/yyyy")"
-                               readonly />
+                        <input class="form-control readonly" value="@Model.DateJoined.ToString("dd/MM/yyyy")" readonly />
                     </div>
                 }
 
@@ -176,10 +152,7 @@
                 {
                     <div class="form-group">
                         <label asp-for="Status">Status</label>
-                        <select asp-for="Status"
-                                class="form-control"
-                                asp-items="Html.GetEnumSelectList<MemberStatus>()">
-                        </select>
+                        <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<MemberStatus>()"></select>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                 }
@@ -187,23 +160,25 @@
                 {
                     <div class="form-group">
                         <label>Status</label>
-                        <input class="form-control" value="Active" readonly />
+                        <input class="form-control readonly" value="Active" readonly />
                     </div>
                 }
+
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Create Member</button>
+                <button type="submit" class="app-primary-btn">Create Member</button>
 
                 @if (isAdmin)
                 {
-                    <a asp-action="Index" class="cancel-link">Cancel</a>
+                    <a asp-action="Index" class="app-cancel-link">Cancel</a>
                 }
                 else
                 {
-                    <a asp-controller="Home" asp-action="Index" class="cancel-link">Cancel</a>
+                    <a asp-controller="Home" asp-action="Index" class="app-cancel-link">Cancel</a>
                 }
             </div>
+
         </form>
     </div>
 </section>

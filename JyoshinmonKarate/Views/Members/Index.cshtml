@@ -5,12 +5,12 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/member-index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/member.css" asp-append-version="true" />
 }
 
-<section class="members-index-page">
+<section class="app-index-page members-index-page">
 
-    <div class="members-header">
+    <div class="app-page-header">
         <h1>Members</h1>
     </div>
 
@@ -28,6 +28,7 @@
             </div>
 
             <div class="more-filters-wrap">
+
                 <button type="button" class="more-filters-btn" id="moreFiltersBtn">
                     <i class="bi bi-sliders"></i>
                     More filters
@@ -39,9 +40,9 @@
                         <h3>Clubs</h3>
 
                         @foreach (var club in Model.Where(m => m.Club != null)
-                                                                        .Select(m => m.Club.ClubName)
-                                                                        .Distinct()
-                                                                        .OrderBy(c => c))
+                                                                          .Select(m => m.Club.ClubName)
+                                                                          .Distinct()
+                                                                          .OrderBy(c => c))
                         {
                             <label>
                                 <input type="checkbox" class="extra-filter" data-filter-type="club" value="@club.ToLower()" />
@@ -54,9 +55,9 @@
                         <h3>Belts</h3>
 
                         @foreach (var belt in Model.Where(m => m.Belt != null)
-                                                                        .Select(m => m.Belt.BeltName)
-                                                                        .Distinct()
-                                                                        .OrderBy(b => b))
+                                                                          .Select(m => m.Belt.BeltName)
+                                                                          .Distinct()
+                                                                          .OrderBy(b => b))
                         {
                             <label>
                                 <input type="checkbox" class="extra-filter" data-filter-type="belt" value="@belt.ToLower()" />
@@ -66,7 +67,7 @@
                     </div>
 
                     <div class="filter-section">
-                        <h3>Age range</h3>
+                        <h3>Age Range</h3>
 
                         <label>
                             <input type="checkbox" class="extra-filter" data-filter-type="age" value="under16" />
@@ -109,41 +110,34 @@
                             }
 
                             <label>
-                                <input type="checkbox"
-                                       class="extra-filter"
-                                       data-filter-type="gender"
-                                       value="@genderValue" />
+                                <input type="checkbox" class="extra-filter" data-filter-type="gender" value="@genderValue" />
                                 @genderDisplay
                             </label>
                         }
                     </div>
 
-                    <button type="button" class="clear-filters-btn" id="clearFiltersBtn">
-                        Clear filters
-                    </button>
+                    <button type="button" class="clear-filters-btn" id="clearFiltersBtn">Clear filters</button>
 
                 </div>
             </div>
 
-            <a asp-action="Create" class="add-member-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Member
             </a>
 
         </div>
-
     </div>
 
-    <div class="members-table-wrap">
-
-        <table class="members-table" id="membersTable">
+    <div class="app-table-wrap">
+        <table class="app-table members-table" id="membersTable">
             <thead>
                 <tr>
                     <th>Member</th>
                     <th>Club</th>
                     <th>Belt</th>
                     <th>Status</th>
-                    <th class="actions-heading">Actions</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -153,27 +147,40 @@
                     string fullName = item.FirstName + " " + item.LastName;
 
                     string clubName = "Not assigned";
+
                     if (item.Club != null)
                     {
                         clubName = item.Club.ClubName;
                     }
 
                     string beltName = "Not assigned";
+
                     if (item.Belt != null)
                     {
                         beltName = item.Belt.BeltName;
                     }
 
                     string statusName = item.Status.ToString();
-                    string statusClass = statusName.ToLower();
+                    string statusValue = statusName.ToLower();
+                    string statusClass = "status-muted";
                     string genderName = item.Gender.ToString().ToLower();
 
-                    int age = 0;
-                    DateTime today = DateTime.Today;
+                    if (statusValue == "active")
+                    {
+                        statusClass = "status-success";
+                    }
+                    else if (statusValue == "suspended")
+                    {
+                        statusClass = "status-warning";
+                    }
+                    else if (statusValue == "inactive" || statusValue == "cancelled")
+                    {
+                        statusClass = "status-danger";
+                    }
 
-                    age = today.Year - item.DateOfBirth.Year;
+                    int age = DateTime.Today.Year - item.DateOfBirth.Year;
 
-                    if (item.DateOfBirth > today.AddYears(-age))
+                    if (item.DateOfBirth > DateTime.Today.AddYears(-age))
                     {
                         age--;
                     }
@@ -193,7 +200,7 @@
                         ageGroup = "35plus";
                     }
 
-                    <tr data-status="@statusClass"
+                    <tr data-status="@statusValue"
                         data-club="@clubName.ToLower()"
                         data-belt="@beltName.ToLower()"
                         data-age="@ageGroup"
@@ -213,42 +220,35 @@
                                     }
                                 </div>
 
-                                <span class="member-name">@fullName</span>
+                                <span class="app-primary-cell">@fullName</span>
 
                             </div>
                         </td>
 
                         <td>@clubName</td>
-
                         <td>@beltName</td>
 
                         <td>
-                            <span class="member-status status-@statusClass">
-                                @statusName
-                            </span>
+                            <span class="status @statusClass">@statusName</span>
                         </td>
 
                         <td>
-                            <div class="member-actions">
-                                <a asp-action="Details"
-                                       asp-route-id="@item.MemberId"
-                                       class="manage-member-link">
-                                    Manage Member
-                                </a>
-
-                                <a asp-action="Delete"
-                                       asp-route-id="@item.MemberId"
-                                       class="delete-member-link">
-                                    Delete
-                                </a>
+                            <div class="app-row-actions">
+                                <a asp-action="Details" asp-route-id="@item.MemberId" class="app-edit-link">Manage Member</a>
+                                <a asp-action="Delete" asp-route-id="@item.MemberId" class="app-delete-link">Delete</a>
                             </div>
                         </td>
+
                     </tr>
                 }
             </tbody>
         </table>
-
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="app-empty-message">No members were found.</div>
+    }
 
     @if (ViewBag.TotalPages > 1)
     {
@@ -295,12 +295,9 @@
         const rows = document.querySelectorAll("#membersTable tbody tr");
         const filterButtons = document.querySelectorAll(".status-filter");
         const extraFilters = document.querySelectorAll(".extra-filter");
-
         const moreFiltersBtn = document.getElementById("moreFiltersBtn");
         const moreFiltersPanel = document.getElementById("moreFiltersPanel");
         const clearFiltersBtn = document.getElementById("clearFiltersBtn");
-
-        let selectedStatus = "all";
 
         function getSelectedStatusFromButton() {
             const activeButton = document.querySelector(".status-filter.active");
@@ -328,10 +325,8 @@
         }
 
         function filterMembers() {
-            selectedStatus = getSelectedStatusFromButton();
-
+            const selectedStatus = getSelectedStatusFromButton();
             const searchValue = searchInput.value.toLowerCase();
-
             const selectedClubs = getCheckedValues("club");
             const selectedBelts = getCheckedValues("belt");
             const selectedAges = getCheckedValues("age");
@@ -343,17 +338,20 @@
 
                 const matchesSearch = rowText.includes(searchValue);
                 const matchesStatus = selectedStatus === "all" || rowStatus === selectedStatus;
-
                 const matchesClub = matchesSelectedFilter(row, "club", selectedClubs);
                 const matchesBelt = matchesSelectedFilter(row, "belt", selectedBelts);
                 const matchesAge = matchesSelectedFilter(row, "age", selectedAges);
                 const matchesGender = matchesSelectedFilter(row, "gender", selectedGenders);
 
-                if (matchesSearch && matchesStatus && matchesClub && matchesBelt && matchesAge && matchesGender) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
+                row.style.display =
+                    matchesSearch &&
+                    matchesStatus &&
+                    matchesClub &&
+                    matchesBelt &&
+                    matchesAge &&
+                    matchesGender
+                        ? ""
+                        : "none";
             });
         }
 
@@ -363,7 +361,6 @@
             button.addEventListener("click", function () {
                 filterButtons.forEach(btn => btn.classList.remove("active"));
                 this.classList.add("active");
-
                 filterMembers();
             });
         });
@@ -380,9 +377,10 @@
             extraFilters.forEach(filter => filter.checked = false);
             searchInput.value = "";
 
-            filterButtons.forEach(btn => btn.classList.remove("active"));
+            filterButtons.forEach(button => button.classList.remove("active"));
 
             const allButton = document.querySelector('.status-filter[data-status="all"]');
+
             if (allButton) {
                 allButton.classList.add("active");
             }
@@ -396,9 +394,7 @@
             }
         });
 
-        window.addEventListener("pageshow", function () {
-            filterMembers();
-        });
+        window.addEventListener("pageshow", filterMembers);
 
         filterMembers();
     </script>
