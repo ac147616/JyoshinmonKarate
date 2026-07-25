@@ -6,16 +6,12 @@
     string instructorName = Model.Instructor.User.FirstName + " " + Model.Instructor.User.LastName;
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/schedule.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="schedule-form-page">
-    <div class="schedule-form-card">
-
-        <div class="schedule-form-header">
+        <div class="app-form-header">
             <h1>Delete Class Schedule</h1>
-            <p>Deleting this class schedule will permanently remove it from the system.</p>
+            <p class="warning">Deleting this class schedule will permanently remove it from the system.</p>
         </div>
 
         <div class="details-grid">
@@ -36,27 +32,29 @@
             </div>
 
             <div class="details-item">
-                <span>Day of week</span>
+                <span>Day of Week</span>
                 <p>@Model.DayOfWeek</p>
             </div>
 
             <div class="details-item">
-                <span>Start time</span>
+                <span>Start Time</span>
                 <p>@Model.StartTime.ToString("hh:mm tt")</p>
             </div>
 
             <div class="details-item">
-                <span>End time</span>
+                <span>End Time</span>
                 <p>@Model.EndTime.ToString("hh:mm tt")</p>
             </div>
 
         </div>
 
-        <form asp-action="Delete" method="post" class="form-actions">
+        <form asp-action="Delete" method="post">
             <input type="hidden" asp-for="ScheduleId" />
 
-            <button type="submit" class="delete-btn">Delete Schedule</button>
-            <a asp-action="Index" class="cancel-link">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="app-danger-btn">Delete Schedule</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
+            </div>
         </form>
 
     </div>

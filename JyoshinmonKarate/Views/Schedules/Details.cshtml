@@ -6,14 +6,10 @@
     string instructorName = Model.Instructor.User.FirstName + " " + Model.Instructor.User.LastName;
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/schedule.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="schedule-form-page">
-    <div class="schedule-form-card">
-
-        <div class="schedule-form-header">
+        <div class="app-form-header">
             <h1>Class Schedule Info</h1>
         </div>
 
@@ -35,25 +31,25 @@
             </div>
 
             <div class="details-item">
-                <span>Day of week</span>
+                <span>Day of Week</span>
                 <p>@Model.DayOfWeek</p>
             </div>
 
             <div class="details-item">
-                <span>Start time</span>
+                <span>Start Time</span>
                 <p>@Model.StartTime.ToString("hh:mm tt")</p>
             </div>
 
             <div class="details-item">
-                <span>End time</span>
+                <span>End Time</span>
                 <p>@Model.EndTime.ToString("hh:mm tt")</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.ScheduleId" class="save-link">Edit Schedule</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.ScheduleId" class="app-primary-btn">Edit Schedule</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>
