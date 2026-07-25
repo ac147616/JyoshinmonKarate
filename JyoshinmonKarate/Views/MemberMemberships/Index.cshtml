@@ -5,61 +5,42 @@
     bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membermembership.css" asp-append-version="true" />
-}
+<section class="app-index-page">
 
-<section class="member-membership-index-page">
-
-    <div class="member-membership-header">
+    <div class="app-page-header">
         <h1>Member Memberships</h1>
     </div>
 
-    <form asp-action="Index" method="get" class="member-membership-toolbar">
+    <form asp-action="Index" method="get" class="app-toolbar">
 
-        <div class="member-membership-filter-fields">
+        <div class="app-filter-fields">
 
-            <div class="member-membership-filter-group">
+            <div class="app-filter-group">
                 <label for="memberSearch">Member</label>
 
-                <div class="member-search-select" id="memberSearchSelect">
-                    <input type="text"
-                           id="memberSearch"
-                           placeholder="Search members"
-                           autocomplete="off" />
+                <div class="member-search" id="memberSearchSelect">
+                    <input type="text" id="memberSearch" placeholder="Search members" autocomplete="off" />
+                    <input type="hidden" name="memberId" id="memberId" value="@ViewBag.SelectedMemberId" />
 
-                    <input type="hidden"
-                           name="memberId"
-                           id="memberId"
-                           value="@ViewBag.SelectedMemberId" />
-
-                    <div class="member-options" id="memberOptions">
-                        <button type="button"
-                                class="member-option"
-                                data-value="0">
-                            All members
-                        </button>
+                    <div class="member-search-options" id="memberOptions">
+                        <button type="button" class="member-search-option" data-value="0">All members</button>
 
                         @foreach (var member in ViewBag.MemberId)
                         {
-                            <button type="button"
-                                    class="member-option"
-                                    data-value="@member.Value">
-                                @member.Text
-                            </button>
+                            <button type="button" class="member-search-option" data-value="@member.Value">@member.Text</button>
                         }
                     </div>
                 </div>
             </div>
 
-            <div class="member-membership-filter-group">
+            <div class="app-filter-group">
                 <label for="membershipId">Membership</label>
                 <select name="membershipId" id="membershipId" asp-items="ViewBag.MembershipId">
                     <option value="0">All memberships</option>
                 </select>
             </div>
 
-            <div class="member-membership-filter-group">
+            <div class="app-filter-group">
                 <label for="membershipStatus">Status</label>
                 <select name="membershipStatus" id="membershipStatus">
                     <option value="">All statuses</option>
@@ -69,26 +50,26 @@
                 </select>
             </div>
 
-            <div class="member-membership-filter-group">
+            <div class="app-filter-group member-membership-date-filter">
                 <label for="startDate">Start Date From</label>
                 <input type="date" name="startDate" id="startDate" value="@ViewBag.StartDate" />
             </div>
 
-            <div class="member-membership-filter-group">
+            <div class="app-filter-group member-membership-date-filter">
                 <label for="endDate">End Date To</label>
                 <input type="date" name="endDate" id="endDate" value="@ViewBag.EndDate" />
             </div>
 
-            <div class="member-membership-filter-actions">
-                <button type="submit" class="apply-member-membership-filters-btn">Apply</button>
-                <a asp-action="Index" class="clear-member-membership-filters-link">Clear</a>
+            <div class="app-filter-actions">
+                <button type="submit" class="app-apply-btn">Apply</button>
+                <a asp-action="Index" class="app-clear-link">Clear</a>
             </div>
 
         </div>
 
         @if (isAdmin)
         {
-            <a asp-action="Create" class="add-member-membership-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Membership
             </a>
@@ -96,8 +77,8 @@
 
     </form>
 
-    <div class="member-membership-table-wrap">
-        <table class="member-membership-table">
+    <div class="app-table-wrap">
+        <table class="app-table member-membership-table">
             <thead>
                 <tr>
                     <th>Member</th>
@@ -118,30 +99,38 @@
                 {
                     string memberName = item.Member.FirstName + " " + item.Member.LastName;
                     string statusName = item.MembershipStatus.ToString();
-                    string statusClass = statusName.ToLower();
+                    string statusClass = "status-muted";
+
+                    if (item.MembershipStatus == JyoshinmonKarate.Models.MembershipStatus.Active)
+                    {
+                        statusClass = "status-success";
+                    }
+                    else if (item.MembershipStatus == JyoshinmonKarate.Models.MembershipStatus.Suspended)
+                    {
+                        statusClass = "status-warning";
+                    }
+                    else if (item.MembershipStatus == JyoshinmonKarate.Models.MembershipStatus.Cancelled)
+                    {
+                        statusClass = "status-danger";
+                    }
 
                     <tr>
-                        <td>
-                            <span class="member-membership-member-name">@memberName</span>
-                        </td>
-
+                        <td class="app-primary-cell">@memberName</td>
                         <td>@item.Membership.MembershipName</td>
                         <td>@item.StartDate.ToString("dd MMM yyyy")</td>
                         <td>@item.EndDate.ToString("dd MMM yyyy")</td>
 
                         <td>
-                            <span class="member-membership-status status-@statusClass">
-                                @statusName
-                            </span>
+                            <span class="status @statusClass">@statusName</span>
                         </td>
 
                         @if (isAdmin)
                         {
                             <td>
-                                <div class="member-membership-actions">
-                                    <a asp-action="Details" asp-route-id="@item.MemberMembershipId" class="details-member-membership-link">Details</a>
-                                    <a asp-action="Edit" asp-route-id="@item.MemberMembershipId" class="edit-member-membership-link">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.MemberMembershipId" class="delete-member-membership-link">Delete</a>
+                                <div class="app-row-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MemberMembershipId" class="app-details-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.MemberMembershipId" class="app-edit-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MemberMembershipId" class="app-delete-link">Delete</a>
                                 </div>
                             </td>
                         }
@@ -153,9 +142,7 @@
 
     @if (!Model.Any())
     {
-        <div class="member-membership-empty-message">
-            No member memberships were found.
-        </div>
+        <div class="app-empty-message">No member memberships were found.</div>
     }
 
     @if (ViewBag.TotalPages > 1)
@@ -164,14 +151,7 @@
 
             @if (ViewBag.CurrentPage > 1)
             {
-                <a asp-action="Index"
-                   asp-route-page="@(ViewBag.CurrentPage - 1)"
-                   asp-route-memberId="@ViewBag.SelectedMemberId"
-                   asp-route-membershipId="@ViewBag.SelectedMembershipId"
-                   asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus"
-                   asp-route-startDate="@ViewBag.StartDate"
-                   asp-route-endDate="@ViewBag.EndDate"
-                   class="app-page-link">&lt;</a>
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-membershipId="@ViewBag.SelectedMembershipId" asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus" asp-route-startDate="@ViewBag.StartDate" asp-route-endDate="@ViewBag.EndDate" class="app-page-link">&lt;</a>
             }
             else
             {
@@ -186,27 +166,13 @@
                 }
                 else
                 {
-                    <a asp-action="Index"
-                       asp-route-page="@i"
-                       asp-route-memberId="@ViewBag.SelectedMemberId"
-                       asp-route-membershipId="@ViewBag.SelectedMembershipId"
-                       asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus"
-                       asp-route-startDate="@ViewBag.StartDate"
-                       asp-route-endDate="@ViewBag.EndDate"
-                       class="app-page-link">@i</a>
+                    <a asp-action="Index" asp-route-page="@i" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-membershipId="@ViewBag.SelectedMembershipId" asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus" asp-route-startDate="@ViewBag.StartDate" asp-route-endDate="@ViewBag.EndDate" class="app-page-link">@i</a>
                 }
             }
 
             @if (ViewBag.CurrentPage < ViewBag.TotalPages)
             {
-                <a asp-action="Index"
-                   asp-route-page="@(ViewBag.CurrentPage + 1)"
-                   asp-route-memberId="@ViewBag.SelectedMemberId"
-                   asp-route-membershipId="@ViewBag.SelectedMembershipId"
-                   asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus"
-                   asp-route-startDate="@ViewBag.StartDate"
-                   asp-route-endDate="@ViewBag.EndDate"
-                   class="app-page-link">&gt;</a>
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-membershipId="@ViewBag.SelectedMembershipId" asp-route-membershipStatus="@ViewBag.SelectedMembershipStatus" asp-route-startDate="@ViewBag.StartDate" asp-route-endDate="@ViewBag.EndDate" class="app-page-link">&gt;</a>
             }
             else
             {
@@ -223,7 +189,7 @@
         const memberSearch = document.getElementById("memberSearch");
         const memberId = document.getElementById("memberId");
         const memberOptions = document.getElementById("memberOptions");
-        const memberOptionButtons = document.querySelectorAll(".member-option");
+        const memberOptionButtons = document.querySelectorAll(".member-search-option");
 
         function setSelectedMemberText() {
             const selectedValue = memberId.value;
@@ -245,13 +211,7 @@
 
             memberOptionButtons.forEach(option => {
                 const optionText = option.innerText.toLowerCase();
-
-                if (optionText.includes(searchValue)) {
-                    option.style.display = "block";
-                }
-                else {
-                    option.style.display = "none";
-                }
+                option.style.display = optionText.includes(searchValue) ? "block" : "none";
             });
 
             memberOptions.classList.add("show");

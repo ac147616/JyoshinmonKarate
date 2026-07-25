@@ -4,16 +4,26 @@
     ViewData["Title"] = "Member Membership Details";
 
     string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
+    string statusClass = "status-muted";
+
+    if (Model.MembershipStatus == JyoshinmonKarate.Models.MembershipStatus.Active)
+    {
+        statusClass = "status-success";
+    }
+    else if (Model.MembershipStatus == JyoshinmonKarate.Models.MembershipStatus.Suspended)
+    {
+        statusClass = "status-warning";
+    }
+    else if (Model.MembershipStatus == JyoshinmonKarate.Models.MembershipStatus.Cancelled)
+    {
+        statusClass = "status-danger";
+    }
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membermembership.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="member-membership-form-page">
-    <div class="member-membership-form-card">
-
-        <div class="member-membership-form-header">
+        <div class="app-form-header">
             <h1>Membership Details</h1>
         </div>
 
@@ -41,19 +51,14 @@
 
             <div class="details-item">
                 <span>Membership Status</span>
-                <p>@Model.MembershipStatus</p>
+                <p class="status @statusClass">@Model.MembershipStatus</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit"
-                   asp-route-id="@Model.MemberMembershipId"
-                   class="save-link">
-                Edit Membership
-            </a>
-
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.MemberMembershipId" class="app-primary-btn">Edit Membership</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>

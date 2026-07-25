@@ -4,14 +4,10 @@
     ViewData["Title"] = "Create Member Membership";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membermembership.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="member-membership-form-page">
-    <div class="member-membership-form-card">
-
-        <div class="member-membership-form-header">
+        <div class="app-form-header">
             <h1>Add Member Membership</h1>
         </div>
 
@@ -50,17 +46,15 @@
 
                 <div class="form-group">
                     <label asp-for="MembershipStatus">Membership Status</label>
-                    <select asp-for="MembershipStatus" class="form-control"
-                            asp-items="Html.GetEnumSelectList<JyoshinmonKarate.Models.MembershipStatus>()">
-                    </select>
+                    <select asp-for="MembershipStatus" class="form-control" asp-items="Html.GetEnumSelectList<JyoshinmonKarate.Models.MembershipStatus>()"></select>
                     <span asp-validation-for="MembershipStatus" class="text-danger"></span>
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Add Membership</button>
-                <a asp-action="Index" class="cancel-link">Cancel</a>
+                <button type="submit" class="app-primary-btn">Add Membership</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
 

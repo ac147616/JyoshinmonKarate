@@ -4,14 +4,10 @@
     ViewData["Title"] = "Edit Member Membership";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membermembership.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="member-membership-form-page">
-    <div class="member-membership-form-card">
-
-        <div class="member-membership-form-header">
+        <div class="app-form-header">
             <h1>Edit Membership</h1>
         </div>
 
@@ -24,19 +20,13 @@
 
                 <div class="form-group">
                     <label asp-for="MemberId">Member</label>
-                    <select asp-for="MemberId"
-                            class="form-control"
-                            asp-items="ViewBag.MemberId">
-                    </select>
+                    <select asp-for="MemberId" class="form-control" asp-items="ViewBag.MemberId"></select>
                     <span asp-validation-for="MemberId" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="MembershipId">Membership</label>
-                    <select asp-for="MembershipId"
-                            class="form-control"
-                            asp-items="ViewBag.MembershipId">
-                    </select>
+                    <select asp-for="MembershipId" class="form-control" asp-items="ViewBag.MembershipId"></select>
                     <span asp-validation-for="MembershipId" class="text-danger"></span>
                 </div>
 
@@ -54,18 +44,15 @@
 
                 <div class="form-group">
                     <label asp-for="MembershipStatus">Membership Status</label>
-                    <select asp-for="MembershipStatus"
-                            class="form-control"
-                            asp-items="Html.GetEnumSelectList<JyoshinmonKarate.Models.MembershipStatus>()">
-                    </select>
+                    <select asp-for="MembershipStatus" class="form-control" asp-items="Html.GetEnumSelectList<JyoshinmonKarate.Models.MembershipStatus>()"></select>
                     <span asp-validation-for="MembershipStatus" class="text-danger"></span>
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Save Changes</button>
-                <a asp-action="Index" class="cancel-link">Cancel</a>
+                <button type="submit" class="app-primary-btn">Save Changes</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
 
