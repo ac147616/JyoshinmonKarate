@@ -5,39 +5,35 @@
     bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/payment.css" asp-append-version="true" />
-}
+<section class="app-index-page">
 
-<section class="payment-index-page">
-
-    <div class="payment-header">
+    <div class="app-page-header">
         <h1>Payments</h1>
     </div>
 
-    <form asp-action="Index" method="get" class="payment-toolbar">
+    <form asp-action="Index" method="get" class="app-toolbar">
 
-        <div class="payment-filter-fields">
+        <div class="app-filter-fields">
 
-            <div class="payment-filter-group">
+            <div class="app-filter-group">
                 <label for="memberSearch">Member</label>
 
-                <div class="member-search-select" id="memberSearchSelect">
+                <div class="member-search" id="memberSearchSelect">
                     <input type="text" id="memberSearch" placeholder="Search members" autocomplete="off" />
                     <input type="hidden" name="memberId" id="memberId" value="@ViewBag.SelectedMemberId" />
 
-                    <div class="member-options" id="memberOptions">
-                        <button type="button" class="member-option" data-value="0">All members</button>
+                    <div class="member-search-options" id="memberOptions">
+                        <button type="button" class="member-search-option" data-value="0">All members</button>
 
                         @foreach (var member in ViewBag.MemberId)
                         {
-                            <button type="button" class="member-option" data-value="@member.Value">@member.Text</button>
+                            <button type="button" class="member-search-option" data-value="@member.Value">@member.Text</button>
                         }
                     </div>
                 </div>
             </div>
 
-            <div class="payment-filter-group">
+            <div class="app-filter-group">
                 <label for="paymentStatus">Status</label>
                 <select name="paymentStatus" id="paymentStatus">
                     <option value="">All statuses</option>
@@ -47,7 +43,7 @@
                 </select>
             </div>
 
-            <div class="payment-filter-group">
+            <div class="app-filter-group">
                 <label for="paymentMethod">Payment Method</label>
                 <select name="paymentMethod" id="paymentMethod">
                     <option value="">All methods</option>
@@ -58,26 +54,26 @@
                 </select>
             </div>
 
-            <div class="payment-filter-group">
+            <div class="app-filter-group">
                 <label for="startDate">Due From</label>
                 <input type="date" name="startDate" id="startDate" value="@ViewBag.StartDate" />
             </div>
 
-            <div class="payment-filter-group">
+            <div class="app-filter-group">
                 <label for="endDate">Due To</label>
                 <input type="date" name="endDate" id="endDate" value="@ViewBag.EndDate" />
             </div>
 
-            <div class="payment-filter-actions">
-                <button type="submit" class="apply-payment-filters-btn">Apply</button>
-                <a asp-action="Index" class="clear-payment-filters-link">Clear</a>
+            <div class="app-filter-actions">
+                <button type="submit" class="app-apply-btn">Apply</button>
+                <a asp-action="Index" class="app-clear-link">Clear</a>
             </div>
 
         </div>
 
         @if (isAdmin)
         {
-            <a asp-action="Create" class="add-payment-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Payment
             </a>
@@ -85,8 +81,8 @@
 
     </form>
 
-    <div class="payment-table-wrap">
-        <table class="payment-table">
+    <div class="app-table-wrap">
+        <table class="app-table payment-table">
             <thead>
                 <tr>
                     <th>Member</th>
@@ -98,7 +94,7 @@
 
                     @if (isAdmin)
                     {
-                        <th class="payment-actions-heading">Actions</th>
+                        <th>Actions</th>
                     }
                 </tr>
             </thead>
@@ -109,7 +105,7 @@
                     string memberName = item.Member.FirstName + " " + item.Member.LastName;
                     string methodName = item.PaymentMethod.ToString();
                     string statusName = item.Status.ToString();
-                    string statusClass = statusName.ToLower();
+                    string statusClass = "status-muted";
 
                     if (item.PaymentMethod == JyoshinmonKarate.Models.PaymentMethods.CreditCard)
                     {
@@ -124,27 +120,37 @@
                         methodName = "Mobile Payment";
                     }
 
-                    <tr>
-                        <td>
-                            <span class="payment-member-name">@memberName</span>
-                        </td>
+                    if (item.Status == JyoshinmonKarate.Models.PaymentStatus.Completed)
+                    {
+                        statusClass = "status-success";
+                    }
+                    else if (item.Status == JyoshinmonKarate.Models.PaymentStatus.Pending)
+                    {
+                        statusClass = "status-warning";
+                    }
+                    else if (item.Status == JyoshinmonKarate.Models.PaymentStatus.Failed)
+                    {
+                        statusClass = "status-danger";
+                    }
 
+                    <tr>
+                        <td class="app-primary-cell">@memberName</td>
                         <td>@item.PaymentName</td>
                         <td>$@item.Amount.ToString("0.00")</td>
                         <td>@item.DateDue.ToString("dd MMM yyyy")</td>
                         <td>@methodName</td>
 
                         <td>
-                            <span class="payment-status status-@statusClass">@statusName</span>
+                            <span class="status @statusClass">@statusName</span>
                         </td>
 
                         @if (isAdmin)
                         {
                             <td>
-                                <div class="payment-actions">
-                                    <a asp-action="Details" asp-route-id="@item.PaymentId" class="details-payment-link">Details</a>
-                                    <a asp-action="Edit" asp-route-id="@item.PaymentId" class="edit-payment-link">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.PaymentId" class="delete-payment-link">Delete</a>
+                                <div class="app-row-actions">
+                                    <a asp-action="Details" asp-route-id="@item.PaymentId" class="app-details-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.PaymentId" class="app-edit-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.PaymentId" class="app-delete-link">Delete</a>
                                 </div>
                             </td>
                         }
@@ -156,7 +162,7 @@
 
     @if (!Model.Any())
     {
-        <div class="payment-empty-message">No payment records were found.</div>
+        <div class="app-empty-message">No payment records were found.</div>
     }
 
     @if (ViewBag.TotalPages > 1)
@@ -200,18 +206,17 @@
 
 @section Scripts {
     <script>
-        const memberSearchSelect = document.getElementById("memberSearchSelect");
         const memberSearch = document.getElementById("memberSearch");
         const memberId = document.getElementById("memberId");
         const memberOptions = document.getElementById("memberOptions");
-        const memberOptionButtons = document.querySelectorAll(".member-option");
+        const memberOptionButtons = document.querySelectorAll(".member-search-option");
 
         function setSelectedMemberText() {
             const selectedValue = memberId.value;
 
             memberOptionButtons.forEach(option => {
                 if (option.getAttribute("data-value") === selectedValue) {
-                    memberSearch.value = option.innerText;
+                    memberSearch.value = option.innerText.trim();
                 }
             });
         }
@@ -226,13 +231,7 @@
 
             memberOptionButtons.forEach(option => {
                 const optionText = option.innerText.toLowerCase();
-
-                if (optionText.includes(searchValue)) {
-                    option.style.display = "block";
-                }
-                else {
-                    option.style.display = "none";
-                }
+                option.style.display = optionText.includes(searchValue) ? "block" : "none";
             });
 
             memberOptions.classList.add("show");
@@ -241,7 +240,7 @@
         memberOptionButtons.forEach(option => {
             option.addEventListener("click", function () {
                 memberId.value = this.getAttribute("data-value");
-                memberSearch.value = this.innerText;
+                memberSearch.value = this.innerText.trim();
                 memberOptions.classList.remove("show");
 
                 memberOptionButtons.forEach(button => {

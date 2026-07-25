@@ -5,6 +5,7 @@
 
     string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
     string paymentMethod = Model.PaymentMethod.ToString();
+    string statusClass = "status-muted";
 
     if (Model.PaymentMethod == JyoshinmonKarate.Models.PaymentMethods.CreditCard)
     {
@@ -18,16 +19,25 @@
     {
         paymentMethod = "Mobile Payment";
     }
+
+    if (Model.Status == JyoshinmonKarate.Models.PaymentStatus.Completed)
+    {
+        statusClass = "status-success";
+    }
+    else if (Model.Status == JyoshinmonKarate.Models.PaymentStatus.Pending)
+    {
+        statusClass = "status-warning";
+    }
+    else if (Model.Status == JyoshinmonKarate.Models.PaymentStatus.Failed)
+    {
+        statusClass = "status-danger";
+    }
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/payment.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="payment-form-page">
-    <div class="payment-form-card">
-
-        <div class="payment-form-header">
+        <div class="app-form-header">
             <h1>Payment Info</h1>
         </div>
 
@@ -39,7 +49,7 @@
             </div>
 
             <div class="details-item">
-                <span>Payment name</span>
+                <span>Payment Name</span>
                 <p>@Model.PaymentName</p>
             </div>
 
@@ -49,25 +59,25 @@
             </div>
 
             <div class="details-item">
-                <span>Due date</span>
+                <span>Due Date</span>
                 <p>@Model.DateDue.ToString("dd MMM yyyy")</p>
             </div>
 
             <div class="details-item">
-                <span>Payment method</span>
+                <span>Payment Method</span>
                 <p>@paymentMethod</p>
             </div>
 
             <div class="details-item">
-                <span>Payment status</span>
-                <p>@Model.Status</p>
+                <span>Payment Status</span>
+                <p class="status @statusClass">@Model.Status</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.PaymentId" class="save-link">Edit Payment</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.PaymentId" class="app-primary-btn">Edit Payment</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>
