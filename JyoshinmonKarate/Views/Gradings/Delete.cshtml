@@ -4,16 +4,12 @@
     ViewData["Title"] = "Delete Grading";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/grading.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="grading-form-page">
-    <div class="grading-form-card">
-
-        <div class="grading-form-header">
+        <div class="app-form-header">
             <h1>Delete Grading</h1>
-            <p>Deleting this grading will permanently remove it from the system.</p>
+            <p class="warning">Deleting this grading will permanently remove it from the system.</p>
         </div>
 
         <div class="details-grid">
@@ -24,27 +20,29 @@
             </div>
 
             <div class="details-item">
-                <span>Grading date</span>
+                <span>Grading Date</span>
                 <p>@Model.GradingDate.ToString("dd MMM yyyy")</p>
             </div>
 
             <div class="details-item">
-                <span>Start time</span>
+                <span>Start Time</span>
                 <p>@Model.GradingStartTime.ToString("hh:mm tt")</p>
             </div>
 
             <div class="details-item">
-                <span>End time</span>
+                <span>End Time</span>
                 <p>@Model.GradingEndTime.ToString("hh:mm tt")</p>
             </div>
 
         </div>
 
-        <form asp-action="Delete" method="post" class="form-actions">
+        <form asp-action="Delete" method="post">
             <input type="hidden" asp-for="GradingId" />
 
-            <button type="submit" class="delete-btn">Delete Grading</button>
-            <a asp-action="Index" class="cancel-link">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="app-danger-btn">Delete Grading</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
+            </div>
         </form>
 
     </div>

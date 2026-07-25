@@ -4,13 +4,9 @@
     ViewData["Title"] = "Gradings";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/grading.css" asp-append-version="true" />
-}
+<section class="app-index-page">
 
-<section class="grading-index-page">
-
-    <div class="grading-header">
+    <div class="app-page-header">
         <h1>Gradings</h1>
     </div>
 
@@ -60,7 +56,7 @@
                 </div>
             </div>
 
-            <a asp-action="Create" class="add-grading-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Grading
             </a>
@@ -68,16 +64,15 @@
         </div>
     </div>
 
-    <div class="grading-table-wrap">
-
-        <table class="grading-table" id="gradingTable">
+    <div class="app-table-wrap">
+        <table class="app-table grading-table" id="gradingTable">
             <thead>
                 <tr>
                     <th>Grading Date</th>
                     <th>Dojo</th>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    <th class="grading-actions-heading">Actions</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -88,27 +83,28 @@
                     string gradingYear = item.GradingDate.Year.ToString();
 
                     <tr data-year="@gradingYear" data-club="@clubName.ToLower()">
-                        <td>
-                            <span class="grading-date">@item.GradingDate.ToString("dd MMM yyyy")</span>
-                        </td>
-
+                        <td class="app-primary-cell">@item.GradingDate.ToString("dd MMM yyyy")</td>
                         <td>@clubName</td>
                         <td>@item.GradingStartTime.ToString("hh:mm tt")</td>
                         <td>@item.GradingEndTime.ToString("hh:mm tt")</td>
 
                         <td>
-                            <div class="grading-actions">
-                                <a asp-action="Details" asp-route-id="@item.GradingId" class="details-grading-link">Details</a>
-                                <a asp-action="Edit" asp-route-id="@item.GradingId" class="edit-grading-link">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@item.GradingId" class="delete-grading-link">Delete</a>
+                            <div class="app-row-actions">
+                                <a asp-action="Details" asp-route-id="@item.GradingId" class="app-details-link">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.GradingId" class="app-edit-link">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.GradingId" class="app-delete-link">Delete</a>
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="app-empty-message">No gradings were found.</div>
+    }
 
     @if (ViewBag.TotalPages > 1)
     {
