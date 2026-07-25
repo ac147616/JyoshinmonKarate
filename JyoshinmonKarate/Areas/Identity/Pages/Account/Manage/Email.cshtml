@@ -53,11 +53,21 @@
             </div>
 
             <div class="form-actions">
-                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="save-btn">Change Email</button>
+                <button id="change-email-button"
+                        type="submit"
+                        asp-page-handler="ChangeEmail"
+                        class="app-primary-btn">
+                    Change Email
+                </button>
 
                 @if (!Model.IsEmailConfirmed)
                 {
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="secondary-account-btn">Send Verification Email</button>
+                    <button id="email-verification"
+                            type="submit"
+                            asp-page-handler="SendVerificationEmail"
+                            class="secondary-account-btn">
+                        Send Verification Email
+                    </button>
                 }
             </div>
         </form>

@@ -77,6 +77,129 @@
     color: #9a6100;
 }
 
+.account-settings-content {
+    width: 100%;
+}
+
+.account-page {
+    width: 100%;
+}
+
+.account-card {
+    width: 100%;
+    padding: 28px;
+    border: 1px solid #eeeeee;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.account-header {
+    margin-bottom: 24px;
+}
+
+    .account-header h1 {
+        margin: 0 0 8px;
+        color: #25272b;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .account-header p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+.account-card .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 24px;
+}
+
+.account-card .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+    .account-card .form-group label {
+        color: #30343b;
+        font-weight: 600;
+    }
+
+.account-card .form-control {
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 14px;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #222222;
+}
+
+    .account-card .form-control:focus {
+        border-color: var(--app-red);
+        box-shadow: 0 0 0 3px rgba(183, 25, 32, 0.12);
+    }
+
+    .account-card .readonly-control,
+    .account-card .form-control:disabled {
+        background: #eef0f2;
+        color: #333333;
+        opacity: 1;
+    }
+
+.full-width-field {
+    grid-column: 1 / -1;
+}
+
+.account-card .form-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.account-card .app-primary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 8px;
+    background: var(--app-red);
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .account-card .app-primary-btn:hover {
+        background: #a9141b;
+        color: #ffffff;
+    }
+
+.secondary-account-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--app-red);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--app-red);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .secondary-account-btn:hover {
+        background: #fff1f2;
+    }
+
 @media (max-width: 650px) {
     .account-nav-list {
         flex-wrap: wrap;
@@ -85,5 +208,17 @@
     .email-current-row {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .account-card {
+        padding: 20px;
+    }
+
+        .account-card .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+    .full-width-field {
+        grid-column: auto;
     }
 }
