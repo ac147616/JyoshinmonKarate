@@ -6,45 +6,47 @@
     var userRoles = ViewBag.UserRoles as Dictionary<string, string>;
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/user.css" asp-append-version="true" />
-}
+<section class="app-index-page">
 
-<section class="user-index-page">
-
-    <div class="user-header">
-        <div>
-            <h1>User Accounts</h1>
-        </div>
+    <div class="app-page-header">
+        <h1>User Accounts</h1>
     </div>
 
-    <form asp-action="Index" method="get" class="user-filter-toolbar">
+    <form asp-action="Index" method="get" class="app-toolbar">
 
-        <div class="user-search-group">
-            <label for="search">Search</label>
-            <input type="text" name="search" id="search" value="@ViewBag.Search" placeholder="Search name or email" />
-        </div>
+        <div class="app-filter-fields">
 
-        <div class="user-filter-group">
-            <label for="role">Role</label>
+            <div class="app-filter-group">
+                <label for="search">Search</label>
+                <input type="text"
+                       name="search"
+                       id="search"
+                       value="@ViewBag.Search"
+                       placeholder="Search name or email" />
+            </div>
 
-            <select name="role" id="role">
-                <option value="">All roles</option>
-                <option value="Admin" selected="@(ViewBag.SelectedRole == "Admin")">Admin</option>
-                <option value="User" selected="@(ViewBag.SelectedRole == "User")">User</option>
-                <option value="No role" selected="@(ViewBag.SelectedRole == "No role")">No role</option>
-            </select>
-        </div>
+            <div class="app-filter-group">
+                <label for="role">Role</label>
 
-        <div class="user-filter-actions">
-            <button type="submit" class="apply-user-filter-btn">Apply</button>
-            <a asp-action="Index" class="clear-user-filter-link">Clear</a>
+                <select name="role" id="role">
+                    <option value="">All roles</option>
+                    <option value="Admin" selected="@(ViewBag.SelectedRole == "Admin")">Admin</option>
+                    <option value="User" selected="@(ViewBag.SelectedRole == "User")">User</option>
+                    <option value="No role" selected="@(ViewBag.SelectedRole == "No role")">No role</option>
+                </select>
+            </div>
+
+            <div class="app-filter-actions">
+                <button type="submit" class="app-primary-btn">Apply</button>
+                <a asp-action="Index" class="app-clear-link">Clear</a>
+            </div>
+
         </div>
 
     </form>
 
-    <div class="user-table-wrap">
-        <table class="user-table">
+    <div class="app-table-wrap">
+        <table class="app-table user-table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -78,19 +80,33 @@
                     }
 
                     <tr>
-                        <td><span class="user-name">@fullName</span></td>
+                        <td class="app-primary-cell">@fullName</td>
                         <td>@item.Email</td>
                         <td>@(string.IsNullOrEmpty(item.PhoneNumber) ? "Not provided" : item.PhoneNumber)</td>
 
                         <td>
-                            <span class="user-role @roleClass">@userRole</span>
+                            <span class="status @roleClass">@userRole</span>
                         </td>
 
                         <td>
-                            <div class="user-actions">
-                                <a asp-action="Details" asp-route-id="@item.Id" class="details-user-link">Details</a>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="edit-user-link">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="delete-user-link">Delete</a>
+                            <div class="app-row-actions">
+                                <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="app-details-link">
+                                    Details
+                                </a>
+
+                                <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="app-edit-link">
+                                    Edit
+                                </a>
+
+                                <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="app-delete-link">
+                                    Delete
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -101,7 +117,7 @@
 
     @if (!Model.Any())
     {
-        <div class="user-empty-message">
+        <div class="app-empty-message">
             No user accounts were found.
         </div>
     }
@@ -112,7 +128,13 @@
 
             @if (ViewBag.CurrentPage > 1)
             {
-                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-search="@ViewBag.Search" asp-route-role="@ViewBag.SelectedRole" class="app-page-link">&lt;</a>
+                <a asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)"
+                       asp-route-search="@ViewBag.Search"
+                       asp-route-role="@ViewBag.SelectedRole"
+                       class="app-page-link">
+                    &lt;
+                </a>
             }
             else
             {
@@ -127,13 +149,25 @@
                 }
                 else
                 {
-                    <a asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-role="@ViewBag.SelectedRole" class="app-page-link">@i</a>
+                    <a asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-search="@ViewBag.Search"
+                           asp-route-role="@ViewBag.SelectedRole"
+                           class="app-page-link">
+                        @i
+                    </a>
                 }
             }
 
             @if (ViewBag.CurrentPage < ViewBag.TotalPages)
             {
-                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-search="@ViewBag.Search" asp-route-role="@ViewBag.SelectedRole" class="app-page-link">&gt;</a>
+                <a asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)"
+                       asp-route-search="@ViewBag.Search"
+                       asp-route-role="@ViewBag.SelectedRole"
+                       class="app-page-link">
+                    &gt;
+                </a>
             }
             else
             {

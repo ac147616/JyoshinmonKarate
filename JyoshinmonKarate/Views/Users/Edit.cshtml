@@ -4,14 +4,10 @@
     ViewData["Title"] = "Edit Account";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/user.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="user-form-page">
-    <div class="user-form-card">
-
-        <div class="user-form-header">
+        <div class="app-form-header">
             <h1>Edit Account</h1>
         </div>
 
@@ -48,9 +44,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Role</label>
+                    <label for="selectedRole">Role</label>
 
                     <select name="selectedRole"
+                            id="selectedRole"
                             class="form-control"
                             asp-items="ViewBag.Roles">
                     </select>
@@ -59,11 +56,11 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">
+                <button type="submit" class="app-primary-btn">
                     Save Changes
                 </button>
 
-                <a asp-action="Index" class="cancel-link">
+                <a asp-action="Index" class="app-cancel-link">
                     Cancel
                 </a>
             </div>
