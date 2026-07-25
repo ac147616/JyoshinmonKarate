@@ -4,42 +4,40 @@
     ViewData["Title"] = "Delete Membership Plan";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membership-form.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="membership-form-page">
-    <div class="membership-form-card">
-
-        <div class="membership-form-header">
+        <div class="app-form-header">
             <h1>Delete Membership Plan</h1>
-            <p>Deleting this plan will permanently remove it from the system.</p>
+            <p class="warning">Deleting this plan will permanently remove it from the system.</p>
         </div>
 
         <div class="details-grid">
 
             <div class="details-item">
-                <span>Membership name</span>
+                <span>Membership Name</span>
                 <p>@Model.MembershipName</p>
             </div>
 
             <div class="details-item">
-                <span>Membership cost</span>
+                <span>Membership Cost</span>
                 <p>$@Model.Cost.ToString("0.00")</p>
             </div>
 
             <div class="details-item">
-                <span>Age group</span>
+                <span>Age Group</span>
                 <p>@Model.AgeGroup</p>
             </div>
 
         </div>
 
-        <form asp-action="Delete" method="post" class="form-actions">
+        <form asp-action="Delete" method="post">
             <input type="hidden" asp-for="MembershipId" />
 
-            <button type="submit" class="delete-btn">Delete Plan</button>
-            <a asp-action="Index" class="cancel-link">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="app-danger-btn">Delete Plan</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
+            </div>
         </form>
 
     </div>

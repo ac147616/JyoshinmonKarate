@@ -4,39 +4,35 @@
     ViewData["Title"] = "Membership Plan Details";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membership-form.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="membership-form-page">
-    <div class="membership-form-card">
-
-        <div class="membership-form-header">
+        <div class="app-form-header">
             <h1>Membership Plan Info</h1>
         </div>
 
         <div class="details-grid">
 
             <div class="details-item">
-                <span>Membership name</span>
+                <span>Membership Name</span>
                 <p>@Model.MembershipName</p>
             </div>
 
             <div class="details-item">
-                <span>Membership cost</span>
+                <span>Membership Cost</span>
                 <p>$@Model.Cost.ToString("0.00")</p>
             </div>
 
             <div class="details-item">
-                <span>Age group</span>
+                <span>Age Group</span>
                 <p>@Model.AgeGroup</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.MembershipId" class="save-link">Edit Plan</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.MembershipId" class="app-primary-btn">Edit Plan</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>

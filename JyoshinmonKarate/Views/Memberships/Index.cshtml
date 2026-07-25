@@ -5,37 +5,33 @@
     bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membership-index.css" asp-append-version="true" />
-}
+<section class="app-index-page compact membership-index-page">
 
-<section class="membership-index-page">
-
-    <div class="membership-header-row">
-        <div class="membership-header">
+    <div class="app-header-row">
+        <div class="app-page-header">
             <h1>Membership Plans</h1>
         </div>
 
         @if (isAdmin)
         {
-            <a asp-action="Create" class="add-membership-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Membership Plan
             </a>
         }
     </div>
 
-    <div class="membership-table-wrap">
-
-        <table class="membership-table">
+    <div class="app-table-wrap">
+        <table class="app-table membership-table">
             <thead>
                 <tr>
                     <th>Membership Name</th>
                     <th>Cost</th>
                     <th>Age Group</th>
+
                     @if (isAdmin)
                     {
-                        <th class="actions-heading">Actions</th>
+                        <th>Actions</th>
                     }
                 </tr>
             </thead>
@@ -44,25 +40,17 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>
-                            <span class="membership-name">@item.MembershipName</span>
-                        </td>
-
-                        <td>
-                            $@item.Cost.ToString("0.00")
-                        </td>
-
-                        <td>
-                            @item.AgeGroup
-                        </td>
+                        <td class="app-primary-cell">@item.MembershipName</td>
+                        <td>$@item.Cost.ToString("0.00")</td>
+                        <td>@item.AgeGroup</td>
 
                         @if (isAdmin)
                         {
                             <td>
-                                <div class="membership-actions">
-                                    <a asp-action="Details" asp-route-id="@item.MembershipId" class="details-membership-link">Details</a>
-                                    <a asp-action="Edit" asp-route-id="@item.MembershipId" class="edit-membership-link">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.MembershipId" class="delete-membership-link">Delete</a>
+                                <div class="app-row-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MembershipId" class="app-details-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.MembershipId" class="app-edit-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MembershipId" class="app-delete-link">Delete</a>
                                 </div>
                             </td>
                         }
@@ -70,7 +58,6 @@
                 }
             </tbody>
         </table>
-
     </div>
 
 </section>
