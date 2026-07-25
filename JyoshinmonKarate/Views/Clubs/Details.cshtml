@@ -4,32 +4,17 @@
     ViewData["Title"] = "Dojo Details";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/dojo.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="dojo-form-page">
-    <div class="dojo-form-card">
-
-        <div class="dojo-form-header">
-            <h1>Dojo Info</h1>
+        <div class="app-form-header">
+            <h1>Dojo Details</h1>
         </div>
 
         <div class="details-grid">
-
             <div class="details-item">
-                <span>Dojo name</span>
+                <span>Dojo Name</span>
                 <p>@Model.ClubName</p>
-            </div>
-
-            <div class="details-item">
-                <span>Address</span>
-                <p>@Model.Address</p>
-            </div>
-
-            <div class="details-item">
-                <span>Email</span>
-                <p>@Model.Email</p>
             </div>
 
             <div class="details-item">
@@ -37,11 +22,24 @@
                 <p>@Model.Phone</p>
             </div>
 
+            <div class="details-item full-width">
+                <span>Address</span>
+                <p>@Model.Address</p>
+            </div>
+
+            <div class="details-item full-width">
+                <span>Email</span>
+                <p>@Model.Email</p>
+            </div>
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.ClubId" class="save-link">Edit Dojo</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.ClubId" class="app-primary-btn">Edit Dojo</a>
+            }
+
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>

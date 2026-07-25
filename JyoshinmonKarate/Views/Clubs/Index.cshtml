@@ -2,41 +2,36 @@
 
 @{
     ViewData["Title"] = "Dojos";
-    bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/dojo.css" asp-append-version="true" />
-}
+<section class="app-index-page compact">
 
-<section class="dojo-index-page">
-
-    <div class="dojo-header-row">
-        <div class="dojo-header">
+    <div class="app-header-row">
+        <div class="app-page-header">
             <h1>Dojos</h1>
         </div>
 
-        @if (isAdmin)
+        @if (User.IsInRole("Admin"))
         {
-            <a asp-action="Create" class="add-dojo-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Dojo
             </a>
         }
     </div>
 
-    <div class="dojo-table-wrap">
-        <table class="dojo-table">
+    <div class="app-table-wrap">
+        <table class="app-table dojo-table">
             <thead>
                 <tr>
                     <th>Dojo Name</th>
                     <th>Address</th>
-                    <th>Email</th>
                     <th>Phone</th>
+                    <th>Email</th>
 
-                    @if (isAdmin)
+                    @if (User.IsInRole("Admin"))
                     {
-                        <th class="actions-heading">Actions</th>
+                        <th>Actions</th>
                     }
                 </tr>
             </thead>
@@ -45,21 +40,18 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>
-                            <span class="dojo-name">@item.ClubName</span>
-                        </td>
-
+                        <td class="app-primary-cell">@item.ClubName</td>
                         <td>@item.Address</td>
-                        <td>@item.Email</td>
                         <td>@item.Phone</td>
+                        <td>@item.Email</td>
 
-                        @if (isAdmin)
+                        @if (User.IsInRole("Admin"))
                         {
                             <td>
-                                <div class="dojo-actions">
-                                    <a asp-action="Details" asp-route-id="@item.ClubId" class="details-dojo-link">Details</a>
-                                    <a asp-action="Edit" asp-route-id="@item.ClubId" class="edit-dojo-link">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.ClubId" class="delete-dojo-link">Delete</a>
+                                <div class="app-row-actions">
+                                    <a asp-action="Details" asp-route-id="@item.ClubId" class="app-details-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.ClubId" class="app-edit-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.ClubId" class="app-delete-link">Delete</a>
                                 </div>
                             </td>
                         }
