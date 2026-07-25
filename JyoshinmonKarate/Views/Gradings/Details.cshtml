@@ -4,14 +4,10 @@
     ViewData["Title"] = "Grading Details";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/grading.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="grading-form-page">
-    <div class="grading-form-card">
-
-        <div class="grading-form-header">
+        <div class="app-form-header">
             <h1>Grading Info</h1>
         </div>
 
@@ -23,25 +19,33 @@
             </div>
 
             <div class="details-item">
-                <span>Grading date</span>
+                <span>Grading Date</span>
                 <p>@Model.GradingDate.ToString("dd MMM yyyy")</p>
             </div>
 
             <div class="details-item">
-                <span>Start time</span>
+                <span>Start Time</span>
                 <p>@Model.GradingStartTime.ToString("hh:mm tt")</p>
             </div>
 
             <div class="details-item">
-                <span>End time</span>
+                <span>End Time</span>
                 <p>@Model.GradingEndTime.ToString("hh:mm tt")</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.GradingId" class="save-link">Edit Grading</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit"
+                   asp-route-id="@Model.GradingId"
+                   class="app-primary-btn">
+                Edit Grading
+            </a>
+
+            <a asp-action="Index"
+                   class="app-cancel-link">
+                Back to List
+            </a>
         </div>
 
     </div>
