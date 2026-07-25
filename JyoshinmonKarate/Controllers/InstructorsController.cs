@@ -265,25 +265,20 @@ namespace JyoshinmonKarate.Controllers
 
         // GET: Attendances/Delete/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
+            var instructor = await _context.Instructors
+                .Include(i => i.User)
+                .Include(i => i.Club)
+                .Include(i => i.Belt)
+                .FirstOrDefaultAsync(i => i.InstructorId == id);
+
+            if (instructor == null)
             {
                 return NotFound();
             }
 
-            var attendance = await _context.Attendances
-                .Include(a => a.Member)
-                .Include(a => a.Schedule)
-                .ThenInclude(s => s.Club)
-                .FirstOrDefaultAsync(a => a.AttendanceId == id);
-
-            if (attendance == null)
-            {
-                return NotFound();
-            }
-
-            return View(attendance);
+            return View(instructor);
         }
 
         // POST: Instructors/Delete/5

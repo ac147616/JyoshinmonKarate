@@ -4,14 +4,10 @@
     ViewData["Title"] = "Edit Instructor";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/instructor.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="instructor-form-page">
-    <div class="instructor-form-card">
-
-        <div class="instructor-form-header">
+        <div class="app-form-header">
             <h1>Edit Instructor</h1>
         </div>
 
@@ -20,37 +16,37 @@
 
             <input type="hidden" asp-for="InstructorId" />
 
-            <div class="instructor-form-row">
+            <div class="form-grid">
 
-                <div class="instructor-form-group">
+                <div class="form-group">
                     <label asp-for="UserId">User Account</label>
-                    <select asp-for="UserId" class="instructor-form-control" asp-items="ViewBag.UserId"></select>
-                    <span asp-validation-for="UserId" class="instructor-field-error"></span>
+                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
                 </div>
 
-                <div class="instructor-form-group">
+                <div class="form-group">
                     <label asp-for="ClubId">Club</label>
-                    <select asp-for="ClubId" class="instructor-form-control" asp-items="ViewBag.ClubId"></select>
-                    <span asp-validation-for="ClubId" class="instructor-field-error"></span>
+                    <select asp-for="ClubId" class="form-control" asp-items="ViewBag.ClubId"></select>
+                    <span asp-validation-for="ClubId" class="text-danger"></span>
                 </div>
 
-                <div class="instructor-form-group">
+                <div class="form-group">
                     <label asp-for="BeltId">Belt</label>
-                    <select asp-for="BeltId" class="instructor-form-control" asp-items="ViewBag.BeltId"></select>
-                    <span asp-validation-for="BeltId" class="instructor-field-error"></span>
+                    <select asp-for="BeltId" class="form-control" asp-items="ViewBag.BeltId"></select>
+                    <span asp-validation-for="BeltId" class="text-danger"></span>
                 </div>
 
-                <div class="instructor-form-group">
+                <div class="form-group">
                     <label asp-for="DateJoined">Date Joined</label>
-                    <input asp-for="DateJoined" class="instructor-form-control" />
-                    <span asp-validation-for="DateJoined" class="instructor-field-error"></span>
+                    <input asp-for="DateJoined" class="form-control" />
+                    <span asp-validation-for="DateJoined" class="text-danger"></span>
                 </div>
 
             </div>
 
-            <div class="instructor-form-actions">
-                <button type="submit" class="instructor-primary-btn">Save Changes</button>
-                <a asp-action="Index" class="instructor-cancel-link">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="app-primary-btn">Save Changes</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
 
@@ -62,4 +58,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

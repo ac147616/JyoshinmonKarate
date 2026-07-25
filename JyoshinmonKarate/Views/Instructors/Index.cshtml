@@ -5,28 +5,29 @@
     bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/instructor.css" asp-append-version="true" />
-}
+<section class="app-index-page instructor-index-page">
 
-<section class="instructor-index-page">
-    <div class="instructor-header">
+    <div class="app-page-header">
         <h1>Instructors</h1>
     </div>
 
     <div class="instructor-toolbar">
+
         <div class="instructor-search-box">
             <input type="text" id="instructorSearch" placeholder="Search instructors" />
         </div>
 
         <div class="instructor-toolbar-actions">
+
             <div class="instructor-filters-wrap">
+
                 <button type="button" class="instructor-filters-btn" id="instructorFiltersBtn">
                     <i class="bi bi-sliders"></i>
                     More filters
                 </button>
 
                 <div class="instructor-filters-panel" id="instructorFiltersPanel">
+
                     <div class="instructor-filter-section">
                         <h3>Clubs</h3>
 
@@ -52,21 +53,23 @@
                     </div>
 
                     <button type="button" class="instructor-clear-filters-btn" id="instructorClearFiltersBtn">Clear filters</button>
+
                 </div>
             </div>
 
             @if (isAdmin)
             {
-                <a asp-action="Create" class="add-instructor-btn">
+                <a asp-action="Create" class="app-add-btn">
                     <i class="bi bi-plus-lg"></i>
                     Add Instructor
                 </a>
             }
+
         </div>
     </div>
 
-    <div class="instructor-table-wrap">
-        <table class="instructor-table" id="instructorTable">
+    <div class="app-table-wrap">
+        <table class="app-table instructor-table" id="instructorTable">
             <thead>
                 <tr>
                     <th>Instructor</th>
@@ -76,7 +79,7 @@
 
                     @if (isAdmin)
                     {
-                        <th class="instructor-actions-heading">Actions</th>
+                        <th>Actions</th>
                     }
                 </tr>
             </thead>
@@ -106,9 +109,7 @@
                     }
 
                     <tr data-club="@clubName.ToLower()" data-belt="@beltName.ToLower()">
-                        <td>
-                            <span class="instructor-name">@fullName</span>
-                        </td>
+                        <td class="app-primary-cell">@fullName</td>
                         <td>@clubName</td>
                         <td>@beltName</td>
                         <td>@item.DateJoined.ToString("dd MMM yyyy")</td>
@@ -116,10 +117,10 @@
                         @if (isAdmin)
                         {
                             <td>
-                                <div class="instructor-actions">
-                                    <a asp-action="Details" asp-route-id="@item.InstructorId" class="details-instructor-link">Details</a>
-                                    <a asp-action="Edit" asp-route-id="@item.InstructorId" class="edit-instructor-link">Edit</a>
-                                    <a asp-action="Delete" asp-route-id="@item.InstructorId" class="delete-instructor-link">Delete</a>
+                                <div class="app-row-actions">
+                                    <a asp-action="Details" asp-route-id="@item.InstructorId" class="app-details-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.InstructorId" class="app-edit-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.InstructorId" class="app-delete-link">Delete</a>
                                 </div>
                             </td>
                         }
@@ -128,6 +129,12 @@
             </tbody>
         </table>
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="app-empty-message">No instructors were found.</div>
+    }
+
 </section>
 
 @section Scripts {
@@ -151,7 +158,6 @@
             }
 
             const rowValue = row.getAttribute("data-" + type);
-
             return selectedValues.includes(rowValue);
         }
 

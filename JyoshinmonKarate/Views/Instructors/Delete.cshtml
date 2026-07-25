@@ -6,27 +6,23 @@
     string instructorName = Model.User.FirstName + " " + Model.User.LastName;
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/instructor.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="instructor-form-page">
-    <div class="instructor-form-card">
-
-        <div class="instructor-form-header">
+        <div class="app-form-header">
             <h1>Delete Instructor</h1>
-            <p>Deleting this instructor will permanently remove them from the system.</p>
+            <p class="warning">Deleting this instructor will permanently remove them from the system.</p>
         </div>
 
         <div class="details-grid">
 
             <div class="details-item">
-                <span>Instructor name</span>
+                <span>Instructor Name</span>
                 <p>@instructorName</p>
             </div>
 
             <div class="details-item">
-                <span>User account</span>
+                <span>User Account</span>
                 <p>@Model.User.Email</p>
             </div>
 
@@ -36,22 +32,24 @@
             </div>
 
             <div class="details-item">
-                <span>Current belt</span>
+                <span>Current Belt</span>
                 <p>@Model.Belt.BeltName</p>
             </div>
 
             <div class="details-item">
-                <span>Date joined</span>
+                <span>Date Joined</span>
                 <p>@Model.DateJoined.ToString("dd MMM yyyy")</p>
             </div>
 
         </div>
 
-        <form asp-action="Delete" method="post" class="form-actions">
+        <form asp-action="Delete" method="post">
             <input type="hidden" asp-for="InstructorId" />
 
-            <button type="submit" class="delete-btn">Delete Instructor</button>
-            <a asp-action="Index" class="cancel-link">Cancel</a>
+            <div class="form-actions">
+                <button type="submit" class="app-danger-btn">Delete Instructor</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
+            </div>
         </form>
 
     </div>

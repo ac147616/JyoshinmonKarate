@@ -314,6 +314,90 @@
     }
 }
 
+.instructor-filters-wrap {
+    position: relative;
+}
+
+.instructor-filters-btn {
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 11px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f1f5;
+    color: #333333;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .instructor-filters-btn:hover {
+        background: #e8e8ee;
+    }
+
+.instructor-filters-panel {
+    display: none;
+    position: absolute;
+    top: 42px;
+    right: 0;
+    z-index: 20;
+    width: 280px;
+    max-height: 430px;
+    overflow-y: auto;
+    padding: 13px;
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+    .instructor-filters-panel.show {
+        display: block;
+    }
+
+.instructor-filter-section {
+    margin-bottom: 14px;
+}
+
+    .instructor-filter-section h3 {
+        margin: 0 0 7px;
+        color: #333333;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .instructor-filter-section label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 6px;
+        color: #444444;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+
+    .instructor-filter-section input {
+        accent-color: var(--app-red);
+    }
+
+.instructor-clear-filters-btn {
+    width: 100%;
+    height: 30px;
+    border: 1px solid var(--app-red);
+    border-radius: 7px;
+    background: #ffffff;
+    color: var(--app-red);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .instructor-clear-filters-btn:hover {
+        background: #fff3f3;
+    }
+
 /* Belts */
 
 .belt-content {

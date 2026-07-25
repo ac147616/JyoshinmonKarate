@@ -6,26 +6,22 @@
     string instructorName = Model.User.FirstName + " " + Model.User.LastName;
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/instructor.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="instructor-form-page">
-    <div class="instructor-form-card">
-
-        <div class="instructor-form-header">
+        <div class="app-form-header">
             <h1>Instructor Info</h1>
         </div>
 
         <div class="details-grid">
 
             <div class="details-item">
-                <span>Instructor name</span>
+                <span>Instructor Name</span>
                 <p>@instructorName</p>
             </div>
 
             <div class="details-item">
-                <span>User account</span>
+                <span>User Account</span>
                 <p>@Model.User.Email</p>
             </div>
 
@@ -35,20 +31,20 @@
             </div>
 
             <div class="details-item">
-                <span>Current belt</span>
+                <span>Current Belt</span>
                 <p>@Model.Belt.BeltName</p>
             </div>
 
             <div class="details-item">
-                <span>Date joined</span>
+                <span>Date Joined</span>
                 <p>@Model.DateJoined.ToString("dd MMM yyyy")</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.InstructorId" class="instructor-primary-btn">Edit Instructor</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.InstructorId" class="app-primary-btn">Edit Instructor</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>
