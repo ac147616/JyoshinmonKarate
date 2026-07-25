@@ -5,16 +5,13 @@
 
     string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
     string result = Model.Passed ? "Passed" : "Not Passed";
+    string resultClass = Model.Passed ? "status-success" : "status-danger";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="member-grading-form-page">
-    <div class="member-grading-form-card">
-
-        <div class="member-grading-form-header">
+        <div class="app-form-header">
             <h1>Member Grading Details</h1>
         </div>
 
@@ -47,21 +44,14 @@
 
             <div class="details-item">
                 <span>Result</span>
-                <p>@result</p>
+                <p class="status @resultClass">@result</p>
             </div>
 
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit"
-               asp-route-id="@Model.MemberGradingId"
-               class="save-link">
-                Edit Member Grading
-            </a>
-
-            <a asp-action="Index" class="cancel-link">
-                Back to List
-            </a>
+            <a asp-action="Edit" asp-route-id="@Model.MemberGradingId" class="app-primary-btn">Edit Member Grading</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>

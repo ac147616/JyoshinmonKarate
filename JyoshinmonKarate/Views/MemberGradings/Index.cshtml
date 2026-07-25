@@ -5,105 +5,67 @@
     bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
-}
+<section class="app-index-page">
 
-<section class="member-grading-index-page">
-
-    <div class="member-grading-header">
+    <div class="app-page-header">
         <h1>Member Gradings</h1>
     </div>
 
-    <form asp-action="Index" method="get" class="member-grading-toolbar">
+    <form asp-action="Index" method="get" class="app-toolbar">
 
-        <div class="member-grading-filter-fields">
+        <div class="app-filter-fields">
 
-            <div class="member-grading-filter-group">
+            <div class="app-filter-group">
                 <label for="memberSearch">Member</label>
 
-                <div class="member-search-select" id="memberSearchSelect">
-                    <input type="text"
-                           id="memberSearch"
-                           placeholder="Search members"
-                           autocomplete="off" />
+                <div class="member-search" id="memberSearchSelect">
+                    <input type="text" id="memberSearch" placeholder="Search members" autocomplete="off" />
+                    <input type="hidden" name="memberId" id="memberId" value="@ViewBag.SelectedMemberId" />
 
-                    <input type="hidden"
-                           name="memberId"
-                           id="memberId"
-                           value="@ViewBag.SelectedMemberId" />
-
-                    <div class="member-options" id="memberOptions">
-                        <button type="button"
-                                class="member-option"
-                                data-value="0">
-                            All members
-                        </button>
+                    <div class="member-search-options" id="memberOptions">
+                        <button type="button" class="member-search-option" data-value="0">All members</button>
 
                         @foreach (var member in ViewBag.MemberId)
                         {
-                            <button type="button"
-                                    class="member-option"
-                                    data-value="@member.Value">
-                                @member.Text
-                            </button>
+                            <button type="button" class="member-search-option" data-value="@member.Value">@member.Text</button>
                         }
                     </div>
                 </div>
             </div>
 
-            <div class="member-grading-filter-group">
+            <div class="app-filter-group">
                 <label for="gradingId">Grading</label>
-
-                <select name="gradingId"
-                        id="gradingId"
-                        asp-items="ViewBag.GradingId">
+                <select name="gradingId" id="gradingId" asp-items="ViewBag.GradingId">
                     <option value="0">All gradings</option>
                 </select>
             </div>
 
-            <div class="member-grading-filter-group">
+            <div class="app-filter-group">
                 <label for="beltAfterId">New Belt</label>
-
-                <select name="beltAfterId"
-                        id="beltAfterId"
-                        asp-items="ViewBag.BeltAfterId">
+                <select name="beltAfterId" id="beltAfterId" asp-items="ViewBag.BeltAfterId">
                     <option value="0">All belts</option>
                 </select>
             </div>
 
-            <div class="member-grading-filter-group">
+            <div class="app-filter-group">
                 <label for="result">Result</label>
-
                 <select name="result" id="result">
                     <option value="">All results</option>
-                    <option value="Passed"
-                            selected="@(ViewBag.SelectedResult == "Passed")">
-                        Passed
-                    </option>
-                    <option value="NotPassed"
-                            selected="@(ViewBag.SelectedResult == "NotPassed")">
-                        Not Passed
-                    </option>
+                    <option value="Passed" selected="@(ViewBag.SelectedResult == "Passed")">Passed</option>
+                    <option value="NotPassed" selected="@(ViewBag.SelectedResult == "NotPassed")">Not Passed</option>
                 </select>
             </div>
 
-            <div class="member-grading-filter-actions">
-                <button type="submit" class="apply-member-grading-filters-btn">
-                    Apply
-                </button>
-
-                <a asp-action="Index"
-                       class="clear-member-grading-filters-link">
-                    Clear
-                </a>
+            <div class="app-filter-actions">
+                <button type="submit" class="app-apply-btn">Apply</button>
+                <a asp-action="Index" class="app-clear-link">Clear</a>
             </div>
 
         </div>
 
         @if (isAdmin)
         {
-            <a asp-action="Create" class="add-member-grading-btn">
+            <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
                 Add Member Grading
             </a>
@@ -111,8 +73,8 @@
 
     </form>
 
-    <div class="member-grading-table-wrap">
-        <table class="member-grading-table">
+    <div class="app-table-wrap">
+        <table class="app-table member-grading-table">
             <thead>
                 <tr>
                     <th>Member</th>
@@ -134,50 +96,26 @@
                 {
                     string memberName = item.Member.FirstName + " " + item.Member.LastName;
                     string resultName = item.Passed ? "Passed" : "Not Passed";
-                    string resultClass = item.Passed ? "result-passed" : "result-not-passed";
+                    string resultClass = item.Passed ? "status-success" : "status-danger";
 
                     <tr>
-                        <td>
-                            <span class="member-grading-member-name">
-                                @memberName
-                            </span>
-                        </td>
-
+                        <td class="app-primary-cell">@memberName</td>
                         <td>@item.Grading.GradingDate.ToString("dd MMM yyyy")</td>
-
                         <td>@item.Grading.Club.ClubName</td>
-
                         <td>@item.BeltBefore.BeltName</td>
-
                         <td>@item.BeltAfter.BeltName</td>
 
                         <td>
-                            <span class="member-grading-result @resultClass">
-                                @resultName
-                            </span>
+                            <span class="status @resultClass">@resultName</span>
                         </td>
 
                         @if (isAdmin)
                         {
                             <td>
-                                <div class="member-grading-actions">
-                                    <a asp-action="Details"
-                                           asp-route-id="@item.MemberGradingId"
-                                           class="details-member-grading-link">
-                                        Details
-                                    </a>
-
-                                    <a asp-action="Edit"
-                                           asp-route-id="@item.MemberGradingId"
-                                           class="edit-member-grading-link">
-                                        Edit
-                                    </a>
-
-                                    <a asp-action="Delete"
-                                           asp-route-id="@item.MemberGradingId"
-                                           class="delete-member-grading-link">
-                                        Delete
-                                    </a>
+                                <div class="app-row-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MemberGradingId" class="app-details-link">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.MemberGradingId" class="app-edit-link">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MemberGradingId" class="app-delete-link">Delete</a>
                                 </div>
                             </td>
                         }
@@ -189,9 +127,7 @@
 
     @if (!Model.Any())
     {
-        <div class="member-grading-empty-message">
-            No member grading records were found.
-        </div>
+        <div class="app-empty-message">No member grading records were found.</div>
     }
 
     @if (ViewBag.TotalPages > 1)
@@ -200,15 +136,7 @@
 
             @if (ViewBag.CurrentPage > 1)
             {
-                <a asp-action="Index"
-                       asp-route-page="@(ViewBag.CurrentPage - 1)"
-                       asp-route-memberId="@ViewBag.SelectedMemberId"
-                       asp-route-gradingId="@ViewBag.SelectedGradingId"
-                       asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId"
-                       asp-route-result="@ViewBag.SelectedResult"
-                       class="app-page-link">
-                    &lt;
-                </a>
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-gradingId="@ViewBag.SelectedGradingId" asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId" asp-route-result="@ViewBag.SelectedResult" class="app-page-link">&lt;</a>
             }
             else
             {
@@ -223,29 +151,13 @@
                 }
                 else
                 {
-                    <a asp-action="Index"
-                           asp-route-page="@i"
-                           asp-route-memberId="@ViewBag.SelectedMemberId"
-                           asp-route-gradingId="@ViewBag.SelectedGradingId"
-                           asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId"
-                           asp-route-result="@ViewBag.SelectedResult"
-                           class="app-page-link">
-                        @i
-                    </a>
+                    <a asp-action="Index" asp-route-page="@i" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-gradingId="@ViewBag.SelectedGradingId" asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId" asp-route-result="@ViewBag.SelectedResult" class="app-page-link">@i</a>
                 }
             }
 
             @if (ViewBag.CurrentPage < ViewBag.TotalPages)
             {
-                <a asp-action="Index"
-                       asp-route-page="@(ViewBag.CurrentPage + 1)"
-                       asp-route-memberId="@ViewBag.SelectedMemberId"
-                       asp-route-gradingId="@ViewBag.SelectedGradingId"
-                       asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId"
-                       asp-route-result="@ViewBag.SelectedResult"
-                       class="app-page-link">
-                    &gt;
-                </a>
+                <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-memberId="@ViewBag.SelectedMemberId" asp-route-gradingId="@ViewBag.SelectedGradingId" asp-route-beltAfterId="@ViewBag.SelectedBeltAfterId" asp-route-result="@ViewBag.SelectedResult" class="app-page-link">&gt;</a>
             }
             else
             {
@@ -262,7 +174,7 @@
         const memberSearch = document.getElementById("memberSearch");
         const memberId = document.getElementById("memberId");
         const memberOptions = document.getElementById("memberOptions");
-        const memberOptionButtons = document.querySelectorAll(".member-option");
+        const memberOptionButtons = document.querySelectorAll(".member-search-option");
 
         function setSelectedMemberText() {
             const selectedValue = memberId.value;
@@ -284,13 +196,7 @@
 
             memberOptionButtons.forEach(option => {
                 const optionText = option.innerText.toLowerCase();
-
-                if (optionText.includes(searchValue)) {
-                    option.style.display = "block";
-                }
-                else {
-                    option.style.display = "none";
-                }
+                option.style.display = optionText.includes(searchValue) ? "block" : "none";
             });
 
             memberOptions.classList.add("show");

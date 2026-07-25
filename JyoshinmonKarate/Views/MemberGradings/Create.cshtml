@@ -4,14 +4,10 @@
     ViewData["Title"] = "Create Member Grading";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/membergrading.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="member-grading-form-page">
-    <div class="member-grading-form-card">
-
-        <div class="member-grading-form-header">
+        <div class="app-form-header">
             <h1>Add Member Grading</h1>
         </div>
 
@@ -22,9 +18,7 @@
 
                 <div class="form-group">
                     <label asp-for="MemberId">Member</label>
-                    <select asp-for="MemberId"
-                            class="form-control"
-                            asp-items="ViewBag.MemberId">
+                    <select asp-for="MemberId" class="form-control" asp-items="ViewBag.MemberId">
                         <option value="">Select a member</option>
                     </select>
                     <span asp-validation-for="MemberId" class="text-danger"></span>
@@ -32,9 +26,7 @@
 
                 <div class="form-group">
                     <label asp-for="GradingId">Grading</label>
-                    <select asp-for="GradingId"
-                            class="form-control"
-                            asp-items="ViewBag.GradingId">
+                    <select asp-for="GradingId" class="form-control" asp-items="ViewBag.GradingId">
                         <option value="">Select a grading</option>
                     </select>
                     <span asp-validation-for="GradingId" class="text-danger"></span>
@@ -42,9 +34,7 @@
 
                 <div class="form-group">
                     <label asp-for="BeltBeforeId">Belt Before</label>
-                    <select asp-for="BeltBeforeId"
-                            class="form-control"
-                            asp-items="ViewBag.BeltBeforeId">
+                    <select asp-for="BeltBeforeId" class="form-control" asp-items="ViewBag.BeltBeforeId">
                         <option value="">Select previous belt</option>
                     </select>
                     <span asp-validation-for="BeltBeforeId" class="text-danger"></span>
@@ -52,15 +42,13 @@
 
                 <div class="form-group">
                     <label asp-for="BeltAfterId">Belt After</label>
-                    <select asp-for="BeltAfterId"
-                            class="form-control"
-                            asp-items="ViewBag.BeltAfterId">
+                    <select asp-for="BeltAfterId" class="form-control" asp-items="ViewBag.BeltAfterId">
                         <option value="">Select new belt</option>
                     </select>
                     <span asp-validation-for="BeltAfterId" class="text-danger"></span>
                 </div>
 
-                <div class="form-group checkbox-group">
+                <div class="form-group">
                     <label asp-for="Passed">Passed</label>
 
                     <div class="checkbox-row">
@@ -74,8 +62,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Add Member Grading</button>
-                <a asp-action="Index" class="cancel-link">Cancel</a>
+                <button type="submit" class="app-primary-btn">Add Member Grading</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
 
