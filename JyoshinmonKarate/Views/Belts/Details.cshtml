@@ -4,29 +4,23 @@
     ViewData["Title"] = "Belt Details";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/belt.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="belt-form-page">
-    <div class="belt-form-card">
-
-        <div class="belt-form-header">
-            <h1>Belt Info</h1>
+        <div class="app-form-header">
+            <h1>Belt Details</h1>
         </div>
 
         <div class="details-grid">
-
             <div class="details-item">
-                <span>Belt name</span>
+                <span>Belt Name</span>
                 <p>@Model.BeltName</p>
             </div>
-
         </div>
 
         <div class="form-actions">
-            <a asp-action="Edit" asp-route-id="@Model.BeltId" class="save-link">Edit Belt</a>
-            <a asp-action="Index" class="cancel-link">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.BeltId" class="app-primary-btn">Edit Belt</a>
+            <a asp-action="Index" class="app-cancel-link">Back to List</a>
         </div>
 
     </div>

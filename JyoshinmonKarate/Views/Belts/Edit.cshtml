@@ -4,35 +4,29 @@
     ViewData["Title"] = "Edit Belt";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/belt.css" asp-append-version="true" />
-}
+<section class="app-form-page">
+    <div class="app-form-card">
 
-<section class="belt-form-page">
-    <div class="belt-form-card">
-
-        <div class="belt-form-header">
+        <div class="app-form-header">
             <h1>Edit Belt</h1>
         </div>
 
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="BeltId" />
 
             <div class="form-grid">
-
                 <div class="form-group">
-                    <label asp-for="BeltName">Belt Name</label>
+                    <label asp-for="BeltName"></label>
                     <input asp-for="BeltName" class="form-control" />
                     <span asp-validation-for="BeltName" class="text-danger"></span>
                 </div>
-
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-btn">Save Changes</button>
-                <a asp-action="Index" class="cancel-link">Cancel</a>
+                <button type="submit" class="app-primary-btn">Save Changes</button>
+                <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
 

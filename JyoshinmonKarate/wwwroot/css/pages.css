@@ -1,0 +1,394 @@
+﻿/* Attendance */
+
+.attendance-schedule-filter select {
+    min-width: 240px;
+}
+
+@media (max-width: 950px) {
+    .attendance-table {
+        min-width: 900px;
+    }
+}
+
+/* Payments */
+
+@media (max-width: 1100px) {
+    .payment-table {
+        min-width: 1000px;
+    }
+}
+
+/* Member gradings */
+
+.checkbox-row {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+    .checkbox-row input {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--app-red);
+    }
+
+    .checkbox-row span {
+        color: #555555;
+        font-size: 0.88rem;
+    }
+
+@media (max-width: 1100px) {
+    .member-grading-table {
+        min-width: 1000px;
+    }
+}
+
+/* Member memberships */
+
+.member-membership-date-filter input {
+    min-width: 125px;
+}
+
+@media (max-width: 1100px) {
+    .member-membership-table {
+        min-width: 900px;
+    }
+}
+
+/* Gradings */
+
+.grading-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-left: 10px;
+    margin-bottom: 16px;
+}
+
+.grading-search-box {
+    width: 240px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+    .grading-search-box input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--app-text);
+        font-size: 0.84rem;
+    }
+
+.grading-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.grading-table th:nth-child(1),
+.grading-table td:nth-child(1) {
+    width: 19%;
+}
+
+.grading-table th:nth-child(2),
+.grading-table td:nth-child(2) {
+    width: 21%;
+}
+
+.grading-table th:nth-child(3),
+.grading-table td:nth-child(3),
+.grading-table th:nth-child(4),
+.grading-table td:nth-child(4) {
+    width: 15%;
+}
+
+.grading-table th:nth-child(5),
+.grading-table td:nth-child(5) {
+    width: 30%;
+}
+
+/* Instructors */
+
+.instructor-index-page {
+    padding-top: 24px;
+}
+
+.instructor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-left: 10px;
+    margin-bottom: 16px;
+}
+
+.instructor-search-box {
+    width: 240px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+    .instructor-search-box input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--app-text);
+        font-size: 0.84rem;
+    }
+
+.instructor-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.instructor-information-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+    padding: 11px 13px;
+    border-radius: 8px;
+    background: #f7f7f9;
+}
+
+    .instructor-information-box strong {
+        color: #444444;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .instructor-information-box span {
+        color: #666666;
+        font-size: 0.88rem;
+    }
+
+.instructor-details-name {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--app-light-border);
+}
+
+    .instructor-details-name h2 {
+        margin: 0 0 5px;
+        color: var(--app-heading);
+        font-size: 1.25rem;
+        font-weight: 800;
+    }
+
+    .instructor-details-name span {
+        color: var(--app-red);
+        font-size: 0.84rem;
+        font-weight: 600;
+    }
+
+@media (max-width: 750px) {
+    .instructor-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .instructor-search-box {
+        width: auto;
+    }
+
+    .instructor-table {
+        min-width: 720px;
+    }
+}
+
+/* Belts */
+
+.belt-content {
+    width: 560px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.belt-table th:nth-child(1),
+.belt-table td:nth-child(1) {
+    width: 220px;
+}
+
+.belt-table th:nth-child(2),
+.belt-table td:nth-child(2) {
+    width: 340px;
+}
+
+@media (max-width: 650px) {
+    .belt-table {
+        min-width: 500px;
+    }
+}
+
+/* Dojos */
+
+.dojo-table th:nth-child(1),
+.dojo-table td:nth-child(1) {
+    width: 20%;
+}
+
+.dojo-table th:nth-child(2),
+.dojo-table td:nth-child(2) {
+    width: 25%;
+}
+
+.dojo-table th:nth-child(3),
+.dojo-table td:nth-child(3) {
+    width: 20%;
+}
+
+.dojo-table th:nth-child(4),
+.dojo-table td:nth-child(4) {
+    width: 15%;
+}
+
+.dojo-table th:nth-child(5),
+.dojo-table td:nth-child(5) {
+    width: 20%;
+}
+
+@media (max-width: 850px) {
+    .dojo-table {
+        min-width: 850px;
+    }
+}
+
+/* Membership plans */
+
+.membership-index-page {
+    padding-top: 38px;
+}
+
+.membership-table th:nth-child(1),
+.membership-table td:nth-child(1) {
+    width: 32%;
+}
+
+.membership-table th:nth-child(2),
+.membership-table td:nth-child(2) {
+    width: 16%;
+}
+
+.membership-table th:nth-child(3),
+.membership-table td:nth-child(3) {
+    width: 18%;
+}
+
+.membership-table th:nth-child(4),
+.membership-table td:nth-child(4) {
+    width: 34%;
+}
+
+@media (max-width: 700px) {
+    .membership-table {
+        min-width: 650px;
+    }
+}
+
+/* Schedules */
+
+.schedule-index-page {
+    padding-top: 38px;
+}
+
+.schedule-header-row {
+    margin-bottom: 28px;
+}
+
+.dojo-schedule-section {
+    margin-bottom: 35px;
+}
+
+.dojo-schedule-header {
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+    .dojo-schedule-header h2 {
+        margin: 0 0 3px;
+        color: var(--app-heading);
+        font-size: 1.15rem;
+        font-weight: 800;
+    }
+
+.schedule-table th:nth-child(1),
+.schedule-table td:nth-child(1) {
+    width: 24%;
+}
+
+.schedule-table th:nth-child(2),
+.schedule-table td:nth-child(2),
+.schedule-table th:nth-child(3),
+.schedule-table td:nth-child(3),
+.schedule-table th:nth-child(4),
+.schedule-table td:nth-child(4),
+.schedule-table th:nth-child(5),
+.schedule-table td:nth-child(5) {
+    width: 14%;
+}
+
+.schedule-table th:nth-child(6),
+.schedule-table td:nth-child(6) {
+    width: 20%;
+}
+
+/* Users */
+
+.user-search-input {
+    width: 220px;
+}
+
+.user-role-select {
+    width: 145px;
+}
+
+.delete-blocked-message {
+    margin: 6px 0 0;
+    color: var(--app-warning);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.delete-reasons {
+    margin-top: 18px;
+    padding: 13px 15px;
+    border: 1px solid #efd2a3;
+    border-radius: 9px;
+    background: #fff8ed;
+}
+
+    .delete-reasons p {
+        margin: 0 0 5px;
+        color: #7a520f;
+        font-size: 0.84rem;
+    }
+
+        .delete-reasons p:last-child {
+            margin-bottom: 0;
+        }
+
+@media (max-width: 650px) {
+    .user-search-input,
+    .user-role-select {
+        width: 100%;
+    }
+
+    .user-table {
+        min-width: 750px;
+    }
+}

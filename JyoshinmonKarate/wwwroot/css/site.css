@@ -1,90 +1,102 @@
+:root {
+    --app-red: #b71920;
+    --app-red-dark: #921219;
+    --app-red-bright: #d71920;
+    --app-heading: #111111;
+    --app-text: #333333;
+    --app-muted: #777777;
+    --app-border: #dddddd;
+    --app-light-border: #eeeeee;
+    --app-light-bg: #f7f7f8;
+    --app-success: #078522;
+    --app-warning: #b26a00;
+}
+
 html {
-  font-size: 14px;
+    position: relative;
+    min-height: 100%;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
     margin-bottom: 60px;
+    background: #ffffff;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem #ffffff, 0 0 0 0.25rem #258cfb;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
-/* making the NAVBAR */
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+/* Navbar */
 
 .navbar {
+    min-height: 70px;
+    margin-top: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    overflow: visible;
     background-image: url('/images/beltsmall.png');
     background-size: auto 120px;
     background-position: center top;
     background-repeat: repeat-x;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    position: relative;
-    margin-top: 40px;
-    overflow: visible;
-    min-height: 70px;
 }
 
-.navbar .nav-link,
-.navbar .navbar-brand,
-.dropdown-toggle {
-    color: white !important;
-    /* makes text stand out from the belt texture by adding a dark shadow behind the white text*/
-    text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
-    /* slightly bolder */
-    font-weight: 600;
-}
+    .navbar .nav-link,
+    .navbar .navbar-brand,
+    .dropdown-toggle {
+        color: #ffffff !important;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
 
-.navbar .nav-link {
-    position: relative;
-    color: white !important;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
+    .navbar .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+    }
 
-/* underline */
-.navbar .nav-link::after {
-    content: "";
-    position: absolute;
-    left: 8px;
-    right: 8px;
-    bottom: 4px;
-    height: 3px;
-    background-color: #d71920;
-    border-radius: 10px;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-}
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 4px;
+            height: 3px;
+            border-radius: 10px;
+            background: var(--app-red-bright);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
 
-/* hover */
-.navbar .nav-link:hover {
-    color: #d71920 !important;
-}
+        .navbar .nav-link:hover {
+            color: var(--app-red-bright) !important;
+        }
 
-.navbar .nav-link:hover::after {
-    transform: scaleX(1);
-}
+            .navbar .nav-link:hover::after {
+                transform: scaleX(1);
+            }
 
 header {
     overflow: visible;
@@ -101,35 +113,35 @@ header {
 }
 
 .settings-link {
-    color: white !important;
-    font-size: 1.25rem;
-    padding: 6px 4px !important;
     display: flex;
     align-items: center;
+    padding: 6px 4px !important;
+    color: #ffffff !important;
+    font-size: 1.25rem;
 }
 
-    .settings-link:hover {
-        color: #f2f2f2 !important;
-    }
-
 .logout-btn {
-    border: none;
-    background: transparent;
-    color: white !important;
     display: flex;
     align-items: center;
     gap: 5px;
     padding: 6px 4px !important;
+    border: none;
+    background: transparent;
+    color: #ffffff !important;
     font-size: 0.95rem;
     cursor: pointer;
 }
+
     .logout-btn i {
         font-size: 1.2rem;
     }
 
+    .settings-link:hover,
     .logout-btn:hover {
         color: #f2f2f2 !important;
     }
+
+/* Shared pagination */
 
 .app-pagination {
     display: flex;
@@ -142,36 +154,36 @@ header {
 .app-page-link {
     min-width: 28px;
     height: 28px;
-    padding: 0 8px;
-    border-radius: 7px;
-    color: #444444;
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 600;
-    line-height: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    padding: 0 8px;
+    border: 1px solid var(--app-border);
+    border-radius: 7px;
+    background: #ffffff;
+    color: #444444;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
 }
 
     .app-page-link:hover {
-        color: #b71920;
-        border-color: #b71920;
+        border-color: var(--app-red);
         background: #fff7f7;
+        color: var(--app-red);
         text-decoration: none;
     }
 
     .app-page-link.active {
+        border-color: var(--app-red);
+        background: var(--app-red);
         color: #ffffff;
-        background: #b71920;
-        border-color: #b71920;
     }
 
     .app-page-link.disabled {
-        color: #bbbbbb;
+        border-color: var(--app-light-border);
         background: #f7f7f7;
-        border-color: #eeeeee;
+        color: #bbbbbb;
         cursor: not-allowed;
     }

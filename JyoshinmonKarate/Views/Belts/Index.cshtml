@@ -2,40 +2,35 @@
 
 @{
     ViewData["Title"] = "Belts";
-    bool isAdmin = User.IsInRole("Admin");
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/belt.css" asp-append-version="true" />
-}
-
-<section class="belt-index-page">
+<section class="app-index-page compact">
 
     <div class="belt-content">
 
-        <div class="belt-header-row">
-            <div class="belt-header">
+        <div class="app-header-row">
+            <div class="app-page-header">
                 <h1>Belts</h1>
             </div>
 
-            @if (isAdmin)
+            @if (User.IsInRole("Admin"))
             {
-                <a asp-action="Create" class="add-belt-btn">
+                <a asp-action="Create" class="app-add-btn">
                     <i class="bi bi-plus-lg"></i>
                     Add Belt
                 </a>
             }
         </div>
 
-        <div class="belt-table-wrap">
-            <table class="belt-table">
+        <div class="app-table-wrap">
+            <table class="app-table belt-table">
                 <thead>
                     <tr>
                         <th>Belt Name</th>
 
-                        @if (isAdmin)
+                        @if (User.IsInRole("Admin"))
                         {
-                            <th class="actions-heading">Actions</th>
+                            <th>Actions</th>
                         }
                     </tr>
                 </thead>
@@ -44,17 +39,17 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>
-                                <span class="belt-name">@item.BeltName</span>
+                            <td class="app-primary-cell">
+                                @item.BeltName
                             </td>
 
-                            @if (isAdmin)
+                            @if (User.IsInRole("Admin"))
                             {
                                 <td>
-                                    <div class="belt-actions">
-                                        <a asp-action="Details" asp-route-id="@item.BeltId" class="details-belt-link">Details</a>
-                                        <a asp-action="Edit" asp-route-id="@item.BeltId" class="edit-belt-link">Edit</a>
-                                        <a asp-action="Delete" asp-route-id="@item.BeltId" class="delete-belt-link">Delete</a>
+                                    <div class="app-row-actions">
+                                        <a asp-action="Details" asp-route-id="@item.BeltId" class="app-details-link">Details</a>
+                                        <a asp-action="Edit" asp-route-id="@item.BeltId" class="app-edit-link">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@item.BeltId" class="app-delete-link">Delete</a>
                                     </div>
                                 </td>
                             }
