@@ -18,12 +18,12 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    //first I seed the roles
+    var context = scope.ServiceProvider.GetRequiredService<JyoshinmonKarateContext>();
+    await context.Database.MigrateAsync();
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     await RoleSeeder.SeedRolesAsync(roleManager);
 
-    // and then the database
-    var context = scope.ServiceProvider.GetRequiredService<JyoshinmonKarateContext>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     DbInitializer.Initialize(context, userManager);
 }
