@@ -1,16 +1,22 @@
 ﻿.account-settings-page {
     max-width: 760px;
+    /*This container can grow upto 760px but not wider than that*/
     margin: 0 auto;
+    /*the 0 removes the top and bottom margin and auto centres the container horizontally*/
     padding: 30px 10px 35px;
+    /*adds those pixels space at top, left and right, and bottom*/
 }
 
 .account-settings-nav {
     margin-bottom: 10px;
+    /*adds this much space at the bottom below the navigation*/
 }
 
 .account-nav-list {
     display: flex;
+    /*this places the items next to each other using flexbox*/
     align-items: center;
+    /*display flex uses flex direction */
     gap: 6px;
     margin: 0;
     padding: 0;
