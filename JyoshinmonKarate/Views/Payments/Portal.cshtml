@@ -1,0 +1,223 @@
+﻿@model IEnumerable<JyoshinmonKarate.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payment Portal";
+    var selectedMember = ViewBag.SelectedMember as JyoshinmonKarate.Models.Member;
+    string memberEmail = ViewBag.MemberEmail ?? "";
+    decimal totalOutstanding = ViewBag.TotalOutstanding ?? 0m;
+}
+
+<section class="app-index-page">
+
+    <div class="app-page-header no-print">
+        <h1>Payment Portal</h1>
+    </div>
+
+    <form asp-action="Portal" method="get" class="app-toolbar no-print">
+
+        <div class="app-filter-fields">
+
+            <div class="app-filter-group">
+                <label for="memberSearch">Member</label>
+
+                <div class="member-search" id="memberSearchSelect">
+                    <input type="text" id="memberSearch" placeholder="Search members" autocomplete="off" />
+                    <input type="hidden" name="memberId" id="memberId" value="@ViewBag.SelectedMemberId" />
+
+                    <div class="member-search-options" id="memberOptions">
+                        @foreach (var member in ViewBag.MemberId)
+                        {
+                            <button type="button" class="member-search-option" data-value="@member.Value">@member.Text</button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-filter-actions">
+                <button type="submit" class="app-apply-btn">Load Payments</button>
+                <a asp-action="Portal" class="app-clear-link">Clear</a>
+            </div>
+
+        </div>
+
+    </form>
+
+    @if (selectedMember != null)
+    {
+        string memberName = selectedMember.FirstName + " " + selectedMember.LastName;
+
+        <div class="app-form-card payment-invoice-area">
+
+            <div class="invoice-print-heading">
+                <h1>Jyoshinmon Karate</h1>
+                <p>Payment Invoice</p>
+            </div>
+
+            <div class="app-form-header invoice-member-header">
+                <div>
+                    <h2>@memberName</h2>
+                    @if (!string.IsNullOrWhiteSpace(memberEmail))
+                    {
+                        <p><strong>Member Email:</strong> @memberEmail</p>
+                    }
+                </div>
+
+                <div class="invoice-meta">
+                    <p><strong>Date:</strong> @DateTime.Today.ToString("dd MMM yyyy")</p>
+                </div>
+            </div>
+
+            @if (Model.Any())
+            {
+                <div class="app-table-wrap">
+                    <table class="app-table payment-table">
+                        <thead>
+                            <tr>
+                                <th>Payment</th>
+                                <th>Due Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                string statusClass = item.Status == JyoshinmonKarate.Models.PaymentStatus.Pending ? "status-warning" : "status-danger";
+
+                                <tr>
+                                    <td class="app-primary-cell">@item.PaymentName</td>
+                                    <td>@item.DateDue.ToString("dd MMM yyyy")</td>
+                                    <td>$@item.Amount.ToString("0.00")</td>
+                                    <td>
+                                        <span class="status @statusClass">@item.Status</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="2"><strong>Total Outstanding</strong></td>
+                                <td><strong>$@totalOutstanding.ToString("0.00")</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="form-actions no-print">
+                    <button type="button" class="app-primary-btn" onclick="window.print()">Print Invoice</button>
+
+                    @if (!string.IsNullOrWhiteSpace(memberEmail))
+                    {
+                        string emailSubject = "Jyoshinmon Karate Payment Invoice | "
+    + selectedMember.FirstName + " "
+    + selectedMember.LastName + " | "
+    + DateTime.Today.ToString("MMMM yyyy");
+
+                        string emailBody = "Hello," + Environment.NewLine + Environment.NewLine;
+
+                        emailBody += "Please find below the outstanding payment summary for "
+                            + selectedMember.FirstName + " "
+                            + selectedMember.LastName + " for "
+                            + DateTime.Today.ToString("MMMM yyyy")
+                            + "." + Environment.NewLine + Environment.NewLine;
+
+                        foreach (var payment in Model)
+                        {
+                            emailBody += payment.PaymentName + Environment.NewLine;
+                            emailBody += "Amount: $" + payment.Amount.ToString("0.00") + Environment.NewLine;
+                            emailBody += "Status: " + payment.Status + Environment.NewLine + Environment.NewLine;
+                        }
+
+                        emailBody += "Total Outstanding: $" + totalOutstanding.ToString("0.00");
+                        emailBody += Environment.NewLine + Environment.NewLine;
+
+                        emailBody += "If you have already made this payment, please disregard this message. ";
+                        emailBody += "If you have any questions regarding the payment, please contact us.";
+                        emailBody += Environment.NewLine + Environment.NewLine;
+
+                        emailBody += "Kind regards," + Environment.NewLine;
+                        emailBody += "Jyoshinmon Karate";
+
+                        string emailLink = "mailto:" + memberEmail
+                            + "?subject=" + Uri.EscapeDataString(emailSubject)
+                            + "&body=" + Uri.EscapeDataString(emailBody);
+
+                        <a href="@emailLink" class="invoice-email-btn">Email Invoice</a>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="app-empty-message">
+                    This member has no pending or failed payments.
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="app-empty-message">
+            Select a member to view their outstanding payments.
+        </div>
+    }
+
+</section>
+
+@section Scripts {
+    <script>
+        const memberSearch = document.getElementById("memberSearch");
+        const memberId = document.getElementById("memberId");
+        const memberOptions = document.getElementById("memberOptions");
+        const memberOptionButtons = document.querySelectorAll(".member-search-option");
+
+        function setSelectedMemberText() {
+            const selectedValue = memberId.value;
+
+            memberOptionButtons.forEach(option => {
+                if (option.getAttribute("data-value") === selectedValue) {
+                    memberSearch.value = option.innerText.trim();
+                }
+            });
+        }
+
+        memberSearch.addEventListener("focus", function () {
+            memberOptions.classList.add("show");
+            this.select();
+        });
+
+        memberSearch.addEventListener("input", function () {
+            const searchValue = this.value.toLowerCase();
+
+            memberOptionButtons.forEach(option => {
+                const optionText = option.innerText.toLowerCase();
+                option.style.display = optionText.includes(searchValue) ? "block" : "none";
+            });
+
+            memberOptions.classList.add("show");
+        });
+
+        memberOptionButtons.forEach(option => {
+            option.addEventListener("click", function () {
+                memberId.value = this.getAttribute("data-value");
+                memberSearch.value = this.innerText.trim();
+                memberOptions.classList.remove("show");
+
+                memberOptionButtons.forEach(button => {
+                    button.style.display = "block";
+                });
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest("#memberSearchSelect")) {
+                memberOptions.classList.remove("show");
+            }
+        });
+
+        setSelectedMemberText();
+    </script>
+}

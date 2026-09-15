@@ -240,3 +240,129 @@ body {
         background: #111111;
         width: 100%;
     }
+
+/*Invoice*/
+
+.invoice-print-heading {
+    display: none;
+}
+
+.invoice-member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+    .invoice-member-header h2 {
+        margin-bottom: 8px;
+    }
+
+    .invoice-member-header p {
+        margin: 0;
+        color: #666666;
+    }
+
+.invoice-meta {
+    text-align: right;
+    color: #555555;
+    min-width: 180px;
+}
+
+.payment-invoice-area .app-table tfoot td {
+    font-weight: 700;
+}
+
+.payment-invoice-area .app-table th {
+    color: #444444;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .payment-invoice-area,
+    .payment-invoice-area * {
+        visibility: visible;
+    }
+
+    .payment-invoice-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0;
+        margin: 0;
+    }
+
+        .payment-invoice-area .app-table-wrap {
+            overflow: visible !important;
+        }
+
+        .payment-invoice-area table {
+            width: 100% !important;
+        }
+
+        .payment-invoice-area .app-form-header,
+        .payment-invoice-area .form-actions,
+        .payment-invoice-area .status {
+            overflow: visible !important;
+        }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .invoice-print-heading {
+        display: block;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #dddddd;
+        padding-bottom: 12px;
+    }
+
+        .invoice-print-heading h1 {
+            margin: 0;
+            font-size: 1.7rem;
+            color: #111111;
+        }
+
+        .invoice-print-heading p {
+            margin: 4px 0 0;
+            color: #666666;
+            font-size: 0.95rem;
+        }
+
+    header,
+    nav,
+    footer {
+        display: none !important;
+    }
+}
+
+.invoice-email-btn {
+    height: 42px;
+    min-width: 160px;
+    padding: 0 16px;
+    border: 1px solid var(--app-red);
+    border-radius: 9px;
+    background: #ffffff;
+    color: var(--app-red);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    white-space: nowrap;
+    width: auto;
+}
+
+    .invoice-email-btn:hover {
+        background: #fff3f3;
+        color: var(--app-red);
+        text-decoration: none;
+    }

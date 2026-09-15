@@ -1,0 +1,96 @@
+﻿@model IEnumerable<JyoshinmonKarate.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payment Invoice";
+
+    var member = ViewBag.Member as JyoshinmonKarate.Models.Member;
+    string memberName = member.FirstName + " " + member.LastName;
+    string memberEmail = ViewBag.MemberEmail ?? "";
+    decimal totalOutstanding = ViewBag.TotalOutstanding ?? 0m;
+
+    string emailSubject = "Jyoshinmon Karate Payment Invoice";
+
+    string emailBody = "Hello " + member.FirstName + "," + Environment.NewLine + Environment.NewLine;
+    emailBody += "The following payments are currently outstanding:" + Environment.NewLine + Environment.NewLine;
+
+    foreach (var payment in Model)
+    {
+        emailBody += payment.PaymentName + " - $" + payment.Amount.ToString("0.00") + " - " + payment.Status + Environment.NewLine;
+    }
+
+    emailBody += Environment.NewLine + "Total Outstanding: $" + totalOutstanding.ToString("0.00");
+    emailBody += Environment.NewLine + Environment.NewLine + "Jyoshinmon Karate";
+
+    string emailLink = "mailto:" + memberEmail
+        + "?subject=" + Uri.EscapeDataString(emailSubject)
+        + "&body=" + Uri.EscapeDataString(emailBody);
+}
+
+<section class="invoice-page">
+
+    <div class="invoice-actions no-print">
+        <button type="button" class="app-primary-btn" onclick="window.print()">Print Invoice</button>
+
+        @if (!string.IsNullOrWhiteSpace(memberEmail))
+        {
+            <a href="@emailLink" class="clear-filters-btn">Email Invoice</a>
+        }
+
+        <a asp-action="Portal" asp-route-memberId="@member.MemberId" class="app-cancel-link">Back</a>
+    </div>
+
+    <div class="invoice-document">
+
+        <div class="invoice-header">
+            <div>
+                <h1>Jyoshinmon Karate</h1>
+                <p>Payment Invoice</p>
+            </div>
+
+            <div class="invoice-date">
+                <span>Date</span>
+                <p>@DateTime.Today.ToString("dd MMM yyyy")</p>
+            </div>
+        </div>
+
+        <div class="invoice-member">
+            <span>Member</span>
+            <h2>@memberName</h2>
+
+            @if (!string.IsNullOrWhiteSpace(memberEmail))
+            {
+                <p>@memberEmail</p>
+            }
+        </div>
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Payment</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.PaymentName</td>
+                        <td>@item.DateDue.ToString("dd MMM yyyy")</td>
+                        <td>@item.Status</td>
+                        <td>$@item.Amount.ToString("0.00")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="invoice-total">
+            <span>Total Outstanding</span>
+            <strong>$@totalOutstanding.ToString("0.00")</strong>
+        </div>
+
+    </div>
+
+</section>

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
+
 namespace JyoshinmonKarate.Controllers
 {
     [Authorize]
@@ -365,5 +366,59 @@ namespace JyoshinmonKarate.Controllers
 
             return date.Date >= minimumDate && date.Date <= maximumDate;
         }
+
+        // GET: Payments/Portal
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Portal(int memberId = 0)
+        {
+            var members = await _context.Members
+                .OrderBy(m => m.FirstName)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+
+            List<SelectListItem> memberOptions = new List<SelectListItem>();
+
+            foreach (Member member in members)
+            {
+                memberOptions.Add(new SelectListItem
+                {
+                    Value = member.MemberId.ToString(),
+                    Text = member.FirstName + " " + member.LastName
+                });
+            }
+
+            ViewData["MemberId"] = new SelectList(memberOptions, "Value", "Text", memberId);
+            ViewBag.SelectedMemberId = memberId;
+
+            if (memberId == 0)
+            {
+                ViewBag.SelectedMember = null;
+                ViewBag.MemberEmail = "";
+                ViewBag.TotalOutstanding = 0m;
+                return View(new List<Payment>());
+            }
+
+            var selectedMember = await _context.Members.FirstOrDefaultAsync(m => m.MemberId == memberId);
+
+            if (selectedMember == null)
+            {
+                return NotFound();
+            }
+
+            var payments = await _context.Payments
+                .Where(p => p.MemberId == memberId &&
+                    (p.Status == PaymentStatus.Pending || p.Status == PaymentStatus.Failed))
+                .OrderBy(p => p.DateDue)
+                .ToListAsync();
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == selectedMember.UserId);
+
+            ViewBag.SelectedMember = selectedMember;
+            ViewBag.MemberEmail = user?.Email ?? "";
+            ViewBag.TotalOutstanding = payments.Sum(p => p.Amount);
+
+            return View(payments);
+        }
+
     }
 }

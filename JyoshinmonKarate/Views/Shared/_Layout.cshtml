@@ -81,12 +81,21 @@
 
                             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a></li>
                             <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminMembersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Payments</a>
+                                <ul class="dropdown-menu" aria-labelledby="adminMembersDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Payments" asp-action="Index">Payments</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Payments" asp-action="Portal">Invoice Portal</a></li>
+                                </ul>
+                            </li>
+                            
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="adminMembersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Attendance</a>
                                 <ul class="dropdown-menu" aria-labelledby="adminMembersDropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Attendances" asp-action="Index">Attendance</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Attendances" asp-action="Mark">Marking Portal</a></li>
                                 </ul>
                             </li>
+
                             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Gradings" asp-action="Index">Gradings</a></li>
 
                             <li class="nav-item dropdown">
