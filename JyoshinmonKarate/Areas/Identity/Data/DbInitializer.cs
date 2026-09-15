@@ -240,19 +240,26 @@ namespace JyoshinmonKarate.Data
 
             // GRADINGS
             var gradings = new List<Grading>();
+
             for (int i = 0; i < 20; i++)
             {
-                var gradingDate = DateTime.Today.AddDays(-(i * 14 + 3));
+                // First 5 are upcoming gradings, remaining 15 are past gradings
+                var gradingDate = i < 5
+                    ? DateTime.Today.AddDays((i + 1) * 14)
+                    : DateTime.Today.AddDays(-((i - 4) * 14));
+
                 var startHour = 9 + (i % 3);
 
                 gradings.Add(new Grading
                 {
+                    SessionName = $"Grading Session {i + 1}",
                     ClubId = clubs[i % clubs.Count].ClubId,
                     GradingDate = gradingDate,
                     GradingStartTime = gradingDate.AddHours(startHour),
                     GradingEndTime = gradingDate.AddHours(startHour + 2)
                 });
             }
+
             context.Gradings.AddRange(gradings);
             context.SaveChanges();
 
@@ -311,21 +318,42 @@ namespace JyoshinmonKarate.Data
 
             // MEMBER GRADINGS
             var memberGradings = new List<MemberGrading>();
+
             for (int i = 0; i < 50; i++)
             {
                 var beforeIndex = i % 8;
-                var afterIndex = beforeIndex + (i % 4 == 0 ? 0 : 1); // some same belt, most move up
 
-                if (afterIndex >= belts.Count)
+                GradingStatus gradingStatus;
+
+                if (i % 5 == 0)
                 {
-                    afterIndex = belts.Count - 1;
+                    gradingStatus = GradingStatus.Pending;
+                }
+                else if (i % 4 == 0)
+                {
+                    gradingStatus = GradingStatus.NotPassed;
+                }
+                else
+                {
+                    gradingStatus = GradingStatus.Passed;
                 }
 
-                var passed = i % 5 != 0;
+                int? beltAfterId = null;
 
-                if (!passed)
+                if (gradingStatus == GradingStatus.Passed)
                 {
-                    afterIndex = beforeIndex;
+                    var afterIndex = beforeIndex + 1;
+
+                    if (afterIndex >= belts.Count)
+                    {
+                        afterIndex = belts.Count - 1;
+                    }
+
+                    beltAfterId = belts[afterIndex].BeltId;
+                }
+                else if (gradingStatus == GradingStatus.NotPassed)
+                {
+                    beltAfterId = belts[beforeIndex].BeltId;
                 }
 
                 memberGradings.Add(new MemberGrading
@@ -333,10 +361,13 @@ namespace JyoshinmonKarate.Data
                     GradingId = gradings[i % gradings.Count].GradingId,
                     MemberId = members[i % members.Count].MemberId,
                     BeltBeforeId = belts[beforeIndex].BeltId,
-                    BeltAfterId = belts[afterIndex].BeltId,
-                    Passed = passed
+                    BeltAfterId = beltAfterId,
+                    Status = gradingStatus
                 });
             }
+
+            context.MemberGradings.AddRange(memberGradings);
+            context.SaveChanges();
             context.MemberGradings.AddRange(memberGradings);
             context.SaveChanges();
         }
