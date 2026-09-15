@@ -368,8 +368,6 @@ namespace JyoshinmonKarate.Data
 
             context.MemberGradings.AddRange(memberGradings);
             context.SaveChanges();
-            context.MemberGradings.AddRange(memberGradings);
-            context.SaveChanges();
         }
     }
 }
