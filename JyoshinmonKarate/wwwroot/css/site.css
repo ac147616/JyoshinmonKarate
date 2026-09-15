@@ -342,23 +342,36 @@ body {
     }
 }
 
-.invoice-email-btn {
-    height: 42px;
-    min-width: 160px;
-    padding: 0 16px;
-    border: 1px solid var(--app-red);
-    border-radius: 9px;
-    background: #ffffff;
-    color: var(--app-red);
-    font-size: 0.9rem;
+.invoice-action-btn {
+    height: 34px;
+    padding: 0 13px;
+    border-radius: 7px;
+    font-size: 0.8rem;
     font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
     white-space: nowrap;
     width: auto;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.invoice-print-btn {
+    border: none;
+    background: var(--app-red);
+    color: #ffffff;
+}
+
+    .invoice-print-btn:hover {
+        background: var(--app-red-dark);
+    }
+
+.invoice-email-btn {
+    border: 1px solid var(--app-red);
+    background: #ffffff;
+    color: var(--app-red);
+    text-decoration: none;
 }
 
     .invoice-email-btn:hover {
