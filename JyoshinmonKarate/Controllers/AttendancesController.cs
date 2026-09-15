@@ -472,5 +472,112 @@ namespace JyoshinmonKarate.Controllers
 
             return date.Date >= minimumDate && date.Date <= maximumDate;
         }
+
+        // GET: Attendances/Mark
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Mark(int clubId = 0, int scheduleId = 0, DateTime? date = null)
+        {
+            DateTime attendanceDate = date ?? DateTime.Today;
+
+            ViewBag.SelectedClubId = clubId;
+            ViewBag.SelectedScheduleId = scheduleId;
+            ViewBag.SelectedDate = attendanceDate;
+
+            ViewBag.Clubs = new SelectList(
+                await _context.Clubs.OrderBy(c => c.ClubName).ToListAsync(),
+                "ClubId",
+                "ClubName",
+                clubId);
+
+            if (clubId != 0)
+            {
+                var schedules = await _context.Schedules
+                    .Where(s => s.ClubId == clubId)
+                    .OrderBy(s => s.DayOfWeek)
+                    .ThenBy(s => s.StartTime)
+                    .ToListAsync();
+
+                ViewBag.Schedules = schedules;
+            }
+            else
+            {
+                ViewBag.Schedules = new List<Schedule>();
+            }
+
+            if (scheduleId != 0)
+            {
+                var schedule = await _context.Schedules
+                    .FirstOrDefaultAsync(s => s.ScheduleId == scheduleId);
+
+                if (schedule == null)
+                {
+                    return NotFound();
+                }
+
+                var members = await _context.Members
+                    .Include(m => m.Belt)
+                    .Where(m => m.ClubId == schedule.ClubId)
+                    .OrderBy(m => m.FirstName)
+                    .ThenBy(m => m.LastName)
+                    .ToListAsync();
+
+                var presentMemberIds = await _context.Attendances
+                    .Where(a => a.ScheduleId == scheduleId && a.Date.Date == attendanceDate.Date)
+                    .Select(a => a.MemberId)
+                    .ToListAsync();
+
+                ViewBag.Members = members;
+                ViewBag.PresentMemberIds = presentMemberIds;
+            }
+            else
+            {
+                ViewBag.Members = new List<Member>();
+                ViewBag.PresentMemberIds = new List<int>();
+            }
+
+            return View();
+        }
+
+        // POST: Attendances/Mark
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Mark(int scheduleId, DateTime date, int[] memberIds)
+        {
+            var existingAttendances = await _context.Attendances
+                .Where(a => a.ScheduleId == scheduleId && a.Date.Date == date.Date)
+                .ToListAsync();
+
+            foreach (var attendance in existingAttendances)
+            {
+                if (!memberIds.Contains(attendance.MemberId))
+                {
+                    _context.Attendances.Remove(attendance);
+                }
+            }
+
+            var existingMemberIds = existingAttendances
+                .Select(a => a.MemberId)
+                .ToList();
+
+            foreach (var memberId in memberIds)
+            {
+                if (!existingMemberIds.Contains(memberId))
+                {
+                    var attendance = new Attendance
+                    {
+                        ScheduleId = scheduleId,
+                        MemberId = memberId,
+                        Date = date.Date
+                    };
+
+                    _context.Attendances.Add(attendance);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

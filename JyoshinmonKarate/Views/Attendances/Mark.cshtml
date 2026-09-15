@@ -1,0 +1,199 @@
+﻿@using JyoshinmonKarate.Models
+
+@{
+    ViewData["Title"] = "Mark Attendance";
+
+    var schedules = ViewBag.Schedules as List<Schedule> ?? new List<Schedule>();
+    var members = ViewBag.Members as List<Member> ?? new List<Member>();
+    var presentMemberIds = ViewBag.PresentMemberIds as List<int> ?? new List<int>();
+}
+
+<section class="app-index-page">
+
+    <div class="app-page-header">
+        <h1>Mark Attendance</h1>
+    </div>
+
+    <form asp-action="Mark" method="get" class="app-toolbar" id="attendanceSelectionForm">
+
+        <div class="app-filter-fields">
+
+            <div class="app-filter-group">
+                <label for="clubId">Dojo</label>
+                <select name="clubId" id="clubId" asp-items="ViewBag.Clubs">
+                    <option value="0">Select dojo</option>
+                </select>
+            </div>
+
+            <div class="app-filter-group">
+                <label for="scheduleId">Class</label>
+                <select name="scheduleId" id="scheduleId">
+                    <option value="0">Select class</option>
+
+                    @foreach (var schedule in schedules)
+                    {
+                        if (schedule.ScheduleId == ViewBag.SelectedScheduleId)
+                        {
+                            <option value="@schedule.ScheduleId" selected>
+                                @schedule.DayOfWeek | @schedule.StartTime.ToString("hh:mm tt") | @schedule.Level
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@schedule.ScheduleId">
+                                @schedule.DayOfWeek | @schedule.StartTime.ToString("hh:mm tt") | @schedule.Level
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="app-filter-group">
+                <label for="date">Date</label>
+                <input type="date" name="date" id="date" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <div class="app-filter-actions">
+                <button type="submit" class="app-apply-btn">Load Class</button>
+            </div>
+
+        </div>
+
+    </form>
+
+    @if (ViewBag.SelectedScheduleId != 0)
+    {
+        <form asp-action="Mark" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="scheduleId" value="@ViewBag.SelectedScheduleId" />
+            <input type="hidden" name="date" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
+
+            <div class="grading-toolbar">
+
+                <div class="grading-search-box">
+                    <input type="text" id="memberSearch" placeholder="Search members" autocomplete="off" />
+                </div>
+
+                <div class="grading-toolbar-actions">
+                    <button type="button" class="app-apply-btn" id="selectAllBtn">Select All</button>
+                    <button type="button" class="app-clear-link" id="clearAllBtn">Clear All</button>
+                </div>
+
+            </div>
+
+            @if (members.Any())
+            {
+                <div class="app-table-wrap">
+                    <table class="app-table" id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Present</th>
+                                <th>Member</th>
+                                <th>Belt</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var member in members)
+                            {
+                                bool isPresent = presentMemberIds.Contains(member.MemberId);
+                                string memberName = member.FirstName + " " + member.LastName;
+
+                                <tr class="attendance-member-row">
+                                    <td>
+                                        <input type="checkbox" class="attendance-checkbox" name="memberIds" value="@member.MemberId" checked="@isPresent" />
+                                    </td>
+
+                                    <td class="app-primary-cell">@memberName</td>
+
+                                    <td>
+                                        @(member.Belt != null ? member.Belt.BeltName : "No belt assigned")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="app-primary-btn">Save Attendance</button>
+                    <a asp-action="Index" class="app-cancel-link">Cancel</a>
+                </div>
+            }
+            else
+            {
+                <div class="app-empty-message">No members were found for this dojo.</div>
+            }
+
+        </form>
+    }
+    else if (ViewBag.SelectedClubId != 0)
+    {
+        <div class="app-empty-message">Select a class to mark attendance.</div>
+    }
+    else
+    {
+        <div class="app-empty-message">Select a dojo and class to begin marking attendance.</div>
+    }
+
+</section>
+
+@section Scripts {
+    <script>
+        const selectionForm = document.getElementById("attendanceSelectionForm");
+        const clubSelect = document.getElementById("clubId");
+        const scheduleSelect = document.getElementById("scheduleId");
+        const memberSearch = document.getElementById("memberSearch");
+        const memberRows = document.querySelectorAll(".attendance-member-row");
+        const attendanceCheckboxes = document.querySelectorAll(".attendance-checkbox");
+        const selectAllBtn = document.getElementById("selectAllBtn");
+        const clearAllBtn = document.getElementById("clearAllBtn");
+
+        clubSelect.addEventListener("change", function () {
+            scheduleSelect.value = "0";
+            selectionForm.submit();
+        });
+
+        scheduleSelect.addEventListener("change", function () {
+            if (this.value !== "0") {
+                selectionForm.submit();
+            }
+        });
+
+        if (memberSearch) {
+            memberSearch.addEventListener("input", function () {
+                const searchValue = this.value.toLowerCase();
+
+                memberRows.forEach(row => {
+                    const memberName = row.innerText.toLowerCase();
+                    row.style.display = memberName.includes(searchValue) ? "" : "none";
+                });
+            });
+        }
+
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener("click", function () {
+                attendanceCheckboxes.forEach(checkbox => {
+                    const row = checkbox.closest(".attendance-member-row");
+
+                    if (row.style.display !== "none") {
+                        checkbox.checked = true;
+                    }
+                });
+            });
+        }
+
+        if (clearAllBtn) {
+            clearAllBtn.addEventListener("click", function () {
+                attendanceCheckboxes.forEach(checkbox => {
+                    const row = checkbox.closest(".attendance-member-row");
+
+                    if (row.style.display !== "none") {
+                        checkbox.checked = false;
+                    }
+                });
+            });
+        }
+    </script>
+}
