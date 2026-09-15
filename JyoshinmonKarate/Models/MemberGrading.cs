@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JyoshinmonKarate.Models
 {
+    public enum GradingStatus
+    {
+        Pending,
+        Passed,
+        NotPassed
+    }
+
     public class MemberGrading
     {
         public int MemberGradingId { get; set; }
@@ -19,12 +26,12 @@ namespace JyoshinmonKarate.Models
         [Display(Name = "Belt Before")]
         public int BeltBeforeId { get; set; }
 
-        [Required(ErrorMessage = "New belt is required.")]
         [Display(Name = "Belt After")]
-        public int BeltAfterId { get; set; }
+        public int? BeltAfterId { get; set; }
 
-        [Display(Name = "Passed")]
-        public bool Passed { get; set; }
+        [Required]
+        [Display(Name = "Grading Status")]
+        public GradingStatus Status { get; set; } = GradingStatus.Pending;
 
         //One grading can have many member gradings to it
         public Grading Grading { get; set; }

@@ -4,8 +4,24 @@
     ViewData["Title"] = "Member Grading Details";
 
     string memberName = Model.Member.FirstName + " " + Model.Member.LastName;
-    string result = Model.Passed ? "Passed" : "Not Passed";
-    string resultClass = Model.Passed ? "status-success" : "status-danger";
+
+    string result = Model.Status switch
+    {
+        JyoshinmonKarate.Models.GradingStatus.Pending => "Pending",
+        JyoshinmonKarate.Models.GradingStatus.Passed => "Passed",
+        JyoshinmonKarate.Models.GradingStatus.NotPassed => "Not Passed",
+        _ => "Unknown"
+    };
+
+    string resultClass = Model.Status switch
+    {
+        JyoshinmonKarate.Models.GradingStatus.Pending => "status-warning",
+        JyoshinmonKarate.Models.GradingStatus.Passed => "status-success",
+        JyoshinmonKarate.Models.GradingStatus.NotPassed => "status-danger",
+        _ => ""
+    };
+
+    string beltAfter = Model.BeltAfter != null ? Model.BeltAfter.BeltName : "Not yet assigned";
 }
 
 <section class="app-form-page">
@@ -20,6 +36,11 @@
             <div class="details-item">
                 <span>Member</span>
                 <p>@memberName</p>
+            </div>
+
+            <div class="details-item">
+                <span>Grading Session</span>
+                <p>@Model.Grading.SessionName</p>
             </div>
 
             <div class="details-item">
@@ -39,11 +60,11 @@
 
             <div class="details-item">
                 <span>Belt After</span>
-                <p>@Model.BeltAfter.BeltName</p>
+                <p>@beltAfter</p>
             </div>
 
             <div class="details-item">
-                <span>Result</span>
+                <span>Status</span>
                 <p class="status @resultClass">@result</p>
             </div>
 

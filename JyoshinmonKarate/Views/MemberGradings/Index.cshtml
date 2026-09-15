@@ -41,16 +41,17 @@
             </div>
 
             <div class="app-filter-group">
-                <label for="beltAfterId">New Belt</label>
+                <label for="beltAfterId">Belt After</label>
                 <select name="beltAfterId" id="beltAfterId" asp-items="ViewBag.BeltAfterId">
                     <option value="0">All belts</option>
                 </select>
             </div>
 
             <div class="app-filter-group">
-                <label for="result">Result</label>
+                <label for="result">Status</label>
                 <select name="result" id="result">
-                    <option value="">All results</option>
+                    <option value="">All statuses</option>
+                    <option value="Pending" selected="@(ViewBag.SelectedResult == "Pending")">Pending</option>
                     <option value="Passed" selected="@(ViewBag.SelectedResult == "Passed")">Passed</option>
                     <option value="NotPassed" selected="@(ViewBag.SelectedResult == "NotPassed")">Not Passed</option>
                 </select>
@@ -67,7 +68,7 @@
         {
             <a asp-action="Create" class="app-add-btn">
                 <i class="bi bi-plus-lg"></i>
-                Add Member Grading
+                Add to Grading
             </a>
         }
 
@@ -78,11 +79,12 @@
             <thead>
                 <tr>
                     <th>Member</th>
+                    <th>Grading</th>
                     <th>Grading Date</th>
                     <th>Dojo</th>
                     <th>Belt Before</th>
                     <th>Belt After</th>
-                    <th>Result</th>
+                    <th>Status</th>
 
                     @if (isAdmin)
                     {
@@ -95,15 +97,31 @@
                 @foreach (var item in Model)
                 {
                     string memberName = item.Member.FirstName + " " + item.Member.LastName;
-                    string resultName = item.Passed ? "Passed" : "Not Passed";
-                    string resultClass = item.Passed ? "status-success" : "status-danger";
+                    string beltAfter = item.BeltAfter != null ? item.BeltAfter.BeltName : "Not yet assigned";
+
+                    string resultName = item.Status switch
+                    {
+                        JyoshinmonKarate.Models.GradingStatus.Pending => "Pending",
+                        JyoshinmonKarate.Models.GradingStatus.Passed => "Passed",
+                        JyoshinmonKarate.Models.GradingStatus.NotPassed => "Not Passed",
+                        _ => "Unknown"
+                    };
+
+                    string resultClass = item.Status switch
+                    {
+                        JyoshinmonKarate.Models.GradingStatus.Pending => "status-warning",
+                        JyoshinmonKarate.Models.GradingStatus.Passed => "status-success",
+                        JyoshinmonKarate.Models.GradingStatus.NotPassed => "status-danger",
+                        _ => ""
+                    };
 
                     <tr>
                         <td class="app-primary-cell">@memberName</td>
+                        <td>@item.Grading.SessionName</td>
                         <td>@item.Grading.GradingDate.ToString("dd MMM yyyy")</td>
                         <td>@item.Grading.Club.ClubName</td>
                         <td>@item.BeltBefore.BeltName</td>
-                        <td>@item.BeltAfter.BeltName</td>
+                        <td>@beltAfter</td>
 
                         <td>
                             <span class="status @resultClass">@resultName</span>

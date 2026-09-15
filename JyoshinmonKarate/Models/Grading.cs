@@ -11,6 +11,11 @@ namespace JyoshinmonKarate.Models
         [Display(Name = "Club")]
         public int ClubId { get; set; }
 
+        [Required(ErrorMessage = "Session name is required.")]
+        [StringLength(100)]
+        [Display(Name = "Session Name")]
+        public string SessionName { get; set; }
+
         [DataType(DataType.Date)]
         [Display(Name = "Grading Date")]
         [Required(ErrorMessage ="Gradings date is required.")]

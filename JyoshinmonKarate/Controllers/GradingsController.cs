@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,7 +38,8 @@ namespace JyoshinmonKarate.Controllers
                 .ToListAsync();
 
             ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(totalGradings / (double)pageSize);
+            ViewBag.TotalPages =
+                (int)Math.Ceiling(totalGradings / (double)pageSize);
 
             return View(gradings);
         }
@@ -54,7 +54,14 @@ namespace JyoshinmonKarate.Controllers
 
             var grading = await _context.Gradings
                 .Include(g => g.Club)
-                .FirstOrDefaultAsync(m => m.GradingId == id);
+                .Include(g => g.MemberGradings)
+                    .ThenInclude(mg => mg.Member)
+                .Include(g => g.MemberGradings)
+                    .ThenInclude(mg => mg.BeltBefore)
+                .Include(g => g.MemberGradings)
+                    .ThenInclude(mg => mg.BeltAfter)
+                .FirstOrDefaultAsync(g => g.GradingId == id);
+
             if (grading == null)
             {
                 return NotFound();
@@ -66,10 +73,16 @@ namespace JyoshinmonKarate.Controllers
         // GET: Gradings/Create
         public IActionResult Create()
         {
-            Grading grading = new Grading();
-            grading.GradingDate = DateTime.Today;
+            Grading grading = new Grading
+            {
+                GradingDate = DateTime.Today
+            };
 
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName");
+            ViewData["ClubId"] =
+                new SelectList(
+                    _context.Clubs,
+                    "ClubId",
+                    "ClubName");
 
             return View(grading);
         }
@@ -77,29 +90,43 @@ namespace JyoshinmonKarate.Controllers
         // POST: Gradings/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GradingId,ClubId,GradingDate,GradingStartTime,GradingEndTime")] Grading grading)
+        public async Task<IActionResult> Create(
+            [Bind("GradingId,SessionName,ClubId,GradingDate,GradingStartTime,GradingEndTime")]
+            Grading grading)
         {
             ModelState.Remove("Club");
             ModelState.Remove("MemberGradings");
 
-            if (!IsDateBetween1900AndToday(grading.GradingDate))
+            if (!IsDateValid(grading.GradingDate))
             {
-                ModelState.AddModelError("GradingDate", "Grading date must be between 1900 and today.");
+                ModelState.AddModelError(
+                    "GradingDate",
+                    "Grading date must be 1900 or later.");
             }
 
-            if (grading.GradingEndTime.TimeOfDay <= grading.GradingStartTime.TimeOfDay)
+            if (grading.GradingEndTime.TimeOfDay
+                <= grading.GradingStartTime.TimeOfDay)
             {
-                ModelState.AddModelError("GradingEndTime", "End time must be later than the start time.");
+                ModelState.AddModelError(
+                    "GradingEndTime",
+                    "End time must be later than the start time.");
             }
 
             if (ModelState.IsValid)
             {
                 _context.Add(grading);
+
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", grading.ClubId);
+            ViewData["ClubId"] =
+                new SelectList(
+                    _context.Clubs,
+                    "ClubId",
+                    "ClubName",
+                    grading.ClubId);
 
             return View(grading);
         }
@@ -112,14 +139,20 @@ namespace JyoshinmonKarate.Controllers
                 return NotFound();
             }
 
-            var grading = await _context.Gradings.FindAsync(id);
+            var grading =
+                await _context.Gradings.FindAsync(id);
 
             if (grading == null)
             {
                 return NotFound();
             }
 
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", grading.ClubId);
+            ViewData["ClubId"] =
+                new SelectList(
+                    _context.Clubs,
+                    "ClubId",
+                    "ClubName",
+                    grading.ClubId);
 
             return View(grading);
         }
@@ -127,7 +160,10 @@ namespace JyoshinmonKarate.Controllers
         // POST: Gradings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GradingId,ClubId,GradingDate,GradingStartTime,GradingEndTime")] Grading grading)
+        public async Task<IActionResult> Edit(
+            int id,
+            [Bind("GradingId,SessionName,ClubId,GradingDate,GradingStartTime,GradingEndTime")]
+            Grading grading)
         {
             if (id != grading.GradingId)
             {
@@ -137,14 +173,19 @@ namespace JyoshinmonKarate.Controllers
             ModelState.Remove("Club");
             ModelState.Remove("MemberGradings");
 
-            if (!IsDateBetween1900AndToday(grading.GradingDate))
+            if (!IsDateValid(grading.GradingDate))
             {
-                ModelState.AddModelError("GradingDate", "Grading date must be between 1900 and today.");
+                ModelState.AddModelError(
+                    "GradingDate",
+                    "Grading date must be 1900 or later.");
             }
 
-            if (grading.GradingEndTime.TimeOfDay <= grading.GradingStartTime.TimeOfDay)
+            if (grading.GradingEndTime.TimeOfDay
+                <= grading.GradingStartTime.TimeOfDay)
             {
-                ModelState.AddModelError("GradingEndTime", "End time must be later than the start time.");
+                ModelState.AddModelError(
+                    "GradingEndTime",
+                    "End time must be later than the start time.");
             }
 
             if (ModelState.IsValid)
@@ -152,6 +193,7 @@ namespace JyoshinmonKarate.Controllers
                 try
                 {
                     _context.Update(grading);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -160,16 +202,19 @@ namespace JyoshinmonKarate.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ClubId"] = new SelectList(_context.Clubs, "ClubId", "ClubName", grading.ClubId);
+            ViewData["ClubId"] =
+                new SelectList(
+                    _context.Clubs,
+                    "ClubId",
+                    "ClubName",
+                    grading.ClubId);
 
             return View(grading);
         }
@@ -184,7 +229,9 @@ namespace JyoshinmonKarate.Controllers
 
             var grading = await _context.Gradings
                 .Include(g => g.Club)
-                .FirstOrDefaultAsync(m => m.GradingId == id);
+                .FirstOrDefaultAsync(
+                    g => g.GradingId == id);
+
             if (grading == null)
             {
                 return NotFound();
@@ -196,31 +243,34 @@ namespace JyoshinmonKarate.Controllers
         // POST: Gradings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(
+            int id)
         {
-            var grading = await _context.Gradings.FindAsync(id);
+            var grading =
+                await _context.Gradings.FindAsync(id);
+
             if (grading != null)
             {
                 _context.Gradings.Remove(grading);
             }
 
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool GradingExists(int id)
         {
-            return _context.Gradings.Any(e => e.GradingId == id);
+            return _context.Gradings
+                .Any(g => g.GradingId == id);
         }
 
-        private bool IsDateBetween1900AndToday(DateTime date)
+        private bool IsDateValid(DateTime date)
         {
-            DateTime minimumDate = new DateTime(1900, 1, 1);
-            DateTime maximumDate = DateTime.Today;
+            DateTime minimumDate =
+                new DateTime(1900, 1, 1);
 
-            return date.Date >= minimumDate && date.Date <= maximumDate;
+            return date.Date >= minimumDate;
         }
     }
-
 }
-

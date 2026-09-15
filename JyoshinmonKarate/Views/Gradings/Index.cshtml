@@ -68,6 +68,7 @@
         <table class="app-table grading-table" id="gradingTable">
             <thead>
                 <tr>
+                    <th>Session Name</th>
                     <th>Grading Date</th>
                     <th>Dojo</th>
                     <th>Start Time</th>
@@ -83,7 +84,8 @@
                     string gradingYear = item.GradingDate.Year.ToString();
 
                     <tr data-year="@gradingYear" data-club="@clubName.ToLower()">
-                        <td class="app-primary-cell">@item.GradingDate.ToString("dd MMM yyyy")</td>
+                        <td class="app-primary-cell">@item.SessionName</td>
+                        <td>@item.GradingDate.ToString("dd MMM yyyy")</td>
                         <td>@clubName</td>
                         <td>@item.GradingStartTime.ToString("hh:mm tt")</td>
                         <td>@item.GradingEndTime.ToString("hh:mm tt")</td>
@@ -104,6 +106,12 @@
     @if (!Model.Any())
     {
         <div class="app-empty-message">No gradings were found.</div>
+    }
+    else
+    {
+        <div class="app-empty-message" id="gradingFilteredEmptyMessage" style="display: none;">
+            No gradings match your search or filters.
+        </div>
     }
 
     @if (ViewBag.TotalPages > 1)
@@ -153,6 +161,7 @@
         const filtersBtn = document.getElementById("gradingFiltersBtn");
         const filtersPanel = document.getElementById("gradingFiltersPanel");
         const clearFiltersBtn = document.getElementById("gradingClearFiltersBtn");
+        const filteredEmptyMessage = document.getElementById("gradingFilteredEmptyMessage");
 
         function getCheckedValues(type) {
             return Array.from(extraFilters)
@@ -170,9 +179,10 @@
         }
 
         function filterGradings() {
-            const searchValue = searchInput.value.toLowerCase();
+            const searchValue = searchInput.value.trim().toLowerCase();
             const selectedYears = getCheckedValues("year");
             const selectedClubs = getCheckedValues("club");
+            let visibleRows = 0;
 
             rows.forEach(row => {
                 const rowText = row.innerText.toLowerCase();
@@ -182,11 +192,16 @@
 
                 if (matchesSearch && matchesYear && matchesClub) {
                     row.style.display = "";
+                    visibleRows++;
                 }
                 else {
                     row.style.display = "none";
                 }
             });
+
+            if (filteredEmptyMessage) {
+                filteredEmptyMessage.style.display = visibleRows === 0 && rows.length > 0 ? "block" : "none";
+            }
         }
 
         searchInput.addEventListener("input", filterGradings);

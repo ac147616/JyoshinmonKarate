@@ -9,6 +9,7 @@
 
         <div class="app-form-header">
             <h1>Add Member Grading</h1>
+            <p>Select a member for an upcoming grading session.</p>
         </div>
 
         <form asp-action="Create" method="post">
@@ -33,36 +34,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="BeltBeforeId">Belt Before</label>
+                    <label asp-for="BeltBeforeId">Current Belt</label>
                     <select asp-for="BeltBeforeId" class="form-control" asp-items="ViewBag.BeltBeforeId">
-                        <option value="">Select previous belt</option>
+                        <option value="">Select current belt</option>
                     </select>
                     <span asp-validation-for="BeltBeforeId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="BeltAfterId">Belt After</label>
-                    <select asp-for="BeltAfterId" class="form-control" asp-items="ViewBag.BeltAfterId">
-                        <option value="">Select new belt</option>
-                    </select>
-                    <span asp-validation-for="BeltAfterId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Passed">Passed</label>
-
-                    <div class="checkbox-row">
-                        <input asp-for="Passed" />
-                        <span>Member passed the grading</span>
-                    </div>
-
-                    <span asp-validation-for="Passed" class="text-danger"></span>
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="app-primary-btn">Add Member Grading</button>
+                <button type="submit" class="app-primary-btn">Add to Grading</button>
                 <a asp-action="Index" class="app-cancel-link">Cancel</a>
             </div>
         </form>
